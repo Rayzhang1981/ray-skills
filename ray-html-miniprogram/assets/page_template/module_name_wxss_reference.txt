@@ -1,0 +1,185 @@
+/* 小程序页面样式模板 - 根据模块类型选择主题色 */
+
+/* 主题色配置（根据模块选择一组）：
+ * 储罐容积：purple: #667eea → #764ba2
+ * 压力降：green: #2aa889 → #197c67
+ * 物性查询：blue: #4facfe → #00f2fe
+ */
+
+/* 容器 */
+.container {
+  padding: 32rpx;
+  background: #f5f5f5;
+  min-height: 100vh;
+}
+
+/* 标题区域 */
+.header {
+  margin-bottom: 32rpx;
+}
+
+.title {
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #333;
+  display: block;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: #666;
+  margin-top: 8rpx;
+  display: block;
+}
+
+/* 输入区域 */
+.input-section {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.08);
+}
+
+.input-group {
+  margin-bottom: 24rpx;
+}
+
+.label {
+  font-size: 28rpx;
+  color: #666;
+  margin-bottom: 8rpx;
+  display: block;
+}
+
+/* ⚠️ 关键：输入框字体要够大！ */
+.input {
+  font-size: 36rpx;  /* 必须≥36rpx，用户才看得清 */
+  border: 2rpx solid #e0e0e0;
+  border-radius: 8rpx;
+  padding: 16rpx;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  border-color: #667eea;  /* 使用模块主题色 */
+  box-shadow: 0 0 0 3rpx rgba(102, 126, 234, 0.1);
+}
+
+/* 选择区域 */
+.select-section {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+}
+
+.select-group {
+  margin-bottom: 24rpx;
+}
+
+.picker {
+  font-size: 36rpx;  /* 同样要够大 */
+  border: 2rpx solid #e0e0e0;
+  border-radius: 8rpx;
+  padding: 16rpx;
+  background: #fff;
+}
+
+/* 计算按钮 - 使用渐变色 */
+.calc-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);  /* 替换为模块主题色 */
+  color: #fff;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  padding: 24rpx;
+  border: none;
+  width: 100%;
+  margin-bottom: 24rpx;
+}
+
+.calc-btn:active {
+  opacity: 0.85;
+}
+
+/* 结果卡片 */
+.result-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);  /* 替换为模块主题色 */
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.15);
+}
+
+.result-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #fff;
+  margin-bottom: 24rpx;
+  display: block;
+}
+
+.result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid rgba(255,255,255,0.2);
+}
+
+.result-label {
+  font-size: 28rpx;
+  color: rgba(255,255,255,0.9);
+}
+
+.result-value {
+  font-size: 32rpx;
+  color: #fff;
+  font-weight: bold;
+}
+
+/* ⚠️ 关键：关键数值用金色高亮 */
+.result-value.highlight {
+  color: #ffd700;
+  font-size: 48rpx;
+}
+
+/* 表格区域 */
+.table-section {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.08);
+}
+
+.table-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 16rpx;
+  display: block;
+}
+
+.table-scroll {
+  max-height: 600rpx;
+}
+
+.table-row {
+  display: flex;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #e0e0e0;
+}
+
+.table-row.header {
+  font-weight: bold;
+  color: #333;
+  background: #f5f5f5;
+}
+
+.table-cell {
+  flex: 1;
+  font-size: 28rpx;
+  color: #666;
+  text-align: center;
+}

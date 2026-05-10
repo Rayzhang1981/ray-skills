@@ -1,0 +1,2180 @@
+<!DOCTYPE html>
+<!--
+  ╔══════════════════════════════════════════════════════════════════╗
+  ║  储罐容积计算系统 V2.3  —  科技感增强版                           ║
+  ║  优化说明 (2026-05-04)                                           ║
+  ║  ─────────────────────────────────────────────────────────────  ║
+  ║  科技感三维度渐进增强：                                           ║
+  ║     ① 氛围层：暗色主题 + Canvas 粒子背景 + 扫描线纹理             ║
+  ║     ② 质感层：玻璃拟态卡片 + 霓虹边框发光 + Orbitron 数字字体     ║
+  ║     ③ 动效层：数字跳动动画 + 实时防抖计算 + 卡片光晕呼吸          ║
+  ║  ─────────────────────────────────────────────────────────────  ║
+  ║  配色策略：                                                      ║
+  ║     暗色模式：#0B0F15 深邃背景 + #00E5FF 霓虹青 + #7B61FF 紫蓝   ║
+  ║     亮色模式：V2.2 暖灰中性（琥珀金点缀），默认亮色              ║
+  ║  ─────────────────────────────────────────────────────────────  ║
+  ║  ⚠️ 核心计算逻辑与 V1.0 / V2.1 / V2.2 完全一致，未作任何修改。 ║
+  ╚══════════════════════════════════════════════════════════════════╝
+-->
+<html lang="zh-CN" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>储罐容积计算系统 VER 1.1 · Tank Volume Calculator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js">
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js">
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ═════════════ Design Tokens V2.3 — 全模式 ═════════════ */
+
+        /* ── 亮色模式（清爽绿松石+琥珀） ── */
+        :root,
+        [data-theme="light"] {
+            /* 品牌色 · 绿松石系 */
+            --brand-primary: #2aa889;
+            --brand-primary-dk: #197c67;
+            --brand-primary-lt: #c8f0e6;
+            --brand-primary-bg: rgba(42, 168, 137, 0.08);
+
+            /* 强调色 · 琥珀金系 */
+            --brand-accent: #e7a642;
+            --brand-accent-dk: #b87f1e;
+            --brand-accent-lt: #f5e8cc;
+            --brand-accent-bg: rgba(231, 166, 66, 0.08);
+
+            /* 辅助色 · 暖金 */
+            --brand-gold: #c98f38;
+            --brand-gold-lt: #f0e0c0;
+            --brand-gold-bg: rgba(201, 143, 56, 0.06);
+
+            /* 页面 & 卡片 */
+            --bg-page: #f4faf7;
+            --bg-card: rgba(255, 255, 255, 0.88);
+            --bg-card2: rgba(255, 255, 255, 0.72);
+            --bg-card-solid: #ffffff;
+            --bg-input: #f8fcfa;
+            --bg-stripe: rgba(42, 168, 137, 0.04);
+
+            /* 文字 */
+            --txt-primary: #1a3c36;
+            --txt-secondary: #4f6f69;
+            --txt-muted: #8aa09b;
+            --txt-placeholder: #b0c8c0;
+
+            /* 边框 */
+            --bd: rgba(42, 168, 137, 0.18);
+            --bd-focus: #2aa889;
+            --bd-error: #c9403e;
+
+            /* 语义色 */
+            --ok: #2aa889;
+            --warn: #c98f38;
+            --err: #c9403e;
+
+            /* 段位色 */
+            --seg1-bg: rgba(42, 168, 137, 0.08);
+            --seg1-c: #197c67;
+            --seg1-bd: rgba(42, 168, 137, 0.22);
+            --seg2-bg: rgba(231, 166, 66, 0.08);
+            --seg2-c: #b87f1e;
+            --seg2-bd: rgba(231, 166, 66, 0.22);
+            --seg3-bg: rgba(201, 143, 56, 0.08);
+            --seg3-c: #8b5e2a;
+            --seg3-bd: rgba(201, 143, 56, 0.22);
+
+            /* ── 科技感发光色（暗色模式显著） ── */
+            --neon-cyan: #00E5FF;
+            --neon-cyan-dim: rgba(0, 229, 255, 0.15);
+            --neon-cyan-glow: rgba(0, 229, 255, 0.35);
+            --neon-purple: #7B61FF;
+            --neon-purple-dim: rgba(123, 97, 255, 0.15);
+            --neon-purple-glow: rgba(123, 97, 255, 0.35);
+            --neon-pink: #FF3CAC;
+            --neon-green: #00FF94;
+
+            /* 玻璃拟态强度 */
+            --glass-blur: blur(14px);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-bg: rgba(255, 255, 255, 0.82);
+
+            /* 页面背景 */
+            --page-bg: linear-gradient(180deg, #f7fbf8 0%, #eef7f2 55%, #f7fbf8 100%);
+
+            /* 阴影 */
+            --shadow-sm: 0 1px 4px rgba(31, 88, 74, 0.06), 0 0 0 1px rgba(42, 168, 137, 0.1);
+            --shadow-md: 0 4px 16px rgba(31, 88, 74, 0.08), 0 1px 4px rgba(31, 88, 74, 0.04);
+            --shadow-lg: 0 8px 32px rgba(31, 88, 74, 0.10), 0 2px 8px rgba(31, 88, 74, 0.05);
+
+            /* 字体 */
+            --font-body: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                "Helvetica Neue", Arial, sans-serif;
+            --font-mono: 'JetBrains Mono', 'Consolas', monospace;
+            --font-tech: 'Orbitron', 'JetBrains Mono', monospace;
+
+            /* 圆角 */
+            --r-sm: 6px;
+            --r-md: 10px;
+            --r-lg: 16px;
+            --r-xl: 20px;
+        }
+
+        /* ── 暗色模式 — 科技深邃风 ── */
+        [data-theme="dark"] {
+            /* 页面背景 */
+            --bg-page: #0B0F15;
+            --page-bg: linear-gradient(180deg, #0B0F15 0%, #0F1623 50%, #111827 100%);
+
+            /* 卡片 · 玻璃拟态 */
+            --bg-card: rgba(15, 22, 42, 0.72);
+            --bg-card2: rgba(15, 22, 42, 0.6);
+            --bg-card-solid: #111827;
+            --bg-input: rgba(15, 22, 42, 0.6);
+            --glass-bg: rgba(15, 22, 42, 0.72);
+            --glass-blur: blur(18px);
+            --glass-border: rgba(0, 229, 255, 0.12);
+
+            /* 文字 */
+            --txt-primary: #E2EAF2;
+            --txt-secondary: #8899AA;
+            --txt-muted: #4A5568;
+            --txt-placeholder: #3A4555;
+
+            /* 边框 */
+            --bd: rgba(0, 229, 255, 0.08);
+            --bd-focus: var(--neon-cyan);
+            --bd-error: #FF4D6D;
+
+            /* 品牌色 · 暗色模式适配（青绿系） */
+            --brand-primary: #00E5FF;
+            --brand-primary-dk: #00C4D6;
+            --brand-primary-lt: rgba(0, 229, 255, 0.15);
+            --brand-primary-bg: rgba(0, 229, 255, 0.06);
+
+            --brand-accent: #7B61FF;
+            --brand-accent-dk: #6344E0;
+            --brand-accent-lt: rgba(123, 97, 255, 0.12);
+            --brand-accent-bg: rgba(123, 97, 255, 0.06);
+
+            --brand-gold: #D4983C;
+            --brand-gold-lt: rgba(212, 152, 60, 0.12);
+            --brand-gold-bg: rgba(212, 152, 60, 0.06);
+
+            /* 语义色 */
+            --ok: #00FF94;
+            --warn: #FFB300;
+            --err: #FF4D6D;
+
+            /* 段位色 · 暗色模式适配 */
+            --seg1-bg: rgba(0, 229, 255, 0.06);
+            --seg1-c: #00E5FF;
+            --seg1-bd: rgba(0, 229, 255, 0.18);
+            --seg2-bg: rgba(123, 97, 255, 0.06);
+            --seg2-c: #7B61FF;
+            --seg2-bd: rgba(123, 97, 255, 0.18);
+            --seg3-bg: rgba(255, 60, 172, 0.06);
+            --seg3-c: #FF3CAC;
+            --seg3-bd: rgba(255, 60, 172, 0.18);
+
+            /* 阴影 · 暗色发光 */
+            --shadow-sm: 0 1px 4px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(0, 229, 255, 0.08),
+                0 0 16px rgba(0, 229, 255, 0.04);
+            --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(0, 229, 255, 0.1),
+                0 0 24px rgba(0, 229, 255, 0.06);
+            --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(0, 229, 255, 0.12),
+                0 0 40px rgba(0, 229, 255, 0.08);
+        }
+
+        /* ═════════════ Reset & Base ═════════════ */
+        *,
+        *::before,
+        *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+        body {
+            font-family: var(--font-body);
+            background: var(--page-bg);
+            background-attachment: fixed;
+            color: var(--txt-primary);
+            min-height: 100vh;
+            line-height: 1.6;
+            transition: background .4s ease, color .3s ease;
+        }
+
+        /* ═════════════ Canvas 背景（暗色模式） ═════════════ */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .6s ease;
+        }
+        [data-theme="dark"] #bgCanvas {
+            opacity: 1;
+        }
+
+        /* 扫描线纹理覆盖层 */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 229, 255, 0.012) 2px,
+                rgba(0, 229, 255, 0.012) 4px
+            );
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity .4s ease;
+        }
+        [data-theme="dark"] body::before {
+            opacity: 1;
+        }
+
+        /* ═════════════ Layout ═════════════ */
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px 20px 60px;
+        }
+
+        /* ═════════════ Theme Toggle ─ 科技感开关 ═════════════ */
+        .theme-toggle {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--glass-border);
+            border-radius: 100px;
+            padding: 6px 14px 6px 10px;
+            cursor: pointer;
+            box-shadow: var(--shadow-sm);
+            transition: all .3s ease;
+            color: var(--txt-secondary);
+            font-family: var(--font-mono);
+            font-size: .7rem;
+            letter-spacing: 1px;
+        }
+        .theme-toggle:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px var(--neon-cyan-dim), var(--shadow-sm);
+            color: var(--neon-cyan);
+        }
+        [data-theme="dark"] .theme-toggle {
+            border-color: rgba(0, 229, 255, 0.2);
+        }
+        [data-theme="dark"] .theme-toggle:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px var(--neon-cyan-glow);
+        }
+        .theme-toggle .sun-icon,
+        .theme-toggle .moon-icon {
+            width: 18px;
+            height: 18px;
+            transition: transform .3s ease, opacity .3s ease;
+        }
+        .theme-toggle .sun-icon { display: block; }
+        .theme-toggle .moon-icon { display: none; }
+        [data-theme="dark"] .theme-toggle .sun-icon { display: none; }
+        [data-theme="dark"] .theme-toggle .moon-icon { display: block; }
+        .theme-toggle .tt-label {
+            color: var(--txt-muted);
+            transition: color .3s;
+        }
+        [data-theme="dark"] .theme-toggle .tt-label {
+            color: var(--neon-cyan);
+        }
+
+        /* ═════════════ Header ═════════════ */
+        header {
+            text-align: center;
+            padding: 40px 0 32px;
+            animation: fadeDown .6s ease both;
+        }
+        .hd-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--brand-primary-bg);
+            border: 1px solid var(--brand-primary-lt);
+            border-radius: 100px;
+            padding: 5px 18px;
+            font-family: var(--font-mono);
+            font-size: .72rem;
+            letter-spacing: 1.5px;
+            color: var(--brand-primary);
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            transition: all .3s ease;
+        }
+        .hd-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--brand-primary);
+            animation: blink 2.2s ease infinite;
+            transition: background .3s;
+        }
+        /* 暗色模式下 badge 发光 */
+        [data-theme="dark"] .hd-badge {
+            border-color: rgba(0, 229, 255, 0.25);
+            box-shadow: 0 0 12px rgba(0, 229, 255, 0.08);
+        }
+        [data-theme="dark"] .hd-badge::before {
+            background: var(--neon-cyan);
+            box-shadow: 0 0 8px var(--neon-cyan);
+        }
+        header h1 {
+            font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--txt-primary);
+            margin-bottom: 10px;
+            transition: color .3s;
+        }
+        header h1 span.accent-red {
+            color: var(--brand-primary);
+            transition: color .3s;
+        }
+        header h1 span.accent-amb {
+            color: var(--brand-accent);
+            transition: color .3s;
+        }
+        header p {
+            font-size: .88rem;
+            color: var(--txt-secondary);
+            letter-spacing: .5px;
+            transition: color .3s;
+        }
+        .brand-bar {
+            width: 100px;
+            height: 3px;
+            margin: 18px auto 0;
+            background: linear-gradient(90deg, var(--brand-primary), var(--brand-gold));
+            border-radius: 2px;
+            opacity: .7;
+            transition: all .3s;
+        }
+
+        /* ═════════════ Tank Switch ═════════════ */
+        .tank-switch {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin: 28px 0;
+            flex-wrap: wrap;
+        }
+        .ts-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 18px 32px;
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1.5px solid var(--bd);
+            border-radius: var(--r-xl);
+            cursor: pointer;
+            transition: all .25s ease;
+            font-family: var(--font-body);
+            color: var(--txt-secondary);
+            min-width: 200px;
+            box-shadow: var(--shadow-sm);
+        }
+        .ts-btn .ts-ico {
+            font-size: 2rem;
+        }
+        .ts-btn .ts-name {
+            font-weight: 700;
+            font-size: .9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .ts-btn .ts-sub {
+            font-size: .8rem;
+            color: var(--txt-muted);
+        }
+        .ts-btn:hover {
+            border-color: var(--brand-gold);
+            color: var(--brand-accent-dk);
+            box-shadow: 0 4px 20px var(--brand-gold-bg), 0 0 16px rgba(212, 152, 60, 0.1);
+            transform: translateY(-2px);
+        }
+        /* 暗色模式：悬停霓虹青光 */
+        [data-theme="dark"] .ts-btn:hover {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 20px var(--neon-cyan-dim), 0 4px 20px rgba(0, 0, 0, 0.3);
+            color: var(--neon-cyan);
+        }
+        .ts-btn.active {
+            border-color: var(--brand-primary);
+            color: var(--brand-primary-dk);
+            background: linear-gradient(135deg, var(--brand-primary-bg), var(--brand-gold-bg));
+            box-shadow: 0 4px 24px rgba(42, 168, 137, 0.12);
+        }
+        /* 暗色模式：激活态霓虹发光 */
+        [data-theme="dark"] .ts-btn.active {
+            border-color: var(--neon-purple);
+            color: var(--neon-purple);
+            box-shadow: 0 0 24px var(--neon-purple-dim),
+                0 4px 24px rgba(123, 97, 255, 0.15);
+            background: rgba(123, 97, 255, 0.06);
+        }
+        .ts-btn.active .ts-sub {
+            color: var(--brand-accent-dk);
+        }
+        [data-theme="dark"] .ts-btn.active .ts-sub {
+            color: rgba(123, 97, 255, 0.7);
+        }
+
+        /* ═════════════ Main Grid ═════════════ */
+        .grid2 {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+        @media (max-width: 1100px) {
+            .grid2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ═════════════ Card ═════════════ */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border: 1px solid var(--bd);
+            border-radius: var(--r-xl);
+            padding: 28px;
+            box-shadow: var(--shadow-md);
+            animation: fadeUp .6s ease both;
+            position: relative;
+            overflow: hidden;
+            transition: background .3s ease, border-color .3s ease, box-shadow .3s ease;
+        }
+        /* 暗色模式：卡片霓虹边框光晕 */
+        [data-theme="dark"] .card {
+            border-color: rgba(0, 229, 255, 0.08);
+        }
+        [data-theme="dark"] .card::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, rgba(0, 229, 255, 0.06), transparent, rgba(123, 97, 255, 0.06));
+            pointer-events: none;
+            z-index: 0;
+        }
+        .card > * {
+            position: relative;
+            z-index: 1;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--brand-primary), var(--brand-gold));
+            opacity: .65;
+            transition: background .3s;
+            z-index: 2;
+        }
+        /* 暗色模式：顶栏霓虹渐变 */
+        [data-theme="dark"] .card::before {
+            background: linear-gradient(90deg, var(--neon-cyan), var(--neon-purple));
+            opacity: .8;
+        }
+
+        /* 卡片呼吸光晕动画 */
+        @keyframes cardPulse {
+            0%, 100% { box-shadow: var(--shadow-md); }
+            50% { box-shadow: var(--shadow-lg), 0 0 30px rgba(0, 229, 255, 0.04); }
+        }
+        [data-theme="dark"] .card {
+            animation: fadeUp .6s ease both, cardPulse 4s ease-in-out infinite;
+        }
+
+        /* ═════════════ Card Title ═════════════ */
+        .ctitle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+        .ctitle .ico {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, var(--brand-primary-dk), var(--brand-primary));
+            border-radius: var(--r-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(42, 168, 137, 0.25);
+            color: #fff;
+            transition: all .3s;
+        }
+        /* 暗色模式：图标霓虹发光 */
+        [data-theme="dark"] .ctitle .ico {
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-cyan));
+            box-shadow: 0 0 16px var(--neon-cyan-dim), 0 2px 8px rgba(0, 0, 0, 0.3);
+        }
+        .ctitle-text .ctitle-main {
+            font-weight: 700;
+            font-size: .95rem;
+            letter-spacing: .5px;
+            color: var(--txt-primary);
+            transition: color .3s;
+        }
+        .ctitle-text .ctitle-sub {
+            font-size: .76rem;
+            color: var(--txt-muted);
+            margin-top: 1px;
+            transition: color .3s;
+        }
+
+        /* ═════════════ Section Label ═════════════ */
+        .slabel {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: .72rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--brand-accent-dk);
+            margin: 22px 0 14px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(199, 116, 42, 0.18);
+            transition: all .3s;
+        }
+        [data-theme="dark"] .slabel {
+            color: var(--neon-cyan);
+            border-bottom-color: rgba(0, 229, 255, 0.12);
+        }
+        .slabel::before {
+            content: '';
+            width: 3px;
+            height: 14px;
+            border-radius: 2px;
+            background: var(--brand-accent);
+            flex-shrink: 0;
+            transition: background .3s;
+        }
+        [data-theme="dark"] .slabel::before {
+            background: var(--neon-cyan);
+            box-shadow: 0 0 6px var(--neon-cyan);
+        }
+
+        /* ═════════════ Form ═════════════ */
+        .fg {
+            margin-bottom: 14px;
+        }
+        .fg label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: .85rem;
+            font-weight: 500;
+            color: var(--txt-secondary);
+            transition: color .3s;
+        }
+        .fg label small {
+            color: var(--txt-muted);
+            font-weight: 400;
+        }
+        .fg input,
+        .fg select {
+            width: 100%;
+            padding: 11px 14px;
+            background: var(--bg-input);
+            border: 1.5px solid var(--bd);
+            border-radius: var(--r-md);
+            color: var(--txt-primary);
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            line-height: 1.4;
+            transition: border-color .18s, box-shadow .18s, background .18s;
+            min-height: 44px;
+        }
+        /* 暗色模式：输入框发光聚焦 */
+        [data-theme="dark"] .fg input:focus,
+        [data-theme="dark"] .fg select:focus {
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.12), 0 0 20px rgba(0, 229, 255, 0.06);
+        }
+        .fg select {
+            appearance: none;
+            cursor: pointer;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='%232aa889'%3E%3Cpath d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            padding-right: 36px;
+        }
+        /* 暗色模式：下拉箭头变青 */
+        [data-theme="dark"] .fg select {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' fill='%2300E5FF'%3E%3Cpath d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+        }
+        .fg select option {
+            background: var(--bg-card-solid);
+            color: var(--txt-primary);
+        }
+        .fg input:focus,
+        .fg select:focus {
+            outline: none;
+            border-color: var(--brand-accent);
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(199, 116, 42, 0.12);
+        }
+        [data-theme="dark"] .fg input:focus,
+        [data-theme="dark"] .fg select:focus {
+            background: rgba(15, 22, 42, 0.8);
+        }
+        .fg input::placeholder {
+            color: var(--txt-placeholder);
+        }
+        .fg input.error {
+            border-color: var(--bd-error) !important;
+            box-shadow: 0 0 0 3px rgba(181, 73, 58, 0.1) !important;
+        }
+        [data-theme="dark"] .fg input.error {
+            border-color: #FF4D6D !important;
+            box-shadow: 0 0 0 3px rgba(255, 77, 109, 0.15) !important;
+        }
+        .fg-hint {
+            font-size: .76rem;
+            color: var(--err);
+            margin-top: 4px;
+            display: none;
+        }
+        .fg-hint.show {
+            display: block;
+        }
+
+        .row2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .row3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+
+        /* ═════════════ Head Info Box ═════════════ */
+        .head-info {
+            background: var(--brand-primary-bg);
+            border: 1px solid rgba(42, 168, 137, 0.18);
+            border-radius: var(--r-md);
+            padding: 12px 16px;
+            margin-bottom: 14px;
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            transition: all .3s;
+        }
+        [data-theme="dark"] .head-info {
+            background: rgba(0, 229, 255, 0.04);
+            border-color: rgba(0, 229, 255, 0.1);
+        }
+        .hi-item {
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+        }
+        .hi-label {
+            font-family: var(--font-mono);
+            font-size: .65rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--txt-muted);
+            transition: color .3s;
+        }
+        [data-theme="dark"] .hi-label {
+            color: rgba(136, 153, 170, 0.7);
+        }
+        .hi-val {
+            font-family: var(--font-mono);
+            font-size: .9rem;
+            font-weight: 600;
+            color: var(--brand-accent-dk);
+            transition: color .3s;
+        }
+        [data-theme="dark"] .hi-val {
+            color: var(--neon-cyan);
+        }
+
+        /* ═════════════ Calc Button — 科技版 ═════════════ */
+        .btn-calc {
+            width: 100%;
+            margin-top: 22px;
+            padding: 14px 20px;
+            background: linear-gradient(135deg, var(--brand-primary-dk), var(--brand-primary));
+            border: none;
+            border-radius: var(--r-md);
+            cursor: pointer;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: .5px;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 20px rgba(42, 168, 137, 0.28);
+            transition: all .25s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        /* 暗色模式：霓虹青按钮 */
+        [data-theme="dark"] .btn-calc {
+            background: linear-gradient(135deg, #006B80, #0088AA);
+            box-shadow: 0 4px 20px rgba(0, 229, 255, 0.15), 0 0 0 1px rgba(0, 229, 255, 0.2);
+        }
+        [data-theme="dark"] .btn-calc:hover:not(:disabled) {
+            box-shadow: 0 8px 32px rgba(0, 229, 255, 0.25), 0 0 30px rgba(0, 229, 255, 0.15);
+        }
+        .btn-calc::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.18), transparent);
+            transform: translateX(-100%);
+            transition: transform .5s ease;
+        }
+        .btn-calc:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(42, 168, 137, 0.35);
+        }
+        .btn-calc:hover:not(:disabled)::after {
+            transform: translateX(100%);
+        }
+        .btn-calc:active:not(:disabled) {
+            transform: translateY(0);
+        }
+        .btn-calc:disabled {
+            opacity: .7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-calc.live-mode {
+            animation: liveGlow 2s ease-in-out infinite;
+        }
+        @keyframes liveGlow {
+            0%, 100% { box-shadow: 0 4px 20px rgba(0, 229, 255, 0.15); }
+            50% { box-shadow: 0 4px 30px rgba(0, 229, 255, 0.35), 0 0 50px rgba(0, 229, 255, 0.1); }
+        }
+        .btn-calc .spin {
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255, 255, 255, 0.35);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+        }
+        .btn-calc.loading .spin {
+            display: block;
+        }
+        .btn-calc.loading .btn-text,
+        .btn-calc.loading .btn-live {
+            display: none;
+        }
+        .btn-calc .btn-live {
+            display: none;
+        }
+        .btn-calc.live-mode .btn-live {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-calc.live-mode .btn-text {
+            display: none;
+        }
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--neon-green, #00FF94);
+            animation: liveBlink .8s ease-in-out infinite;
+        }
+        @keyframes liveBlink {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: .3; transform: scale(.7); }
+        }
+        [data-theme="light"] .live-dot {
+            background: var(--ok);
+        }
+
+        /* ═════════════ Result Panel ═════════════ */
+        #rPlaceholder {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--txt-muted);
+        }
+        #rPlaceholder .rp-ico {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+            opacity: .3;
+        }
+        #rPlaceholder p {
+            font-family: var(--font-mono);
+            font-size: .82rem;
+            letter-spacing: .5px;
+        }
+        #rContent {
+            display: none;
+        }
+        #rContent.show {
+            display: block;
+            animation: fadeRight .5s ease both;
+        }
+
+        /* ═════════════ Hero Result ═════════════ */
+        .r-hero {
+            background: linear-gradient(135deg, var(--brand-primary-bg), var(--brand-gold-bg));
+            border: 1.5px solid rgba(42, 168, 137, 0.18);
+            border-radius: var(--r-lg);
+            padding: 28px 24px;
+            text-align: center;
+            margin-bottom: 18px;
+            position: relative;
+            overflow: hidden;
+            transition: all .3s;
+        }
+        [data-theme="dark"] .r-hero {
+            background: linear-gradient(135deg, rgba(123, 97, 255, 0.08), rgba(0, 229, 255, 0.05));
+            border-color: rgba(0, 229, 255, 0.15);
+            box-shadow: inset 0 0 30px rgba(0, 229, 255, 0.03);
+        }
+        .r-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center top, rgba(42, 168, 137, 0.04), transparent 70%);
+            pointer-events: none;
+        }
+        [data-theme="dark"] .r-hero::after {
+            background: radial-gradient(ellipse at center top, rgba(0, 229, 255, 0.05), transparent 70%);
+        }
+        .r-hero .rl {
+            font-family: var(--font-mono);
+            font-size: .72rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--txt-muted);
+            margin-bottom: 10px;
+            transition: color .3s;
+        }
+        .r-hero .rv {
+            font-family: var(--font-tech);
+            font-size: clamp(1.8rem, 4vw, 2.6rem);
+            font-weight: 700;
+            color: var(--brand-primary-dk);
+            transition: color .3s;
+            letter-spacing: 2px;
+        }
+        /* 暗色模式：数值霓虹青 */
+        [data-theme="dark"] .r-hero .rv {
+            color: var(--neon-cyan);
+            text-shadow: 0 0 20px rgba(0, 229, 255, 0.4);
+        }
+        .r-hero .ru {
+            font-size: .9rem;
+            color: var(--brand-accent-dk);
+            margin-top: 5px;
+            font-weight: 500;
+            transition: color .3s;
+        }
+        [data-theme="dark"] .r-hero .ru {
+            color: var(--neon-purple);
+        }
+
+        /* ═════════════ Result Items ═════════════ */
+        .rg3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .rg2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        @media (max-width: 700px) {
+            .rg3 { grid-template-columns: 1fr 1fr; }
+            .rg2 { grid-template-columns: 1fr; }
+        }
+        .ri {
+            background: var(--bg-card2);
+            border: 1px solid var(--bd);
+            border-radius: var(--r-md);
+            padding: 14px 16px;
+            transition: all .18s;
+        }
+        [data-theme="dark"] .ri {
+            background: rgba(15, 22, 42, 0.6);
+            border-color: rgba(0, 229, 255, 0.06);
+        }
+        .ri:hover {
+            border-color: var(--brand-gold);
+            background: var(--brand-gold-bg);
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-sm);
+        }
+        [data-theme="dark"] .ri:hover {
+            border-color: var(--neon-cyan);
+            background: rgba(0, 229, 255, 0.04);
+            box-shadow: 0 0 16px rgba(0, 229, 255, 0.08);
+        }
+        .ri .rl {
+            font-family: var(--font-mono);
+            font-size: .67rem;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: var(--txt-muted);
+            margin-bottom: 6px;
+            transition: color .3s;
+        }
+        .ri .rv {
+            font-family: var(--font-tech);
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--brand-accent-dk);
+            transition: color .3s;
+            letter-spacing: 1px;
+        }
+        /* 暗色模式：数值青/紫双色 */
+        [data-theme="dark"] .ri .rv {
+            color: var(--neon-cyan);
+        }
+        .ri .ru {
+            font-size: .72rem;
+            color: var(--txt-muted);
+            margin-top: 3px;
+            transition: color .3s;
+        }
+
+        /* ═════════════ Segment Badges ═════════════ */
+        .seg-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-family: var(--font-mono);
+            font-size: .72rem;
+            padding: 3px 10px;
+            border-radius: 100px;
+            font-weight: 500;
+        }
+        .seg-1 {
+            background: var(--seg1-bg);
+            border: 1px solid var(--seg1-bd);
+            color: var(--seg1-c);
+        }
+        .seg-2 {
+            background: var(--seg2-bg);
+            border: 1px solid var(--seg2-bd);
+            color: var(--seg2-c);
+        }
+        .seg-3 {
+            background: var(--seg3-bg);
+            border: 1px solid var(--seg3-bd);
+            color: var(--seg3-c);
+        }
+
+        /* ═════════════ Chart ═════════════ */
+        .chart-wrap {
+            background: var(--bg-card2);
+            border: 1px solid var(--bd);
+            border-radius: var(--r-md);
+            padding: 16px;
+            margin-bottom: 16px;
+            transition: all .3s;
+        }
+        [data-theme="dark"] .chart-wrap {
+            background: rgba(15, 22, 42, 0.6);
+            border-color: rgba(0, 229, 255, 0.08);
+        }
+        .chart-wrap canvas {
+            max-height: 280px;
+            width: 100% !important;
+        }
+
+        /* ═════════════ Table ═════════════ */
+        .tbl-wrap {
+            border: 1px solid var(--bd);
+            border-radius: var(--r-md);
+            overflow: hidden;
+            margin-bottom: 16px;
+            transition: all .3s;
+        }
+        [data-theme="dark"] .tbl-wrap {
+            border-color: rgba(0, 229, 255, 0.08);
+        }
+        .tbl-scroll {
+            max-height: 360px;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+        .tbl-scroll::-webkit-scrollbar { width: 5px; height: 5px; }
+        .tbl-scroll::-webkit-scrollbar-track { background: transparent; }
+        .tbl-scroll::-webkit-scrollbar-thumb { background: rgba(42, 168, 137, 0.35); border-radius: 3px; }
+        .tbl-scroll::-webkit-scrollbar-thumb:hover { background: var(--brand-primary); }
+        [data-theme="dark"] .tbl-scroll::-webkit-scrollbar-thumb { background: rgba(0, 229, 255, 0.2); }
+        [data-theme="dark"] .tbl-scroll::-webkit-scrollbar-thumb:hover { background: var(--neon-cyan); }
+        table.rtbl {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: var(--font-mono);
+        }
+        table.rtbl th {
+            position: sticky;
+            top: 0;
+            z-index: 2;
+            background: var(--brand-gold-bg);
+            color: var(--brand-accent-dk);
+            font-size: .72rem;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            padding: 10px 14px;
+            border-bottom: 2px solid rgba(231, 166, 66, 0.25);
+            text-align: left;
+            white-space: nowrap;
+            transition: all .3s;
+        }
+        [data-theme="dark"] table.rtbl th {
+            background: rgba(15, 22, 42, 0.95);
+            color: var(--neon-cyan);
+            border-bottom-color: rgba(0, 229, 255, 0.2);
+        }
+        table.rtbl td {
+            padding: 8px 14px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+            font-size: .82rem;
+            color: var(--txt-secondary);
+            white-space: nowrap;
+            transition: all .3s;
+        }
+        [data-theme="dark"] table.rtbl td {
+            border-bottom-color: rgba(0, 229, 255, 0.04);
+        }
+        table.rtbl tr:nth-child(even) td { background: var(--bg-stripe); }
+        [data-theme="dark"] table.rtbl tr:nth-child(even) td {
+            background: rgba(0, 229, 255, 0.02);
+        }
+        table.rtbl tr:last-child td { border-bottom: none; }
+        table.rtbl tr:hover td { background: var(--brand-gold-bg); color: var(--txt-primary); }
+        [data-theme="dark"] table.rtbl tr:hover td {
+            background: rgba(0, 229, 255, 0.04);
+            color: var(--neon-cyan);
+        }
+        table.rtbl td.vnum { color: var(--brand-accent-dk); font-weight: 600; }
+        table.rtbl td.wnum { color: var(--brand-primary); font-weight: 500; }
+        [data-theme="dark"] table.rtbl td.vnum { color: var(--neon-cyan); }
+        [data-theme="dark"] table.rtbl td.wnum { color: var(--neon-purple); }
+        table.rtbl td.seg { font-size: .68rem; }
+        table.rtbl td.seg span { padding: 2px 8px; border-radius: 100px; }
+
+        /* ═════════════ Export Buttons ═════════════ */
+        .exp-sec {
+            margin-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .exl {
+            font-family: var(--font-mono);
+            font-size: .72rem;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--txt-muted);
+            transition: color .3s;
+        }
+        .btn-sm {
+            padding: 9px 18px;
+            font-family: var(--font-body);
+            font-size: .85rem;
+            font-weight: 500;
+            border: 1.5px solid var(--bd);
+            border-radius: var(--r-sm);
+            background: var(--bg-card-solid);
+            color: var(--txt-secondary);
+            cursor: pointer;
+            transition: all .18s;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            min-height: 40px;
+        }
+        .btn-sm:hover {
+            color: var(--brand-accent-dk);
+            border-color: var(--brand-gold);
+            background: var(--brand-gold-bg);
+        }
+        [data-theme="dark"] .btn-sm:hover {
+            color: var(--neon-cyan);
+            border-color: var(--neon-cyan);
+            background: rgba(0, 229, 255, 0.04);
+        }
+        .btn-sm.xl:hover {
+            color: var(--brand-primary-dk);
+            border-color: var(--brand-primary);
+            background: var(--brand-primary-bg);
+        }
+        [data-theme="dark"] .btn-sm.xl:hover {
+            color: var(--neon-purple);
+            border-color: var(--neon-purple);
+            background: rgba(123, 97, 255, 0.06);
+        }
+
+        /* ═════════════ Footer ═════════════ */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            font-family: var(--font-mono);
+            font-size: .72rem;
+            color: var(--txt-muted);
+            letter-spacing: 1px;
+            border-top: 1px solid var(--bd);
+            transition: all .3s;
+        }
+        footer .f-brand { color: var(--brand-primary); font-weight: 600; transition: color .3s; }
+        footer .f-accent { color: var(--brand-accent-dk); transition: color .3s; }
+        [data-theme="dark"] footer .f-brand { color: var(--neon-purple); }
+        [data-theme="dark"] footer .f-accent { color: var(--neon-cyan); }
+
+        /* ═════════════ Toast ═════════════ */
+        .toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--txt-primary);
+            color: #fff;
+            border-radius: var(--r-md);
+            padding: 12px 24px;
+            font-family: var(--font-mono);
+            font-size: .85rem;
+            box-shadow: var(--shadow-lg);
+            z-index: 9999;
+            opacity: 0;
+            transition: all .3s ease;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast.ok { background: var(--ok); }
+        [data-theme="dark"] .toast.ok { background: var(--neon-green); }
+        .toast.err { background: var(--err); }
+        [data-theme="dark"] .toast.err { background: #FF4D6D; }
+
+        /* ═════════════ Back-to-top ═════════════ */
+        #backTop {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 44px;
+            height: 44px;
+            background: var(--brand-primary);
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 4px 16px rgba(42, 168, 137, 0.3);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all .25s ease;
+            z-index: 100;
+        }
+        #backTop.visible { display: flex; }
+        #backTop:hover { transform: scale(1.08); }
+        [data-theme="dark"] #backTop {
+            background: rgba(0, 229, 255, 0.15);
+            color: var(--neon-cyan);
+            border: 1.5px solid rgba(0, 229, 255, 0.3);
+            box-shadow: 0 4px 16px rgba(0, 229, 255, 0.15);
+        }
+        [data-theme="dark"] #backTop:hover {
+            background: rgba(0, 229, 255, 0.25);
+            box-shadow: 0 6px 24px rgba(0, 229, 255, 0.3);
+        }
+
+        /* ═════════════ Responsive ═════════════ */
+        @media (max-width: 1023px) and (min-width: 768px) {
+            .page { padding: 20px 16px 50px; }
+            header h1 { font-size: 1.6rem; }
+            .ts-btn { min-width: 160px; padding: 16px 24px; }
+        }
+
+        @media (max-width: 767px) {
+            .page { padding: 16px 12px 50px; }
+            header { padding: 28px 0 22px; }
+            header h1 { font-size: 1.25rem; letter-spacing: 1px; }
+            header p { font-size: .8rem; }
+            .hd-badge { font-size: .68rem; padding: 4px 14px; }
+            .tank-switch { gap: 12px; }
+            .ts-btn { min-width: 140px; padding: 14px 18px; flex: 1; }
+            .ts-btn .ts-ico { font-size: 1.6rem; }
+            .ts-btn .ts-name { font-size: .8rem; }
+            .card { padding: 20px 16px; border-radius: var(--r-lg); }
+            .ctitle .ico { width: 32px; height: 32px; font-size: .9rem; }
+            .row2 { grid-template-columns: 1fr; }
+            .row3 { grid-template-columns: 1fr 1fr; }
+            .rg3 { grid-template-columns: 1fr 1fr; }
+            .rg2 { grid-template-columns: 1fr; }
+            .r-hero .rv { font-size: 1.6rem; }
+            .exp-sec { gap: 8px; }
+            #backTop { bottom: 16px; right: 16px; }
+            .theme-toggle { top: 12px; right: 12px; }
+        }
+
+        /* ═════════════ Animations ═════════════ */
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeRight {
+            from { opacity: 0; transform: translateX(16px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: .25; }
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Canvas 粒子背景 -->
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- 主题切换 -->
+    <button class="theme-toggle" id="themeToggle" title="切换亮/暗主题" aria-label="切换主题">
+        <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <svg class="moon-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+        </svg>
+        <span class="tt-label" id="ttLabel">DARK</span>
+    </button>
+
+    <div class="page">
+        <!-- Header -->
+        <header>
+            <div class="hd-badge">TANK VOLUME CALCULATOR · VER 1.1 · 储罐容积计算系统</div>
+            <h1>
+                TANK VOLUME CALCULATOR
+                <span class="accent-amb">储罐容积计算</span>
+            </h1>
+            <p>立式 &amp; 卧式储罐 Vertical &amp; Horizontal &nbsp;|&nbsp; 椭圆形 · 碟型 · 半球形封头</p>
+            <div class="brand-bar"></div>
+        </header>
+
+        <!-- Tank Type Switch -->
+        <div class="tank-switch">
+            <button class="ts-btn active" id="btnHoriz" onclick="switchTank('horiz')">
+                <span class="ts-ico">🛢</span>
+                <span class="ts-name">HORIZONTAL TANK</span>
+                <span class="ts-sub">卧式储罐容积计算</span>
+            </button>
+            <button class="ts-btn" id="btnVert" onclick="switchTank('vert')">
+                <span class="ts-ico">🏗</span>
+                <span class="ts-name">VERTICAL TANK</span>
+                <span class="ts-sub">立式储罐容积计算</span>
+            </button>
+        </div>
+
+        <div class="grid2">
+            <!-- INPUT CARD -->
+            <div class="card">
+                <div class="ctitle">
+                    <span class="ico">📥</span>
+                    <div class="ctitle-text">
+                        <div class="ctitle-main">INPUT PARAMETERS</div>
+                        <div class="ctitle-sub">输入参数</div>
+                    </div>
+                </div>
+
+                <div class="slabel">① 基本参数 Basic Data</div>
+                <div class="row2">
+                    <div class="fg">
+                        <label>储罐位号 Tag No.</label>
+                        <input type="text" id="tagNo" placeholder="TK-001">
+                    </div>
+                    <div class="fg">
+                        <label>存储介质 Fluid</label>
+                        <input type="text" id="fluid" placeholder="Water / 水">
+                    </div>
+                </div>
+                <div class="fg">
+                    <label>介质密度 ρ (kg/m³)</label>
+                    <input type="number" id="rho" value="1000" min="0.01" step="1">
+                    <div class="fg-hint" id="hint-rho">请输入大于 0 的密度值</div>
+                </div>
+
+                <div class="slabel">② 储罐尺寸 Tank Dimensions</div>
+                <div class="fg">
+                    <label>封头类型 Head Type</label>
+                    <select id="headType" onchange="onHeadChange()">
+                        <option value="elliptic">椭圆形封头 Ellipsoidal (C=0.5)</option>
+                        <option value="dish">碟型封头 Torispherical (C=0.255)</option>
+                        <option value="hemi">半球形封头 Hemispherical (C=1.0)</option>
+                    </select>
+                </div>
+                <div class="head-info" id="headInfo">
+                    <div class="hi-item"><span class="hi-label">封头系数 C</span><span class="hi-val" id="hiC">0.5</span></div>
+                    <div class="hi-item"><span class="hi-label">封头高度</span><span class="hi-val" id="hiH">= C × R</span></div>
+                    <div class="hi-item"><span class="hi-label">单封头体积</span><span class="hi-val" id="hiV">= (π/3)·R²·C·R × 修正</span></div>
+                </div>
+
+                <div class="fg">
+                    <label>储罐内径 D (m)</label>
+                    <input type="number" id="tanD" value="2.8" min="0.01" step="0.01" oninput="updateDerived(); triggerRealtime()">
+                    <div class="fg-hint" id="hint-D">请输入大于 0 的内径值</div>
+                </div>
+                <div class="row2">
+                    <div class="fg">
+                        <label>容器直筒长度 L (m) <small>不含封头</small></label>
+                        <input type="number" id="tanL" value="7.58" min="0" step="0.01" oninput="updateDerived(); triggerRealtime()">
+                        <div class="fg-hint" id="hint-L">请输入大于等于 0 的长度</div>
+                    </div>
+                    <div class="fg">
+                        <label>直边长度 SF (mm)</label>
+                        <input type="number" id="tanSF" value="40" min="0" step="1" oninput="updateDerived(); triggerRealtime()">
+                    </div>
+                </div>
+                <div class="head-info" id="derivedInfo">
+                    <div class="hi-item"><span class="hi-label">半径 R (m)</span><span class="hi-val" id="dR">1.400</span></div>
+                    <div class="hi-item"><span class="hi-label">总长 SL (m)</span><span class="hi-val" id="dSL">—</span></div>
+                    <div class="hi-item"><span class="hi-label">总高 H_max (m)</span><span class="hi-val" id="dHmax">—</span></div>
+                    <div class="hi-item"><span class="hi-label">满罐容积 V_full (m³)</span><span class="hi-val" id="dVfull">—</span></div>
+                </div>
+
+                <div class="slabel">③ 给定液位计算 Single Level Calc</div>
+                <div class="fg">
+                    <label>液位高度 h (m)</label>
+                    <input type="number" id="hInput" value="1.4" min="0" step="0.01" oninput="triggerRealtime()">
+                    <div class="fg-hint" id="hint-h">液位高度不能为负</div>
+                </div>
+
+                <div class="slabel">④ 液位-容积对应表 Level-Volume Table</div>
+                <div class="row2">
+                    <div class="fg">
+                        <label>起始液位 h_start (m)</label>
+                        <input type="number" id="hStart" value="0" min="0" step="0.01">
+                    </div>
+                    <div class="fg">
+                        <label>液位分度 Δh (m)</label>
+                        <input type="number" id="hStep" value="0.1" min="0.001" step="0.01">
+                    </div>
+                </div>
+
+                <button class="btn-calc" id="btnCalc" onclick="calc()">
+                    <div class="spin"></div>
+                    <span class="btn-text">▶ EXECUTE CALCULATION · 立即计算</span>
+                    <span class="btn-live"><span class="live-dot"></span>REAL-TIME CALCULATING...</span>
+                </button>
+            </div>
+
+            <!-- RESULT CARD -->
+            <div class="card">
+                <div class="ctitle">
+                    <span class="ico">📊</span>
+                    <div class="ctitle-text">
+                        <div class="ctitle-main">ANALYSIS RESULTS</div>
+                        <div class="ctitle-sub">计算结果</div>
+                    </div>
+                </div>
+
+                <div id="rPlaceholder">
+                    <div class="rp-ico">⬡</div>
+                    <p>AWAITING INPUT // 请输入参数并执行计算</p>
+                </div>
+
+                <div id="rContent">
+                    <div class="r-hero">
+                        <div class="rl">LIQUID VOLUME AT GIVEN LEVEL // 给定液位对应容积</div>
+                        <div class="rv" id="rVol">—</div>
+                        <div class="ru">m³</div>
+                    </div>
+
+                    <div class="rg3" id="rGrid3">
+                        <div class="ri"><div class="rl">容积 (L)</div><div class="rv" id="rVolL">—</div></div>
+                        <div class="ri"><div class="rl">液重 (T)</div><div class="rv" id="rWeight">—</div></div>
+                        <div class="ri"><div class="rl">满罐占比</div><div class="rv" id="rFill">—</div><div class="ru">%</div></div>
+                    </div>
+
+                    <div class="rg2">
+                        <div class="ri"><div class="rl">满罐容积 V_full (m³)</div><div class="rv" id="rVfull">—</div></div>
+                        <div class="ri" id="rSegRow">
+                            <div class="rl">所在段位 Segment</div>
+                            <div id="rSeg">—</div>
+                        </div>
+                    </div>
+
+                    <div class="slabel" id="slGeo">几何参数 Geometry</div>
+                    <div class="rg3" id="rGeoGrid">
+                        <div class="ri"><div class="rl">直筒段体积 V_cyl (m³)</div><div class="rv" id="rVcyl">—</div></div>
+                        <div class="ri"><div class="rl">单封头体积 V_head (m³)</div><div class="rv" id="rVhead">—</div></div>
+                        <div class="ri"><div class="rl">双封头合计 V_2heads (m³)</div><div class="rv" id="rV2h">—</div></div>
+                    </div>
+
+                    <div class="slabel">液位-容积曲线 Level-Volume Curve</div>
+                    <div class="chart-wrap">
+                        <canvas id="volChart"></canvas>
+                    </div>
+
+                    <div class="slabel">液位-容积对应表 Level-Volume Table</div>
+                    <div class="tbl-wrap">
+                        <div class="tbl-scroll">
+                            <table class="rtbl" id="volTable">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>液位 h (m)</th>
+                                        <th>容积 V (m³)</th>
+                                        <th>容积 V (L)</th>
+                                        <th>液重 W (T)</th>
+                                        <th>满罐占比 (%)</th>
+                                        <th id="segColHead">段位</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="volTBody"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="exp-sec">
+                        <div class="exl">EXPORT RESULTS · 导出结果</div>
+                        <button class="btn-sm xl" onclick="exportExcel()">📊 Excel 明细</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            TANK VOLUME CALCULATOR 储罐容积计算系统 V2.3 &nbsp;|&nbsp;
+            <span class="f-brand">Vertical &amp; Horizontal</span> &nbsp;|&nbsp;
+            <span class="f-accent">椭圆形 / 碟型 / 半球形封头</span>
+        </footer>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Back to Top -->
+    <button id="backTop" title="回到顶部" onclick="window.scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+    <script>
+        /* ══════════════════════════════════════
+           V2.3 科技感增强 — 新增功能模块
+           ⚠️ 计算逻辑与 V1.0 完全一致
+        ══════════════════════════════════════ */
+
+        /* ═══════════════
+           Theme Toggle
+        ═══════════════ */
+        const themeToggle = document.getElementById('themeToggle');
+        const ttLabel = document.getElementById('ttLabel');
+
+        function applyTheme(theme) {
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('tank-calc-theme', theme);
+            ttLabel.textContent = theme === 'dark' ? 'LIGHT' : 'DARK';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const current = document.documentElement.getAttribute('data-theme') || 'light';
+            applyTheme(current === 'dark' ? 'light' : 'dark');
+        });
+
+        // 恢复保存的主题
+        const savedTheme = localStorage.getItem('tank-calc-theme');
+        if (savedTheme) applyTheme(savedTheme);
+
+        /* ═══════════════
+           Canvas 粒子背景
+        ═══════════════ */
+        (function initBgCanvas() {
+            const canvas = document.getElementById('bgCanvas');
+            const ctx = canvas.getContext('2d');
+            let W, H, particles = [];
+            const PARTICLE_COUNT = 55;
+            const DARK_THRESHOLD = 50; // 亮度阈值判断暗色模式
+
+            function resize() {
+                W = canvas.width = window.innerWidth;
+                H = canvas.height = window.innerHeight;
+            }
+            resize();
+            window.addEventListener('resize', resize);
+
+            // 粒子类
+            class Particle {
+                constructor() { this.reset(true); }
+                reset(initial) {
+                    this.x = Math.random() * W;
+                    this.y = initial ? Math.random() * H : H + 10;
+                    this.r = Math.random() * 1.5 + 0.3;
+                    this.vy = -(Math.random() * 0.3 + 0.08);
+                    this.vx = (Math.random() - 0.5) * 0.2;
+                    this.alpha = Math.random() * 0.5 + 0.1;
+                    this.pulse = Math.random() * Math.PI * 2;
+                    this.pulseSpeed = Math.random() * 0.02 + 0.005;
+                    // 颜色：青或紫随机
+                    this.color = Math.random() > 0.6 ? '0,229,255' : '123,97,255';
+                }
+                update() {
+                    this.y += this.vy;
+                    this.x += this.vx;
+                    this.pulse += this.pulseSpeed;
+                    if (this.y < -10) this.reset(false);
+                }
+                draw() {
+                    const a = this.alpha * (0.5 + 0.5 * Math.sin(this.pulse));
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${this.color},${a})`;
+                    ctx.fill();
+                    // 光晕
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.r * 3, 0, Math.PI * 2);
+                    ctx.fillStyle = `rgba(${this.color},${a * 0.2})`;
+                    ctx.fill();
+                }
+            }
+
+            for (let i = 0; i < PARTICLE_COUNT; i++) {
+                particles.push(new Particle());
+            }
+
+            function animate() {
+                // 检测暗色模式
+                const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+                if (!isDark) {
+                    ctx.clearRect(0, 0, W, H);
+                    requestAnimationFrame(animate);
+                    return;
+                }
+
+                ctx.clearRect(0, 0, W, H);
+                particles.forEach(p => { p.update(); p.draw(); });
+                requestAnimationFrame(animate);
+            }
+            animate();
+
+            // 主题切换时也重新触发动画（上面已内联检测）
+        })();
+
+        /* ═══════════════
+           Back To Top
+        ═══════════════ */
+        window.addEventListener('scroll', function() {
+            const btn = document.getElementById('backTop');
+            if (window.scrollY > 300) { btn.classList.add('visible'); }
+            else { btn.classList.remove('visible'); }
+        });
+
+        /* ═══════════════
+           Toast
+        ═══════════════ */
+        function toast(msg, type = 'ok') {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.className = 'toast ' + type;
+            void t.offsetWidth;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2600);
+        }
+
+        /* ═══════════════
+           数字跳动动画
+        ═══════════════ */
+        function animateValue(element, start, end, duration, decimals, suffix) {
+            if (!element) return;
+            const startTime = performance.now();
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+            function step(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                // easeOutExpo
+                const eased = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                const current = start + (end - start) * eased;
+                element.textContent = current.toFixed(decimals) + (suffix || '');
+                if (progress < 1) requestAnimationFrame(step);
+            }
+            requestAnimationFrame(step);
+        }
+
+        /* ═══════════════
+           状态 & 实时计算
+        ═══════════════ */
+        let tankMode = 'horiz';
+        let volChartInst = null;
+        let lastResult = null;
+        let realtimeTimer = null;
+        let isLive = false;
+        // 存储上一次显示的值（用于动画）
+        let prevValues = {};
+
+        const HEAD_PARAMS = {
+            elliptic: { C: 0.5, label: '椭圆形封头 Ellipsoidal', desc: 'C=0.5, 标准2:1椭圆封头' },
+            dish: { C: 0.255, label: '碟型封头 Torispherical', desc: 'C=0.255, 标准碟型封头' },
+            hemi: { C: 1.0, label: '半球形封头 Hemispherical', desc: 'C=1.0, 半球形封头' },
+        };
+
+        function switchTank(mode) {
+            tankMode = mode;
+            document.getElementById('btnHoriz').classList.toggle('active', mode === 'horiz');
+            document.getElementById('btnVert').classList.toggle('active', mode === 'vert');
+            document.getElementById('segColHead').style.display = mode === 'vert' ? '' : 'none';
+            document.getElementById('rSegRow').style.display = mode === 'vert' ? '' : 'none';
+            updateDerived();
+            triggerRealtime();
+        }
+
+        function onHeadChange() { updateDerived(); triggerRealtime(); }
+
+        function updateDerived() {
+            const D = parseFloat(document.getElementById('tanD').value) || 0;
+            const L = parseFloat(document.getElementById('tanL').value) || 0;
+            const SF = (parseFloat(document.getElementById('tanSF').value) || 0) / 1000;
+            const ht = document.getElementById('headType').value;
+            const hp = HEAD_PARAMS[ht];
+            const R = D / 2;
+            const C = hp.C;
+
+            document.getElementById('hiC').textContent = C.toFixed(3);
+            document.getElementById('hiH').textContent = `${(C*R).toFixed(4)} m`;
+            const Vh = calcHeadVol(R, C);
+            document.getElementById('hiV').textContent = `${Vh.toFixed(4)} m³`;
+            document.getElementById('dR').textContent = R.toFixed(4) + ' m';
+
+            if (tankMode === 'horiz') {
+                const SL = L + 2 * SF;
+                const Hmax = D;
+                const Vfull = calcHorizVol(R, C, SF, L, D);
+                document.getElementById('dSL').textContent = SL.toFixed(4) + ' m';
+                document.getElementById('dHmax').textContent = Hmax.toFixed(4) + ' m';
+                document.getElementById('dVfull').textContent = Vfull.toFixed(4) + ' m³';
+            } else {
+                const Hmax = L + 2 * C * R;
+                const Vfull = calcVertVol(R, C, SF, L, Hmax);
+                document.getElementById('dSL').textContent = '—';
+                document.getElementById('dHmax').textContent = Hmax.toFixed(4) + ' m';
+                document.getElementById('dVfull').textContent = Vfull.toFixed(4) + ' m³';
+            }
+        }
+
+        /* ── 实时计算触发器 ── */
+        function triggerRealtime() {
+            if (realtimeTimer) clearTimeout(realtimeTimer);
+            realtimeTimer = setTimeout(() => {
+                // 实时计算只更新数值，不需要完整 UI 重建
+                const D = parseFloat(document.getElementById('tanD').value);
+                const L = parseFloat(document.getElementById('tanL').value);
+                const SF = (parseFloat(document.getElementById('tanSF').value) || 0) / 1000;
+                const rho = parseFloat(document.getElementById('rho').value);
+                const h_in = parseFloat(document.getElementById('hInput').value);
+
+                if (!D || D <= 0 || isNaN(L) || L < 0 || !rho || rho <= 0) return;
+                if (h_in < 0) return;
+
+                const ht = document.getElementById('headType').value;
+                const hp = HEAD_PARAMS[ht];
+                const C = hp.C;
+                const R = D / 2;
+                let H_max, V_full, V_at_h;
+
+                if (tankMode === 'horiz') {
+                    H_max = D;
+                    V_full = calcHorizVol(R, C, SF, L, D);
+                    V_at_h = calcHorizVol(R, C, SF, L, Math.min(h_in, H_max));
+                } else {
+                    const CR = C * R;
+                    H_max = L + 2 * CR;
+                    V_full = calcVertVol(R, C, SF, L, H_max);
+                    V_at_h = calcVertVol(R, C, SF, L, Math.min(h_in, H_max));
+                }
+
+                const W_at_h = V_at_h * rho / 1000;
+                const fill_pct = V_full > 0 ? (V_at_h / V_full * 100) : 0;
+
+                // 跳动动画更新数值
+                animateValue(document.getElementById('rVol'), parseFloat(prevValues.rVol) || 0, V_at_h, 400, 6, '');
+                animateValue(document.getElementById('rVolL'), parseFloat(prevValues.rVolL) || 0, V_at_h * 1000, 400, 2, ' L');
+                animateValue(document.getElementById('rWeight'), parseFloat(prevValues.rWeight) || 0, W_at_h, 400, 4, ' T');
+                animateValue(document.getElementById('rFill'), parseFloat(prevValues.rFill) || 0, fill_pct, 400, 2, '');
+
+                // 更新 prevValues
+                prevValues.rVol = V_at_h.toFixed(6);
+                prevValues.rVolL = (V_at_h * 1000).toFixed(2);
+                prevValues.rWeight = W_at_h.toFixed(4);
+                prevValues.rFill = fill_pct.toFixed(2);
+
+                // 激活 live 模式
+                if (!isLive) {
+                    isLive = true;
+                    document.getElementById('btnCalc').classList.add('live-mode');
+                }
+
+                // 显示结果面板
+                document.getElementById('rPlaceholder').style.display = 'none';
+                document.getElementById('rContent').classList.add('show');
+
+            }, 300);
+        }
+
+        /* ══════════════════════════════
+           CORE CALCULATION FUNCTIONS
+           ⚠️ 以下函数与 V1.0 完全一致，禁止修改！
+        ══════════════════════════════ */
+
+        function calcHeadVol(R, C) {
+            return (2 / 3) * Math.PI * C * R * R * R;
+        }
+
+        function segArea(r, h) {
+            if (h <= 0) return 0;
+            if (h >= 2 * r) return Math.PI * r * r;
+            const cosv = Math.max(-1, Math.min(1, (r - h) / r));
+            return r * r * Math.acos(cosv) - (r - h) * Math.sqrt(Math.max(0, 2 * r * h - h * h));
+        }
+
+        function calcHorizOneHeadVol(R, C, h_liq) {
+            const CR = C * R;
+            const n = 50;
+            const dt = 1.0 / n;
+            let s = 0;
+            for (let i = 0; i <= n; i++) {
+                const t = i * dt;
+                const rx = R * Math.sqrt(Math.max(0, 1 - t * t));
+                const h_sec = h_liq - R + rx;
+                const fa = segArea(rx, h_sec);
+                const w = (i === 0 || i === n) ? 1 : (i % 2 === 1 ? 4 : 2);
+                s += w * fa;
+            }
+            return s * CR * dt / 3;
+        }
+
+        function calcHorizVol(R, C, SF, L, h_liq) {
+            if (h_liq <= 0) return 0;
+            const D = 2 * R;
+            if (h_liq > D) h_liq = D;
+            const A_seg = segArea(R, h_liq);
+            const SL = L + 2 * SF;
+            const V_cyl_part = A_seg * SL;
+            const V_head_part = 2 * calcHorizOneHeadVol(R, C, h_liq);
+            return V_cyl_part + V_head_part;
+        }
+
+        function calcVertSegHeadVol(R, C, h) {
+            if (h <= 0) return 0;
+            const CR = C * R;
+            if (h > CR) h = CR;
+            return Math.PI * h * h * (3 * CR - h) / (3 * C * C);
+        }
+
+        function calcVertVol(R, C, SF, L, h_liq) {
+            if (h_liq <= 0) return 0;
+            const CR = C * R;
+            const H_max = L + 2 * CR;
+            if (h_liq > H_max) h_liq = H_max;
+            const V_head_full = calcHeadVol(R, C);
+            const V_cyl_full = Math.PI * R * R * L;
+            if (h_liq <= CR) {
+                return calcVertSegHeadVol(R, C, h_liq);
+            } else if (h_liq <= L + CR) {
+                return V_head_full + Math.PI * R * R * (h_liq - CR);
+            } else {
+                const h_top = h_liq - L - CR;
+                const V_top = calcVertSegHeadVol(R, C, h_top);
+                return V_head_full + V_cyl_full + V_top;
+            }
+        }
+
+        function getVertSeg(R, C, L, h) {
+            const CR = C * R;
+            if (h <= CR) return { label: '第1段 下封头', cls: 'seg-1' };
+            if (h <= L + CR) return { label: '第2段 直筒', cls: 'seg-2' };
+            if (h <= L + 2 * CR) return { label: '第3段 上封头', cls: 'seg-3' };
+            return { label: '超出范围', cls: '' };
+        }
+
+        /* ═══════════════
+           Input Validation
+        ═══════════════ */
+        function setFieldError(inputId, hintId, hasError) {
+            const el = document.getElementById(inputId);
+            const hint = document.getElementById(hintId);
+            if (hasError) { el.classList.add('error'); hint.classList.add('show'); }
+            else { el.classList.remove('error'); hint.classList.remove('show'); }
+        }
+
+        /* ═══════════
+           MAIN CALC
+        ═════════ */
+        function calc() {
+            const D = parseFloat(document.getElementById('tanD').value);
+            const L = parseFloat(document.getElementById('tanL').value);
+            const SF = (parseFloat(document.getElementById('tanSF').value) || 0) / 1000;
+            const rho = parseFloat(document.getElementById('rho').value);
+            const h_in = parseFloat(document.getElementById('hInput').value);
+            const hSt = parseFloat(document.getElementById('hStart').value) || 0;
+            const hDt = parseFloat(document.getElementById('hStep').value) || 0.1;
+            const ht = document.getElementById('headType').value;
+            const hp = HEAD_PARAMS[ht];
+            const C = hp.C;
+
+            let hasErr = false;
+            setFieldError('tanD', 'hint-D', !D || D <= 0);
+            setFieldError('tanL', 'hint-L', L === undefined || L < 0 || isNaN(L));
+            setFieldError('rho', 'hint-rho', !rho || rho <= 0);
+            setFieldError('hInput', 'hint-h', h_in < 0);
+
+            if (!D || D <= 0 || isNaN(L) || L < 0 || !rho || rho <= 0) {
+                toast('⚠️ 请填写完整且正确的参数', 'err');
+                return;
+            }
+            if (h_in < 0) {
+                toast('⚠️ 液位高度不能为负', 'err');
+                return;
+            }
+
+            // 取消实时计算 pending
+            if (realtimeTimer) clearTimeout(realtimeTimer);
+
+            const btn = document.getElementById('btnCalc');
+            btn.classList.add('loading');
+            btn.disabled = true;
+
+            setTimeout(() => {
+                try {
+                    _doCalc(D, L, SF, rho, h_in, hSt, hDt, ht, hp, C);
+                } finally {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    // 完成后重新启动实时监听
+                    isLive = false;
+                    btn.classList.remove('live-mode');
+                }
+            }, 30);
+        }
+
+        function _doCalc(D, L, SF, rho, h_in, hSt, hDt, ht, hp, C) {
+            const R = D / 2;
+            let H_max, V_full, V_at_h, V_head, V_cyl, V_2h;
+
+            if (tankMode === 'horiz') {
+                H_max = D;
+                V_full = calcHorizVol(R, C, SF, L, D);
+                V_at_h = calcHorizVol(R, C, SF, L, Math.min(h_in, H_max));
+                V_head = calcHeadVol(R, C);
+                V_cyl = Math.PI * R * R * (L + 2 * SF);
+                V_2h = 2 * V_head;
+            } else {
+                const CR = C * R;
+                H_max = L + 2 * CR;
+                V_full = calcVertVol(R, C, SF, L, H_max);
+                V_at_h = calcVertVol(R, C, SF, L, Math.min(h_in, H_max));
+                V_head = calcHeadVol(R, C);
+                V_cyl = Math.PI * R * R * L;
+                V_2h = 2 * V_head;
+            }
+
+            const W_at_h = V_at_h * rho / 1000;
+            const fill_pct = V_full > 0 ? (V_at_h / V_full * 100) : 0;
+
+            // 动画更新主数值
+            animateValue(document.getElementById('rVol'), 0, V_at_h, 600, 6, '');
+            animateValue(document.getElementById('rVolL'), 0, V_at_h * 1000, 600, 2, ' L');
+            animateValue(document.getElementById('rWeight'), 0, W_at_h, 600, 4, ' T');
+            animateValue(document.getElementById('rFill'), 0, fill_pct, 600, 2, '');
+
+            // 存储 prevValues
+            prevValues.rVol = V_at_h.toFixed(6);
+            prevValues.rVolL = (V_at_h * 1000).toFixed(2);
+            prevValues.rWeight = W_at_h.toFixed(4);
+            prevValues.rFill = fill_pct.toFixed(2);
+
+            document.getElementById('rVfull').textContent = V_full.toFixed(6);
+            document.getElementById('rVcyl').textContent = V_cyl.toFixed(4);
+            document.getElementById('rVhead').textContent = V_head.toFixed(4);
+            document.getElementById('rV2h').textContent = V_2h.toFixed(4);
+
+            if (tankMode === 'vert') {
+                const seg = getVertSeg(R, C, L, Math.min(h_in, H_max));
+                document.getElementById('rSeg').innerHTML =
+                    `<span class="seg-badge ${seg.cls}">${seg.label}</span>`;
+                document.getElementById('rSegRow').style.display = '';
+                document.getElementById('segColHead').style.display = '';
+            } else {
+                document.getElementById('rSegRow').style.display = 'none';
+                document.getElementById('segColHead').style.display = 'none';
+            }
+
+            // 表格数据
+            const rows = [];
+            let h_cur = hSt;
+            let idx = 1;
+            const step = Math.max(0.001, hDt);
+            while (h_cur <= H_max + 1e-9) {
+                const hv = Math.min(h_cur, H_max);
+                let V_row, seg_row = '';
+                if (tankMode === 'horiz') {
+                    V_row = calcHorizVol(R, C, SF, L, hv);
+                } else {
+                    V_row = calcVertVol(R, C, SF, L, hv);
+                    const sg = getVertSeg(R, C, L, hv);
+                    seg_row = `<span class="seg-badge ${sg.cls}">${sg.label}</span>`;
+                }
+                const W_row = V_row * rho / 1000;
+                const fp_row = V_full > 0 ? (V_row / V_full * 100) : 0;
+                rows.push({ idx, h: hv, V: V_row, Vl: V_row * 1000, W: W_row, fp: fp_row, seg: seg_row });
+                idx++;
+                h_cur = Math.round((h_cur + step) * 1e6) / 1e6;
+                if (rows.length > 2000) break;
+            }
+            if (rows.length === 0 || Math.abs(rows[rows.length - 1].h - H_max) > 1e-6) {
+                const V_row = V_full;
+                const W_row = V_row * rho / 1000;
+                const seg_row = tankMode === 'vert' ?
+                    `<span class="seg-badge seg-3">满罐</span>` : '';
+                rows.push({ idx, h: H_max, V: V_row, Vl: V_row * 1000, W: W_row, fp: 100, seg: seg_row });
+            }
+
+            const tbody = document.getElementById('volTBody');
+            tbody.innerHTML = '';
+            rows.forEach(r => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${r.idx}</td>
+                    <td>${r.h.toFixed(3)}</td>
+                    <td class="vnum">${r.V.toFixed(6)}</td>
+                    <td class="vnum">${r.Vl.toFixed(2)}</td>
+                    <td class="wnum">${r.W.toFixed(4)}</td>
+                    <td>${r.fp.toFixed(2)}</td>
+                    ${tankMode==='vert' ? `<td class="seg">${r.seg}</td>` : `<td style="display:none"></td>`}
+                `;
+                tbody.appendChild(tr);
+            });
+
+            renderChart(rows, H_max);
+
+            document.getElementById('rPlaceholder').style.display = 'none';
+            document.getElementById('rContent').classList.add('show');
+
+            lastResult = {
+                rows, R, C, SF, L, D, rho, tankMode, ht,
+                H_max, V_full, step,
+                tagNo: document.getElementById('tagNo').value,
+                fluid: document.getElementById('fluid').value
+            };
+
+            toast('✅ 计算完成', 'ok');
+        }
+
+        /* ══════════
+           Chart
+        ═════════ */
+        function renderChart(rows, H_max) {
+            const labels = rows.map(r => r.h.toFixed(3));
+            const data = rows.map(r => r.V);
+            const fpData = rows.map(r => r.fp);
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+
+            if (volChartInst) { volChartInst.destroy(); volChartInst = null; }
+
+            const ctx = document.getElementById('volChart').getContext('2d');
+
+            const primaryColor = isDark ? '0,229,255' : '139,66,57';
+            const accentColor = isDark ? '123,97,255' : '199,116,42';
+            const bgColor = isDark ? 'rgba(0,229,255,0.04)' : 'rgba(139,66,57,0.06)';
+            const gridColor = isDark ? 'rgba(0,229,255,0.06)' : 'rgba(180,165,150,0.18)';
+            const txtColor = isDark ? '#8899AA' : '#5C4F4B';
+            const mutedColor = isDark ? '#4A5568' : '#8A7D78';
+
+            volChartInst = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels,
+                    datasets: [{
+                        label: '容积 V (m³)',
+                        data,
+                        borderColor: `rgba(${primaryColor},0.8)`,
+                        backgroundColor: bgColor,
+                        borderWidth: 2.5,
+                        pointRadius: 0,
+                        fill: true,
+                        tension: .4,
+                        yAxisID: 'y',
+                    }, {
+                        label: '满罐占比 (%)',
+                        data: fpData,
+                        borderColor: `rgba(${accentColor},0.7)`,
+                        borderDash: [5, 4],
+                        borderWidth: 1.8,
+                        pointRadius: 0,
+                        fill: false,
+                        tension: .4,
+                        yAxisID: 'y2',
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: txtColor,
+                                font: { family: 'JetBrains Mono', size: 11 }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: isDark ? 'rgba(11,15,21,0.95)' : 'rgba(62,50,48,0.95)',
+                            borderColor: `rgba(${primaryColor},0.3)`,
+                            borderWidth: 1,
+                            titleColor: isDark ? '#00E5FF' : '#D4983C',
+                            bodyColor: isDark ? '#E2EAF2' : '#F5EDE4',
+                            titleFont: { family: 'JetBrains Mono', size: 11 },
+                            bodyFont: { family: 'JetBrains Mono', size: 11 },
+                            callbacks: {
+                                title: items => `液位 h = ${items[0].label} m`,
+                                label: item => item.datasetIndex === 0 ?
+                                    ` V = ${item.raw.toFixed(4)} m³` :
+                                    ` 占比 = ${item.raw.toFixed(2)} %`
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            ticks: { color: mutedColor, font: { family: 'JetBrains Mono', size: 10 }, maxTicksLimit: 12 },
+                            grid: { color: gridColor },
+                            title: { display: true, text: '液位 h (m)', color: txtColor, font: { size: 11, family: 'JetBrains Mono' } }
+                        },
+                        y: {
+                            position: 'left',
+                            ticks: { color: mutedColor, font: { family: 'JetBrains Mono', size: 10 } },
+                            grid: { color: gridColor },
+                            title: { display: true, text: 'V (m³)', color: txtColor, font: { size: 11 } }
+                        },
+                        y2: {
+                            position: 'right',
+                            ticks: { color: mutedColor, font: { family: 'JetBrains Mono', size: 10 }, callback: v => v + '%' },
+                            grid: { drawOnChartArea: false },
+                            title: { display: true, text: '占比 (%)', color: txtColor, font: { size: 11 } },
+                            min: 0, max: 100,
+                        }
+                    }
+                }
+            });
+        }
+
+        /* ══════════
+           Export Excel
+        ═════════ */
+        function exportExcel() {
+            if (!lastResult) { toast('⚠️ 请先执行计算', 'err'); return; }
+            const r = lastResult;
+            const tankLabel = r.tankMode === 'horiz' ? '卧式储罐' : '立式储罐';
+            const headLabel = HEAD_PARAMS[r.ht].label;
+
+            const info = [
+                ['储罐容积计算报告', '', '', '', ''],
+                [''],
+                ['储罐类型', tankLabel],
+                ['封头类型', headLabel],
+                ['储罐位号', r.tagNo || '—'],
+                ['存储介质', r.fluid || '—'],
+                ['介质密度 ρ', r.rho, 'kg/m³'],
+                ['储罐内径 D', r.D, 'm'],
+                ['半径 R', r.R, 'm'],
+                ['直筒长度 L', r.L, 'm'],
+                ['封头系数 C', r.C],
+                ['满罐容积 V_full', r.V_full.toFixed(6), 'm³'],
+                ['最大液位 H_max', r.H_max.toFixed(4), 'm'],
+                [''],
+                ['— 液位-容积对应表 —'],
+                r.tankMode === 'vert' ?
+                ['#', '液位h (m)', '容积V (m³)', '容积V (L)', '液重W (T)', '满罐占比(%)', '段位'] :
+                ['#', '液位h (m)', '容积V (m³)', '容积V (L)', '液重W (T)', '满罐占比(%)'],
+            ];
+            r.rows.forEach(row => {
+                const base = [row.idx, row.h, parseFloat(row.V.toFixed(6)), parseFloat((row.V * 1000).toFixed(2)), parseFloat(row.W.toFixed(4)), parseFloat(row.fp.toFixed(2))];
+                if (r.tankMode === 'vert') base.push(row.seg.replace(/<[^>]+>/g, ''));
+                info.push(base);
+            });
+
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.aoa_to_sheet(info);
+            ws['!cols'] = [{ wch: 22 }, { wch: 14 }, { wch: 16 }, { wch: 16 }, { wch: 14 }, { wch: 14 }, { wch: 16 }];
+            XLSX.utils.book_append_sheet(wb, ws, '容积计算结果');
+            const fname = `储罐容积计算_${tankLabel}_${r.tagNo||'未命名'}.xlsx`;
+            XLSX.writeFile(wb, fname);
+            toast('📊 Excel 已导出', 'ok');
+        }
+
+        /* ════════
+           Init
+        ═══════ */
+        switchTank('horiz');
+    </script>
+</body>
+</html>

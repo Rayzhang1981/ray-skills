@@ -1,0 +1,115 @@
+/* 通用样式片段 - 可复用到多个页面 */
+
+/* 主题色变量（在app.wxss或各页面定义） */
+/* 紫色主题（储罐容积） */
+.purple-theme {
+  --primary: #667eea;
+  --secondary: #764ba2;
+  --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* 绿色主题（压力降） */
+.green-theme {
+  --primary: #2aa889;
+  --secondary: #197c67;
+  --gradient: linear-gradient(135deg, #2aa889 0%, #197c67 100%);
+}
+
+/* 蓝色主题（物性查询） */
+.blue-theme {
+  --primary: #4facfe;
+  --secondary: #00f2fe;
+  --gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+/* 通用输入框样式 ⚠️ 字体必须≥36rpx */
+.input-base {
+  font-size: 36rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 8rpx;
+  padding: 16rpx;
+  width: 100%;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+}
+
+.input-base:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3rpx rgba(102, 126, 234, 0.1);
+  outline: none;
+}
+
+/* 通用按钮样式 */
+.btn-base {
+  color: #fff;
+  border-radius: 12rpx;
+  font-size: 32rpx;
+  padding: 24rpx;
+  border: none;
+  width: 100%;
+  transition: opacity 0.2s ease;
+}
+
+.btn-base:active {
+  opacity: 0.85;
+}
+
+.btn-gradient {
+  background: var(--gradient);
+}
+
+/* 通用结果卡片 */
+.result-card-base {
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0,0,0,0.15);
+}
+
+.result-card-gradient {
+  background: var(--gradient);
+  color: #fff;
+}
+
+/* 关键数值高亮 */
+.highlight-gold {
+  color: #ffd700;
+  font-size: 48rpx;
+  font-weight: bold;
+}
+
+/* 通用表格样式 */
+.table-base {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.08);
+}
+
+.table-row {
+  display: flex;
+  padding: 16rpx 0;
+  border-bottom: 1rpx solid #e0e0e0;
+}
+
+.table-row.header {
+  font-weight: bold;
+  color: #333;
+  background: #f5f5f5;
+}
+
+.table-cell {
+  flex: 1;
+  font-size: 28rpx;
+  color: #666;
+  text-align: center;
+}
+
+/* 通用卡片样式 */
+.card {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 32rpx;
+  margin-bottom: 24rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.08);
+}

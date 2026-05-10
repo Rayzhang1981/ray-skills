@@ -1,0 +1,60 @@
+<!-- 小程序页面模板 - 根据HTML结构生成 -->
+<view class="container">
+  <!-- 标题 -->
+  <view class="header">
+    <text class="title">{{title}}</text>
+    <text class="subtitle">{{subtitle}}</text>
+  </view>
+
+  <!-- 输入区域 -->
+  <view class="input-section">
+    <view class="input-group" wx:for="{{inputs}}" wx:key="id">
+      <text class="label">{{item.label}}</text>
+      <input class="input" 
+             type="digit" 
+             value="{{item.value}}" 
+             placeholder="{{item.placeholder}}"
+             bindinput="onInputChange"
+             data-field="{{item.id}}"/>
+    </view>
+  </view>
+
+  <!-- 选择区域（如封头类型） -->
+  <view class="select-section" wx:if="{{selects.length > 0}}">
+    <view class="select-group" wx:for="{{selects}}" wx:key="id">
+      <text class="label">{{item.label}}</text>
+      <picker mode="selector" range="{{item.options}}" range-key="label" bindchange="onSelectChange" data-field="{{item.id}}">
+        <view class="picker">
+          {{item.options[item.selectedIndex].label}}
+        </view>
+      </picker>
+    </view>
+  </view>
+
+  <!-- 计算按钮 -->
+  <button class="calc-btn" bindtap="calculate">计 算 Calculate</button>
+
+  <!-- 结果展示 -->
+  <view class="result-card" wx:if="{{result}}">
+    <text class="result-title">计算结果 Results</text>
+    <view class="result-item" wx:for="{{resultItems}}" wx:key="label">
+      <text class="result-label">{{item.label}}:</text>
+      <text class="result-value {{item.highlight ? 'highlight' : ''}}">{{item.value}} {{item.unit}}</text>
+    </view>
+  </view>
+
+  <!-- 容积表（如需要） -->
+  <view class="table-section" wx:if="{{tableData.length > 0}}">
+    <text class="table-title">容积表 Volume Table</text>
+    <scroll-view scroll-y class="table-scroll">
+      <view class="table-row header">
+        <text class="table-cell">液位高度</text>
+        <text class="table-cell">容积</text>
+      </view>
+      <view class="table-row" wx:for="{{tableData}}" wx:key="index">
+        <text class="table-cell">{{item.height}}</text>
+        <text class="table-cell">{{item.volume}}</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>
