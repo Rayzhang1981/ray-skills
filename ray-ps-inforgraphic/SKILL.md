@@ -6,6 +6,8 @@ agent_created: true
 
 # PS Infographic — 化工安全信息图生成器
 
+**📦 Source:** https://github.com/Rayzhang1981/ray-skills/tree/main/ray-ps-inforgraphic
+
 Process Safety Infographic Generator.  
 输入一个化工安全关键词，自动输出一张可直接用于技术分享/培训的信息图 HTML。
 

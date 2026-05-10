@@ -6,6 +6,8 @@ agent_created: true
 
 # HTML转微信小程序 Skill
 
+**📦 Source:** https://github.com/Rayzhang1981/ray-skills/tree/main/ray-html-miniprogram
+
 ## 概述
 
 将现有的化工计算HTML文件转换为微信小程序模块，提取计算逻辑、优化UI/UX、确保参数准确性。基于真实项目经验，避免常见坑点。

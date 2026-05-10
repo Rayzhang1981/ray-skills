@@ -6,6 +6,8 @@ agent_created: true
 
 # Excel to HTML — 过程工程计算 HTML 工作流
 
+**📦 Source:** https://github.com/Rayzhang1981/ray-skills/tree/main/ray-excel-html
+
 > 本 Skill 固化了我（灵犀）在将 Excel 工程计算表转化为单文件 HTML 过程中积累的所有经验。
 
 
