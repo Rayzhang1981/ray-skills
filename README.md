@@ -31,6 +31,15 @@ Convert chemical calculation HTML files to WeChat Mini Program modules. Extract 
 
 ---
 
+### 4. ray-hazop-lopa
+End-to-end HAZOP/LOPA quantitative analysis report generator. Inputs process procedure documents, reaction calorimetry reports (RC1/ARC/DSC), equipment lists and reference PDFs; outputs a deliverable 26-column LOPA report (HTML with main report + appendix tab pages), plus tooling scripts for kinetics, relief sizing (API 520/DIERS/刘嚆/赵红乔), MAWP, mass balance, QA scan, PDF/Word export and action-item Excel export.
+
+**Use when:** User provides process technical documents (process procedure, thermal risk assessment report, equipment list, reference PDFs) and requests HAZOP/LOPA analysis, hazard identification, relief sizing verification, or SIL assessment. Bundled with the "功易安" process safety expert.
+
+**Path:** `ray-hazop-lopa/`
+
+---
+
 ## Installation
 
 Download the skill zip file from the respective directory and upload it via WorkBuddy SkillHub.

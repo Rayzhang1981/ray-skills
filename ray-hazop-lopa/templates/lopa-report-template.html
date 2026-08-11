@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{工艺名称} HAZOP/LOPA 分析报告</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: "Microsoft YaHei", "PingFang SC", sans-serif; color: #2C2C2A; background: #F7F6F2; line-height: 1.65; }
+  .container { max-width: 1200px; margin: 0 auto; padding: 28px 36px; background: #fff; min-height: 100vh; }
+  h1 { font-size: 24px; font-weight: 600; color: #173404; margin-bottom: 4px; }
+  .subtitle { font-size: 13px; color: #5F5E5A; margin-bottom: 20px; }
+  h2 { font-size: 18px; font-weight: 600; color: #0C447C; margin: 26px 0 10px; padding-bottom: 6px; border-bottom: 2px solid #B5D4F4; }
+  h3 { font-size: 15px; font-weight: 600; color: #3C3489; margin: 16px 0 8px; }
+  p { margin-bottom: 9px; font-size: 13.5px; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0 16px; font-size: 12.5px; }
+  th { background: #E6F1FB; color: #0C447C; font-weight: 600; padding: 6px 8px; border: 1px solid #B5D4F4; text-align: center; }
+  td { padding: 5px 8px; border: 1px solid #D3D1C7; vertical-align: top; }
+  tr:nth-child(even) td { background: #FAFAF7; }
+  .num { font-family: Consolas, monospace; }
+  .ok { color: #3B6D11; font-weight: 600; }
+  .warn { color: #854F0B; font-weight: 600; }
+  .danger { color: #A32D2D; font-weight: 600; }
+  .card { border-radius: 10px; padding: 13px 17px; margin: 13px 0; border-left: 5px solid; font-size: 13.5px; }
+  .card-green { background: #EAF3DE; border-color: #639922; }
+  .card-amber { background: #FAEEDA; border-color: #BA7517; }
+  .card-red { background: #FCEBEB; border-color: #A32D2D; }
+  .card-blue { background: #E6F1FB; border-color: #378ADD; }
+  .badge { display: inline-block; padding: 1px 8px; border-radius: 11px; font-size: 11.5px; font-weight: 600; margin-right: 4px; }
+  .b-ok { background: #EAF3DE; color: #3B6D11; }
+  .b-warn { background: #FAEEDA; color: #854F0B; }
+  .b-danger { background: #FCEBEB; color: #A32D2D; }
+  .b-blue { background: #E6F1FB; color: #0C447C; }
+  .tbl-wrap { overflow-x: auto; }
+  ul, ol { margin: 5px 0 11px 22px; font-size: 13.5px; }
+  li { margin-bottom: 3px; }
+  .note { font-size: 12px; color: #888780; }
+  .formula { background: #F1EFE8; padding: 10px 14px; border-radius: 6px; font-family: Consolas, monospace; font-size: 12.5px; margin: 10px 0; overflow-x: auto; }
+  .tabs { position: sticky; top: 0; z-index: 10; background: #fff; padding: 10px 0; border-bottom: 1px solid #D3D1C7; margin-bottom: 18px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .tab { padding: 5px 14px; border-radius: 16px; border: 1px solid #B5D4F4; background: #fff; color: #0C447C; font-size: 13px; cursor: pointer; }
+  .tab:hover { background: #E6F1FB; }
+  .tab.active { background: #0C447C; color: #fff; border-color: #0C447C; }
+  .page { display: none; }
+  .page.active { display: block; }
+  .footer { margin-top: 32px; padding-top: 13px; border-top: 1px solid #D3D1C7; font-size: 12px; color: #888780; }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="tabs">
+  <button class="tab active" onclick="showPage('page-main')">主报告</button>
+  <button class="tab" onclick="showPage('page-attA')">附件A 动力学</button>
+  <button class="tab" onclick="showPage('page-attB')">附件B 泄放校核</button>
+  <button class="tab" onclick="showPage('page-attC')">附件C 物料平衡</button>
+  <button class="tab" onclick="showPage('page-attD')">附件D 温升/压升</button>
+  <button class="tab" onclick="showPage('page-attE')">附件E MAWP</button>
+</div>
+
+<section id="page-main" class="page active">
+
+<h1>{工艺名称} HAZOP/LOPA 分析报告</h1>
+<div class="subtitle">分析对象：{工艺规程版本}｜产品：{产品}｜版本：{Vx.x}｜{日期}｜功易安（AI 辅助）</div>
+
+<h2>一、工艺与数据基线</h2>
+<h3>1.1 化学反应与工艺参数</h3>
+<div class="tbl-wrap"><table>
+  <tr><th>参数</th><th>数值</th><th>来源</th></tr>
+  <tr><td>主反应</td><td class="num">{反应式}</td><td>工艺规程</td></tr>
+  <tr><td>反应热 / 绝热温升 ΔTad</td><td class="num">{数值}</td><td>RC1 实测</td></tr>
+  <tr><td>MTSR / TMRad</td><td class="num">{数值}</td><td>ARC</td></tr>
+  <tr><td>热稳定性（原料）</td><td class="num">{起始分解温度等}</td><td>ARC</td></tr>
+</table></div>
+
+<h3>1.2 数据来源审计（实测✅/估算🟡/缺口❌）</h3>
+<div class="tbl-wrap"><table>
+  <tr><th>数据项</th><th>状态</th><th>来源/说明</th></tr>
+  <tr><td>{数据项}</td><td class="ok">✅ 实测</td><td>{来源}</td></tr>
+  <tr><td>{估算项}</td><td class="warn">🟡 估算</td><td>{方法}，见附件 X</td></tr>
+  <tr><td>{缺口项}</td><td class="danger">❌ 缺口</td><td>{补齐路径}</td></tr>
+</table></div>
+
+<h2>二、风险矩阵与概率映射</h2>
+<h3>2.1 风险矩阵（7×5，四维后果）</h3>
+<div class="tbl-wrap"><table>
+  <tr><th rowspan="2">可能性\严重性</th><th colspan="5">严重性 S</th></tr>
+  <tr><th>1 轻微</th><th>2 严重</th><th>3 较重大</th><th>4 非常重大</th><th>5 灾难性</th></tr>
+  <tr><td class="num">7（&gt;10⁻¹/年）</td><td class="num">2</td><td class="num">2</td><td class="num">3</td><td class="num">4</td><td class="num">4</td></tr>
+  <tr><td class="num">6（10⁻²~10⁻¹）</td><td class="num">2</td><td class="num">2</td><td class="num">2</td><td class="num">3</td><td class="num">4</td></tr>
+  <tr><td class="num">5（10⁻³~10⁻²）</td><td class="num">1</td><td class="num">2</td><td class="num">2</td><td class="num">3</td><td class="num">3</td></tr>
+  <tr><td class="num">4（10⁻⁴~10⁻³）</td><td class="num">1</td><td class="num">1</td><td class="num">2</td><td class="num">2</td><td class="num">3</td></tr>
+  <tr><td class="num">3（10⁻⁵~10⁻⁴）</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">2</td><td class="num">2</td></tr>
+  <tr><td class="num">2（10⁻⁶~10⁻⁵）</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">2</td></tr>
+  <tr><td class="num">1（&lt;10⁻⁶）</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">1</td><td class="num">1</td></tr>
+</table></div>
+<div class="note">风险等级：1=低 ｜ 2=中（ALARP）｜ 3=高（限期改进+临时措施）｜ 4=很高（立即行动）。四维后果：人员/财产/环境/声誉。</div>
+
+<h3>2.2 LOPA 计算规则</h3>
+<div class="card card-amber"><b>LOPA 计算规则：</b>Pp = Cp × CF；Pr = Pp × Π(PFD)；<b>仅"有效"状态预防性 IPL 计入 PFD</b>；缓解性保护（泄爆/隔爆/围堰/喷淋）在后果维度体现，不削减 Pr；管理措施（SOP/检查表）不计 PFD，作 CF 修正。</div>
+
+<h2>三、节点划分（{N} 节点）</h2>
+<div class="tbl-wrap"><table>
+  <tr><th>节点</th><th>描述</th><th>设计意图</th><th>主要设备</th><th>PID</th></tr>
+  <tr><td class="num">Node 1</td><td>{描述}</td><td>{意图}</td><td>{设备}</td><td class="num">{图号}</td></tr>
+</table></div>
+
+<h2>四、节点 HAZOP+LOPA 工作表</h2>
+<h3>4.1 Node {n} {名称}</h3>
+<div class="tbl-wrap"><table>
+  <tr><th>场景</th><th>偏差</th><th>原因（初始事件）</th><th>Cp</th><th>CF</th><th>Pp(级)</th><th>S</th><th>Rp</th><th>预防性 IPL（PFD·状态）</th><th>PFD总</th><th>Pr(级)</th><th>Rr</th><th>缓解性保护</th><th>行动建议（PFD）</th><th>Rf</th></tr>
+  <tr>
+    <td class="num">{x.y}</td><td>{偏差}</td><td>{原因}</td><td class="num">{Cp}</td><td class="num">{CF}</td><td class="num">{Pp}(级)</td><td class="num">{S}</td><td class="danger">{Rp}</td>
+    <td>{IPL} <span class="b-ok">有效</span>/<span class="b-warn">待验证</span>/<span class="b-danger">不成立</span></td><td class="num">{PFD}</td><td class="num">{Pr}(级)</td><td class="num">{Rr}</td>
+    <td>{缓解性保护}</td><td>{行动建议（PFD）}</td><td class="num">{Rf}</td>
+  </tr>
+</table></div>
+
+<h2>五、共因失效分析</h2>
+<div class="tbl-wrap"><table>
+  <tr><th>#</th><th>共因源</th><th>受影响保护层/设备</th><th>失效机制</th><th>处置建议</th></tr>
+  <tr><td class="num">CC-1</td><td>{共用源}</td><td>{影响}</td><td>{机制}</td><td>{建议}</td></tr>
+</table></div>
+
+<h2>六、残余风险声明</h2>
+<div class="card card-amber">
+  <ol>
+    <li>{边界条件结论 1}；</li>
+    <li>{边界条件结论 2}；</li>
+    <li>本报告为 AI 辅助初步分析，须由有资质 HAZOP 团队评审确认后方可作为正式文件。</li>
+  </ol>
+</div>
+
+<h2>七、风险统计</h2>
+<div class="tbl-wrap"><table>
+  <tr><th>统计口径</th><th>数量</th><th>说明</th></tr>
+  <tr><td>编号场景</td><td class="num">{N}</td><td>全节点</td></tr>
+  <tr><td>完成 LOPA 定量场景</td><td class="num">{N}</td><td>Cp→Rf 全链路</td></tr>
+  <tr><td>产生行动项场景</td><td class="num">{N}</td><td>见行动项闭环表</td></tr>
+</table></div>
+
+<h2>八、行动项闭环表</h2>
+<div class="tbl-wrap"><table>
+  <tr><th>#</th><th>场景</th><th>行动建议</th><th>优先级</th><th>Rf</th><th>责任人</th><th>截止</th><th>状态</th></tr>
+  <tr><td class="num">A1</td><td class="num">{x.y}</td><td>{建议}</td><td class="danger">P0</td><td class="num">{Rf}</td><td>{责任人}</td><td>{截止}</td><td>待办</td></tr>
+</table></div>
+
+<h2>九、SIL 衔接建议</h2>
+<div class="tbl-wrap"><table>
+  <tr><th>SIF</th><th>场景</th><th>LOPA 需求 PFD</th><th>建议 SIL</th><th>结构约束提示</th></tr>
+  <tr><td class="num">{SIF 描述}</td><td class="num">{场景}</td><td class="num">{PFD}</td><td class="num">{SIL}</td><td>{提示}</td></tr>
+</table></div>
+
+<h2>十、版本与滚动机制</h2>
+<div class="tbl-wrap"><table>
+  <tr><th>版本</th><th>日期</th><th>说明</th></tr>
+  <tr><td class="num">V1.0</td><td class="num">{日期}</td><td>{说明}</td></tr>
+</table></div>
+
+</section>
+
+<section id="page-attA" class="page">
+<h2>附件 A：{动力学/温升时间线}计算</h2>
+<div class="formula">{Arrhenius 两点拟合 + 数值积分}</div>
+<div class="tbl-wrap"><table><tr><th>温区</th><th>耗时</th><th>累计</th><th>产氧速率</th></tr></table></div>
+<svg viewBox="0 0 640 320" width="100%" xmlns="http://www.w3.org/2000/svg"><!-- 温度-时间轨迹 --></svg>
+<p class="note">{假设与局限}</p>
+</section>
+
+<section id="page-attB" class="page">
+<h2>附件 B：{泄放面积}四方法校核</h2>
+<div class="formula">{API 520 / DIERS / 刘嚆 / 赵红乔 kF}</div>
+<div class="tbl-wrap"><table><tr><th>方法</th><th>所需面积</th><th>判定</th></tr></table></div>
+<p class="note">{单位注记与保守方向}</p>
+</section>
+
+<section id="page-attC" class="page">
+<h2>附件 C：{物料平衡/富氧}计算</h2>
+<div class="formula">{分解率/产气/稀释计算}</div>
+<svg viewBox="0 0 640 200" width="100%" xmlns="http://www.w3.org/2000/svg"><!-- 组成图 --></svg>
+</section>
+
+<section id="page-attD" class="page">
+<h2>附件 D：{异常加料温升/压升}估算</h2>
+<div class="formula">{放热/产气/ΔT/ΔP 计算}</div>
+<svg viewBox="0 0 640 220" width="100%" xmlns="http://www.w3.org/2000/svg"><!-- 温升对比 --></svg>
+<p class="note">{简化假设与正式校核差异声明}</p>
+</section>
+
+<section id="page-attE" class="page">
+<h2>附件 E：MAWP 估算</h2>
+<div class="formula">P = 2·S·E·t / (D + 0.8·t)</div>
+<div class="tbl-wrap"><table><tr><th>设备</th><th>规格</th><th>t/D</th><th>理论 MAWP</th><th>工程取值</th></tr></table></div>
+<p class="note">正式设计/复核须按 GB 150 执行；MAWP 仅用于超压判定参考。</p>
+</section>
+
+<script>
+function showPage(id){
+  var pages = document.querySelectorAll('.page');
+  for(var i=0;i<pages.length;i++){ pages[i].classList.remove('active'); }
+  var tabs = document.querySelectorAll('.tab');
+  for(var j=0;j<tabs.length;j++){ tabs[j].classList.remove('active'); }
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+
+<div class="footer">
+  本报告为 AI 辅助初步分析，须由有资质 HAZOP 团队评审确认后方可作为正式文件。<br>
+  分析人：功易安（AI 辅助）｜{日期}
+</div>
+
+</div>
+</body>
+</html>
