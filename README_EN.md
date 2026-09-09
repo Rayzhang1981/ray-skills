@@ -2,7 +2,7 @@
 
 > **Original by Rayzhang1981** · Built from a process safety engineer's perspective · Chemical engineering + process safety + productivity tooling
 
-This repository is the **source repo** of the Ray series of WorkBuddy Skills, running dual-track with the [SkillHub](https://skillhub.cn) marketplace:
+This repository is the **source repo** of the Ray series of WorkBuddy Skills, running dual-track with the [SkillHub marketplace (my skill page)](https://skillhub.cn/skills/user_fb8bdb79):
 
 | Track | Role | Link |
 |-------|------|------|

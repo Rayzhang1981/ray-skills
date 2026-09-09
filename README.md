@@ -4,7 +4,7 @@
 
 > 🌐 **English version:** [README_EN.md](README_EN.md)
 
-本仓库是 Ray 系列 WorkBuddy Skills 的**源仓库（Source）**，与 [SkillHub](https://skillhub.cn) 分发市场构成双轨：
+本仓库是 Ray 系列 WorkBuddy Skills 的**源仓库（Source）**，与 [SkillHub 分发市场（我的技能主页）](https://skillhub.cn/skills/user_fb8bdb79) 构成双轨：
 
 | 轨道 | 角色 | 链接 |
 |------|------|------|
