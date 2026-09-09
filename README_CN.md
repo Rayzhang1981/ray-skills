@@ -41,10 +41,11 @@
 | ray-hazop-lopa | 1.3.1 | HAZOP/LOPA 定量分析报告生成器 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-hazop-lopa) |
 | ray-chem-property | 3.5.0 | 化学品物性数据批量搜集（索引库随 SkillHub 版分发） | ✅* | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-chem-property) |
 | ray-household-finance | 2.4.1 | 家庭财务管理框架（示例为虚构数据） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-household-finance) |
+| ray-mm | 2.1.0 | 会议材料（音视频/PPT/PDF/文档）→ 统一 Markdown 转写与纪要 | ⏳ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-mm) |
 | ray-rca | 1.1.0 | 事故根本原因分析（RCA）端到端 | ⏳ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-rca) |
 
 > \* ray-chem-property 开源版含脚本与流程，完整物性索引库（授权数据）仅随 SkillHub 版分发。
-> ⏳ ray-rca 融合第三方专有方法（ABS SOURCE™），源码不公开。
+> ⏳ ray-rca 融合第三方专有方法（ABS SOURCE™），源码不公开。ray-mm 源码不公开（会议内容隐私）。
 > 另有 30+ 技能（CCPS 方法论认知层 17 个等）仅在私有环境分发，未公开源码。
 
 ---

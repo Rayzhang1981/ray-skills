@@ -41,10 +41,11 @@ Each track feeds the other: SkillHub listings point back to this source repo, an
 | ray-hazop-lopa | 1.3.1 | HAZOP/LOPA quantitative report generator | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-hazop-lopa) |
 | ray-chem-property | 3.5.0 | Batch chemical property data collection (111 fields; index DB via SkillHub) | ✅* | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-chem-property) |
 | ray-household-finance | 2.4.1 | Household finance management framework (examples are fictional) | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-household-finance) |
+| ray-mm | 2.1.0 | Meeting materials (audio/video/PPT/PDF/docs) → unified Markdown transcript & minutes | ⏳ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-mm) |
 | ray-rca | 1.1.0 | Root cause analysis end-to-end | ⏳ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-rca) |
 
 > \* ray-chem-property open-source edition includes scripts & workflow; the full property index database (licensed data) ships only with the SkillHub edition.
-> ⏳ ray-rca integrates third-party proprietary methodology (ABS SOURCE™), source code is not public.
+> ⏳ ray-rca integrates third-party proprietary methodology (ABS SOURCE™), source code is not public. ray-mm source withheld (meeting-content privacy).
 > 30+ more skills (e.g. 17 CCPS methodology cognition skills) are distributed privately only.
 
 ---
