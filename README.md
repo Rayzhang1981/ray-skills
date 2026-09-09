@@ -2,6 +2,8 @@
 
 > **Rayzhang1981 原创** · 过程安全工程师视角 · 化工 + 过程安全 + 工具链
 
+> 🌐 **English version:** [README_EN.md](README_EN.md)
+
 本仓库是 Ray 系列 WorkBuddy Skills 的**源仓库（Source）**，与 [SkillHub](https://skillhub.cn) 分发市场构成双轨：
 
 | 轨道 | 角色 | 链接 |
@@ -62,7 +64,7 @@ cp -r ray-skills/skills/<name> ~/.workbuddy/skills/
 ray-skills/
 ├── skills/                 # 已开源技能（一个目录一个，SKILL.md + scripts + references）
 ├── scripts/sync_from_local.sh   # 从 ~/.workbuddy/skills 一键同步本仓库（白名单=skills/ 现有目录）
-├── README.md               # 本文件（双轨索引）
+├── README.md / README_EN.md   # 双轨索引（中文 / English）
 ├── AGENTS.md               # 给 AI 协作者的结构说明
 └── LICENSE                 # MIT
 ```
