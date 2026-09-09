@@ -1,0 +1,13 @@
+{
+  "language": "A-handdrawn-line",
+  "name": "手绘线语言",
+  "bg": "#F4F2EE",
+  "accent": "#9D5A37",
+  "text": "#252525",
+  "line": "#9D5A37",
+  "secondary_bg": "#EDEAE3",
+  "gray_photo": true,
+  "font_cn": "思源黑体/微软雅黑",
+  "font_en": "Noto Sans SC",
+  "notes": "暖纸色极简，图纸/手稿感；线元素高均0.3英寸；插图统一灰度"
+}

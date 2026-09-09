@@ -1,0 +1,161 @@
+# Refine 能力边界矩阵
+# Step 3 诊断 / Step 4 执行时查阅，防止凭感觉承诺做不到的修复。
+# 日期：2026-08-20 v2.1.0（进化轮 Mck 对比）
+
+# ===== 1. 字体统一 =====
+font_consistency:
+  # 目标字体
+  target: "Microsoft YaHei"
+  # 替换规则：Win32COM 批量替换，保留字号/粗体/颜色，只改字体名
+  method: "Win32COM batch replace"
+  # 依赖
+  requires_win32com: true
+  # 边界
+  limitations:
+    - "必须在 Windows + PowerPoint/WPS 已安装环境运行"
+    - "python-pptx 替换字体会丢渐变/阴影，必须用 COM"
+    - "页眉页脚元素需白名单保护（不改字体名，只换粗体/颜色）"
+  # 白名单模式（按文本内容识别，不缩放不换字体名）
+  footer_whitelist_patterns:
+    - "Rianlon"   # 公司名页脚
+    - "Page"      # 英文页码
+    - "页码"      # 中文页码
+
+# ===== 2. 字号缩放 =====
+font_size_mapping:
+  # 分档映射：{原字号: 目标字号}（pt）
+  # 原则：小字（9-11pt）优先拉大；标题（20-30pt）轻微上调；留 6pt 级差保持层级
+  mapping:
+    9: 12
+    10: 12
+    10.5: 13
+    11: 13
+    11.5: 13.5
+    12: 14
+    13: 15
+    14: 16
+    15: 17
+    16: 18
+    20: 22
+    22: 24
+    24: 26
+    30: 32
+    34: 36
+  # 红线
+  rules:
+    - "表格只换字体不换字号（改字号触发列宽重排）"
+    - "页眉页脚白名单内元素不参与缩放"
+    - "卡片页字号由 cards() 脚本设计，COM 后处理排除卡片页（只换字体不动字号）"
+    - "全局同倍率缩放是反模式（标题小字级差消失）"
+
+# ===== 3. 配色换肤 =====
+skin_palettes:
+  available:
+    - name: "商务深蓝"
+      key: "navy-executive"
+      primary: "(30,39,97)"
+      scenario: "商务汇报/年终总结"
+    - name: "科技深空"
+      key: "tech-dark"
+      primary: "(13,17,23)"
+      scenario: "技术分享/产品发布"
+    - name: "海洋渐变"
+      key: "ocean-gradient"
+      primary: "(6,90,130)"
+      scenario: "技术分享"
+    - name: "青绿信任"
+      key: "teal-trust"
+      primary: "(2,128,144)"
+      scenario: "培训课件/教学"
+    - name: "暖陶简约"
+      key: "warm-terracotta"
+      primary: "(184,80,66)"
+      scenario: "培训课件/教学"
+    - name: "炭灰极简"
+      key: "charcoal-minimal"
+      primary: "(54,69,79)"
+      scenario: "商务汇报/年终总结"
+    - name: "纸张手绘风"
+      key: "paper-sketch"
+      primary: "(157,90,55)"
+      bg: "(244,242,238)"
+      scenario: "工程师/技术受众培训"
+    - name: "化工安全"
+      key: "chem-safety"
+      primary: "SAFE_BLUE #005293"
+      scenario: "化工安全/危化品"
+  rules:
+    - "换肤前必问：换体系 or 保留现有体系补手法？（LRN-20260817-007 教训）"
+    - "换肤 = 批量替换主色/辅色/强调色 + 标题栏/页脚配色，不动内容文字"
+    - "COM 的 .RGB 是 BGR 顺序，必须用 rgb_to_bgr() 转换"
+
+# ===== 4. 卡片化 =====
+card_layout:
+  # 适用性判定（量化红线）
+  max_chars_english: 130      # 英文正文 ≤130 字符才适合卡片
+  max_items_per_card: 4       # 每卡片最多 4 条要点
+  grid_modes: ["1x3", "2x2", "2x3"]  # 按条目数自适应
+  # 装饰规范
+  badge_size_in: 0.55         # 1:1 方形徽章尺寸
+  badge_padding_in: 0.61      # 白底圆角衬垫
+  # 功能色条（卡片左侧）
+  color_bar:
+    green: "(30,142,78)"      # 健康/权益
+    blue: "(0,82,147)"        # 法规/职责
+    red: "(192,57,43)"        # 警示
+    orange: "(230,126,34)"    # 注意
+  rules:
+    - "长描述页保持列表（超过 130 字符不卡片化）"
+    - "COM 后处理排除卡片页——只换字体不动字号"
+    - "徽章图标与右侧竖图（PAGE_ILLU）共用资产池时，同页必冲突，需自动替换右侧图"
+
+# ===== 5. 配图决策 =====
+image_sources:
+  decision_chain:
+    - step: "扫描空白"
+      detail: "右半区 → 网格 → 精确小区域逐层收敛"
+    - step: "有空白直接配"
+    - step: "无空白不硬塞"
+      detail: "改用布局让位（公共函数收窄文字宽批量让出侧栏）"
+    - step: "配图后专项检查"
+      detail: "插图底边 vs 相邻元素；横图用 cover 不用 contain"
+  cover_vs_contain: "装饰插图一律用 cover（居中裁成框同比例撑满，PIL crop）；产品图用 contain"
+  # 图片来源
+  sources:
+    - type: "ImageGen"
+      when: "专业化工安全主题（受限空间/动火/中毒救援/危化品储存）"
+      prompt_template: "realistic photo, professional photography, grayscale monochrome, sharp focus, vertical composition, no text, no watermark"
+      special: "全身人物必须加 normal adult body proportions（防卡通比例 2.5-3 头身）"
+    - type: "Pexels"
+      when: "通用主题（灭火器/安全帽/脚手架/警示牌）"
+      note: "必须英文关键词；逐张 VL 核验内容（9张池图2张跑偏）"
+    - type: "Pixabay"
+      when: "通用主题"
+      note: "中文搜索歧义严重（'受限空间'→太空），必须用英文"
+  water_mark_crop: "ImageGen 生成图必须 PIL 裁右下角 8%×6% 去水印"
+
+# ===== 6. 文字溢出估算（行高估算器）=====
+whitespace_detection:
+  formula: "lines = ceil(len(text) / chars_per_line); cpl = width_in * 72 / font_size_pt; height_in = lines * font_size_pt * 1.45 / 72"
+  overlap_threshold: 0.05  # 两 shape 文字底边-顶边间距 < 0.05" 才算重叠（防虚警）
+  blank_threshold: 0.7     # 估算空白高度 < 0.7" 时不放配图（太小没意义）
+  # 伪阳性排除规则
+  false_positive_filters:
+    - "文本框是透明容器，框体高度 ≠ 文字实际高度——必须用行高估算，不能裸框体相交"
+    - "嵌套包含关系的 shape 不算重叠（子 shape 在父 shape 内）"
+
+# ===== 7. banner 警示条 =====
+banner_positions:
+  bottom: {y: 6.45, height: 0.4, when: "底部有空间页"}
+  top: {y: 1.18, height: 0.3, when: "内容满页（先量内容区底边 y，防重叠）"}
+  colors:
+    red: "警示"
+    orange: "注意"
+  rules:
+    - "banner 不能与内容重叠（先量内容区底边 y）"
+    - "pos='bottom' 优先，内容满才用 pos='top'"
+
+# ===== 8. 图库规模 =====
+image_library:
+  min_ratio: "页数 / 3"    # 图库规模 ≥ 页数/3 才能避免相邻重复
+  dedup_strategy: "相邻页主题差异常数避免；同一章内复用相近图是大忌"

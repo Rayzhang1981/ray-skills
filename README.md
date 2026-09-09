@@ -1,53 +1,79 @@
-# Ray's WorkBuddy Skills
+# Ray Skills — 化工 / 过程安全 AI Skill 集（WorkBuddy）
 
-Personal collection of WorkBuddy skills for chemical engineering and process safety workflows.
+> **Rayzhang1981 原创** · 过程安全工程师视角 · 化工 + 过程安全 + 工具链
 
-## Skills
+本仓库是 Ray 系列 WorkBuddy Skills 的**源仓库（Source）**，与 [SkillHub](https://skillhub.cn) 分发市场构成双轨：
 
-### 1. ray-excel-html
-Convert Excel/project calculation sheets into standalone HTML applications. Supports chemical engineering calculation scenarios (tank volume, pipe pressure drop, safety valve calculations, etc.) to generate offline web tools.
+| 轨道 | 角色 | 链接 |
+|------|------|------|
+| **GitHub（本仓库）** | 源码 + 版本演变历史 + Issue/PR 协作 | `github.com/Rayzhang1981/ray-skills` |
+| **SkillHub** | 一键安装 + 更新 + 审核背书 | [Ray 的技能页](https://skillhub.cn/skills/user_fb8bdb79) |
 
-**Use when:** User needs to convert Excel or engineering calculation sheets to single-file HTML apps, or has chemical/process engineering calculations that need to be turned into offline web tools.
-
-**Path:** `ray-excel-html/`
-
----
-
-### 2. ray-ps-inforgraphic (PS Infographic)
-Generate chemical safety infographics. Triggers on keywords like "化工安全信息图", "生成安全信息图", "关键词信息图", "PS信息图" or chemical safety topic keywords (nitration, HAZOP, LOPA, etc.).
-
-**Use when:** User mentions chemical safety infographics, safety information graphics, keyword infographics, PS infographics, or provides chemical safety topic keywords.
-
-**Path:** `ray-ps-inforgraphic/`
+两个轨道互相导流：SkillHub 简介指向本仓库源码，本 README 指向 SkillHub 安装。
 
 ---
 
-### 3. ray-html-miniprogram
-Convert chemical calculation HTML files to WeChat Mini Program modules. Extract calculation logic from existing HTML to create new mini program pages, or mobilize chemical/process engineering calculation tools.
+## 在架技能（SkillHub 已发布 · 21 个）
 
-**Use when:** User needs to convert chemical calculation HTML files to WeChat mini program modules, convert HTML calculation tools to mini programs, extract calculation logic from existing HTML to create new mini program pages, or mobilize chemical/process engineering calculation tools for mobile.
+✅ = 源码已在本仓库 `skills/`；⏳ = 版权/脱敏评估中，暂未收录源码
 
-**Path:** `ray-html-miniprogram/`
+| 技能 | 版本 | 一句话 | 源码 | SkillHub |
+|------|------|--------|:---:|----------|
+| ray-excel-html | 2.2.0 | Excel/工程计算表 → 单文件 HTML 计算工具（离线可用） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-excel-html) |
+| ray-pe-calc | 2.2.0 | 七大工艺计算模块工具箱 + 计算书输出 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-pe-calc) |
+| ray-html-miniprogram | 1.2.0 | 化工计算 HTML → 微信小程序模块 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-html-miniprogram) |
+| ray-ps-inforgraphic | 2.2.0 | 化工安全主题信息图生成器 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-ps-inforgraphic) |
+| ray-skill-generator | 1.12.0 | 从零创建 Skill 的元工具 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-skill-generator) |
+| ray-file-distil | 1.13.0 | 书籍/长文档蒸馏为 Skill 的元工具 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-file-distil) |
+| ray-data-analysis | 1.2.0 | 完整数据分析工作流 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-data-analysis) |
+| ray-ppt-generator | 3.19.0 | python-pptx 快速生成可编辑 PPTX | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-ppt-generator) |
+| ray-ppt-refine | 2.5.0 | 已有 PPTX 排版美化与合规验收 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-ppt-refine) |
+| ray-ppt-video | 2.7.0 | PPTX → 配音培训视频（FFmpeg） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-ppt-video) |
+| ray-rca | 1.1.0 | 事故根本原因分析（RCA）端到端 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-rca) |
+| ray-deep-research | 1.3.2 | 溯源对比法深度研究对象 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-deep-research) |
+| ray-synth-search | 1.7.1 | 多源检索 + 交叉验证的日常搜索主力 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-synth-search) |
+| ray-chem-property | 3.5.0 | 化学品物性数据批量搜集（111 列） | ⏳ 数据版权评估中 | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-chem-property) |
+| ray-hazop-lopa | 1.3.1 | HAZOP/LOPA 定量分析报告生成器 | ⏳ 模板去敏中 | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-hazop-lopa) |
+| ray-pse-sharing | 1.13.0 | 事故报告 → 一页 A4 分享卡 | ⏳ 素材去敏中 | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-pse-sharing) |
+| ray-pse-video | 2.4.0 | 事故报告 → 安全培训视频 | ⏳ 素材去敏中 | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-pse-video) |
+| ray-self-reflection | 3.15.0 | 自我反思 · 经验萃取 | ⏳ references 抽离中 | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-self-reflection) |
+| ray-standard-search | 3.0.1 | 化工标准与法规快查 | ⏳ 凭据剥离中 | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-standard-search) |
+| ray-translate | 3.3.3 | 化工安全文档中英双向翻译 | ⏳ 术语库去敏中 | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-translate) |
+| ray-household-finance | 2.4.1 | 家庭财务管理框架 | ⏳ 隐私评估中 | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-household-finance) |
+
+> 另有 30+ 技能（CCPS 方法论认知层 17 个、私用 4 个等）仅在 SkillHub/私有环境分发，未公开源码，详见各 Skill 说明。
 
 ---
 
-### 4. ray-hazop-lopa
-End-to-end HAZOP/LOPA quantitative analysis report generator. Inputs process procedure documents, reaction calorimetry reports (RC1/ARC/DSC), equipment lists and reference PDFs; outputs a deliverable 26-column LOPA report (HTML with main report + appendix tab pages), plus tooling scripts for kinetics, relief sizing (API 520/DIERS/刘嚆/赵红乔), MAWP, mass balance, QA scan, PDF/Word export and action-item Excel export.
+## 本地安装（不经 SkillHub）
 
-**Use when:** User provides process technical documents (process procedure, thermal risk assessment report, equipment list, reference PDFs) and requests HAZOP/LOPA analysis, hazard identification, relief sizing verification, or SIL assessment. Bundled with the "功易安" process safety expert.
+```bash
+git clone https://github.com/Rayzhang1981/ray-skills.git
+# 把需要的技能复制到 WorkBuddy 技能目录
+cp -r ray-skills/skills/<name> ~/.workbuddy/skills/
+# 重启会话后生效
+```
 
-**Path:** `ray-hazop-lopa/`
+## 目录结构
 
----
+```
+ray-skills/
+├── skills/                 # 已开源技能（一个目录一个，SKILL.md + scripts + references）
+├── scripts/sync_from_local.sh   # 从 ~/.workbuddy/skills 一键同步本仓库（白名单=skills/ 现有目录）
+├── README.md               # 本文件（双轨索引）
+├── AGENTS.md               # 给 AI 协作者的结构说明
+└── LICENSE                 # MIT
+```
 
-## Installation
+## 同步策略
 
-Download the skill zip file from the respective directory and upload it via WorkBuddy SkillHub.
+`skills/<name>/` 是本地 `~/.workbuddy/skills/<name>` 当前版的**发布镜像**（只收录通过分层评估的技能）。
+日常更新：改本地 → SkillHub 发布 → `bash scripts/sync_from_local.sh` 同步仓库 → push。
 
-## Author
+## 贡献
 
-Rayzhang — Chemical Process Safety Engineer & Researcher
+欢迎 Issue 报 bug、PR 改进、Discussions 交流。涉及工艺安全内容的修改请附依据（标准号/指南出处）。
 
 ## License
 
-MIT
+[MIT](LICENSE) © 2026 Rayzhang（张瑞超）
