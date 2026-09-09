@@ -190,8 +190,8 @@ $pres.Slides.Item(35).Export("E:\...\_render\S35.png", "PNG", 1280, 720)
 ```bash
 # 纯文本模型 → ray-ppt-ocr-eyes 看图（VL 描述布局：溢出/重叠/风格）
 # ⚠️ 路径必须 Windows 格式，Git Bash 的 /e/... Python 不认
-PY="C:/Users/rayzh/.workbuddy/binaries/python/envs/default/Scripts/python.exe"
-"$PY" "C:/Users/rayzh/.workbuddy/skills/ray-ppt-ocr-eyes/scripts/ocr_eyes.py" \
+PY=~/.workbuddy/binaries/python/envs/default/Scripts/python.exe
+"$PY" "$HOME/.workbuddy/skills/ray-ppt-ocr-eyes/scripts/ocr_eyes.py" \
       "E:\\LingXi\\...\\_render\\S35.png" --provider opencode-go
 ```
 

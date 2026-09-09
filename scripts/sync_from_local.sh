@@ -22,7 +22,13 @@ for d in "$DEST"/ray-*/; do
   echo "  - $name"
   if [ "$DRY" != "--dry-run" ]; then
     rsync -a --delete --exclude '__pycache__/' --exclude '*.pyc' \
+      --exclude 'data/' --exclude 'anchor_db.json' --exclude 'output/' \
+      --exclude '*.zip' --exclude '.venv/' \
       "$SRC/$name/" "$DEST/$name/"
+    # 去敏后处理：本机路径占位化（防同步冲掉开源版修改；源目录不受影响）
+    find "$DEST/$name/" -type f \( -name '*.md' -o -name '*.py' -o -name '*.js' \
+      -o -name '*.json' -o -name '*.sh' -o -name '*.yaml' -o -name '*.cjs' \) \
+      -exec sed -i 's|C:/Users/rayzh|~/.workbuddy|g; s|D:/RayClaw|~/RayClaw|g; s|E:/LingXi|~/LingXi|g' {} + 2>/dev/null || true
   fi
 done
 echo "---"

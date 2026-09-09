@@ -102,9 +102,9 @@ $pres.Close(); $pp.Quit()
 
 ```bash
 # ray-ppt-ocr-eyes：OCR 文字层 + VL 视觉描述层（opencode-go 默认，key 已固化）
-PY="C:/Users/rayzh/.workbuddy/binaries/python/envs/default/Scripts/python.exe"
+PY=~/.workbuddy/binaries/python/envs/default/Scripts/python.exe
 for n in 30 32 35 40; do
-  "$PY" "C:/Users/rayzh/.workbuddy/skills/ray-ppt-ocr-eyes/scripts/ocr_eyes.py" \
+  "$PY" "$HOME/.workbuddy/skills/ray-ppt-ocr-eyes/scripts/ocr_eyes.py" \
         "E:\\LingXi\\...\\_render\\S$n.png" --provider opencode-go 2>&1 \
     | sed -n '/【视觉描述/,$p'
 done

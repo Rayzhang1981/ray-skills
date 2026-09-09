@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>安全事故分享卡片</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --brand-orange: #C05015; --brand-orange-dark: #9A3D0F;
+    --brand-blue: #005DAA; --brand-green: #00843D; --brand-red: #D50032;
+    --hse-blue: #1A5276; --hse-bg: #EBF5FB;
+    --accent-yellow: #FFF3CD; --accent-yellow-border: #FFC107;
+    --text-dark: #2C2C2C; --text-body: #444; --text-light: #666;
+    --bg-light: #F2F2F2; --bg-know: #D9D9D9; --bg-do: #EAEEEA;
+    --border-color: #D0D0D0; --white: #FFF;
+  }
+  body {
+    background: #E0E0E0;
+    font-family: "楷体","KaiTi","KaiTi SC","STKaiti","华文楷体",serif;
+    display:flex; justify-content:center; align-items:flex-start;
+    min-height:100vh; padding:20px;
+  }
+  .page { width:210mm; height:297mm; background:var(--white); box-shadow:0 4px 24px rgba(0,0,0,0.15); position:relative; overflow:hidden; display:flex; flex-direction:column; }
+  @page { size: A4 portrait; margin: 0; }
+  @media print {
+    body{background:white;padding:0;margin:0}
+    .page{box-shadow:none;width:210mm;height:297mm;page-break-after:avoid}
+  }
+
+  /* ── Header ── */
+  .header-bar {
+    background:linear-gradient(135deg,var(--brand-orange),var(--brand-orange-dark));
+    color:var(--white); padding:12px 26px 14px; display:flex; align-items:center;
+    justify-content:space-between; position:relative;
+  }
+  .header-bar::after { content:''; position:absolute; bottom:0;left:0;right:0; height:3px; background:linear-gradient(90deg,#FFC107,#FF9800,var(--brand-red)); }
+  .header-left { font-size:24px; font-weight:900; letter-spacing:6px; text-shadow:0 1px 3px rgba(0,0,0,0.25); }
+  .header-right { text-align:right; display:flex; flex-direction:column; gap:3px; padding-left:14px; position:relative; }
+  .header-right::before { content:''; position:absolute; left:0;top:50%; transform:translateY(-50%); width:1px; height:30px; background:rgba(255,255,255,0.35); }
+  .header-right .l1,.header-right .l2 { font-size:12px; font-weight:600; letter-spacing:1px; opacity:0.9; }
+
+  /* ── Info Strip ── */
+  .info-strip { display:flex; background:var(--bg-light); border-bottom:1px solid var(--border-color); font-size:12px; }
+  .info-item { flex:1; padding:7px 6px; text-align:center; border-right:1px solid var(--border-color); display:flex; flex-direction:column; gap:2px; }
+  .info-item:last-child { border-right:none; }
+  .info-label { font-size:10px; color:var(--text-light); letter-spacing:1px; }
+  .info-value { font-weight:700; color:var(--text-dark); font-size:12px; }
+  .info-value.severity-high{color:var(--brand-red)} .info-value.severity-mid{color:var(--brand-orange)}
+
+  /* ── Title ── */
+  .accident-title { font-size:18px; font-weight:800; color:var(--text-dark); padding-bottom:7px; border-bottom:2px solid var(--brand-orange); display:flex; align-items:center; justify-content:space-between; }
+  .date-badge { font-size:10px; color:var(--text-light); background:var(--bg-light); padding:3px 9px; border-radius:3px; white-space:nowrap; }
+
+  /* ── Shared components ── */
+  .desc-text { font-size:14px; line-height:1.9; color:var(--text-body); text-align:justify; }
+  .desc-text .highlight { background:var(--accent-yellow); padding:1px 4px; border-radius:2px; font-weight:600; }
+
+  .card-img { border-radius:4px; overflow:hidden; background:var(--bg-light); border:1px solid var(--border-color); display:flex; align-items:center; justify-content:center; }
+  .card-img img { width:100%; height:100%; object-fit:cover; display:block; }
+  .card-img svg { width:100%; height:auto; display:block; }
+  .card-img .no-image { color:var(--text-light); font-size:12px; text-align:center; padding:10px; }
+
+  .protect-fail { background:#FAF7F7; border:1px solid #E5D8D8; border-left:4px solid var(--brand-red); border-radius:0 4px 4px 0; padding:4px 12px; font-size:12px; line-height:1.55; color:#8E3B3B; }
+  .protect-fail .pf-title { font-weight:800; font-size:13px; margin-bottom:3px; }
+  .pf-items { display:flex; gap:6px; flex-wrap:wrap; }
+  .pf-tag { background:var(--white); border:1px solid #DDBFBF; padding:2px 9px; border-radius:3px; font-size:11px; white-space:nowrap; color:#7A4A4A; }
+
+  /* ── 历史事故单元（全宽，位于知识/行动行与保护层失效之间）── */
+  .history-box { background:#FBF6EC; border:1px solid #E3D5B8; border-left:4px solid #B8860B; border-radius:0 4px 4px 0; padding:4px 12px; font-size:12px; line-height:1.55; color:#6B5320; }
+  .history-box .hs-title { font-weight:800; font-size:13px; margin-bottom:3px; color:#8A6508; }
+  .hs-items { display:flex; gap:7px; flex-wrap:wrap; }
+  .hs-tag { background:var(--white); border:1px solid #D9C89E; padding:3px 10px; border-radius:3px; font-size:11px; white-space:nowrap; color:#6B5320; }
+
+  .hse-tools { background:#F4F6F8; border:1px solid #D6DEE4; border-left:4px solid var(--hse-blue); border-radius:0 4px 4px 0; padding:4px 12px; font-size:12px; line-height:1.55; color:#3E5C74; }
+  .hse-tools .ht-title { font-weight:800; font-size:13px; margin-bottom:3px; }
+  .ht-items { display:flex; gap:7px; flex-wrap:wrap; }
+  .ht-tag { background:var(--white); border:1px solid #C8D4DC; padding:3px 10px; border-radius:3px; font-size:11px; white-space:nowrap; color:#3E5C74; }
+
+  .know { background:#EDEFEF; border:1px solid #CFCFCF; border-radius:4px; padding:8px 12px; }
+  .know .sect-tit { font-size:13px; font-weight:800; color:var(--brand-blue); margin-bottom:5px; display:flex; align-items:center; gap:5px; }
+  .know .sect-tit::before { content:'?'; display:inline-flex; align-items:center; justify-content:center; width:18px;height:18px; background:var(--brand-blue); color:white; border-radius:50%; font-size:12px; font-weight:800; flex-shrink:0; }
+  .know ul { list-style:none; display:flex; flex-direction:column; gap:4px; }
+  .know ul li { font-size:11.5px; line-height:1.55; color:var(--text-body); padding-left:14px; position:relative; }
+  .know ul li::before { content:'▪'; position:absolute; left:0;top:2px; color:var(--brand-blue); font-size:9px; }
+
+  .dodo { background:#EFF1EF; border:1px solid #D2DAD2; border-radius:4px; padding:8px 12px; }
+  .dodo .sect-tit { font-size:13px; font-weight:800; color:var(--brand-green); margin-bottom:5px; display:flex; align-items:center; gap:5px; }
+  .dodo .sect-tit::before { content:'!'; display:inline-flex; align-items:center; justify-content:center; width:18px;height:18px; background:var(--brand-green); color:white; border-radius:50%; font-size:12px; font-weight:800; flex-shrink:0; }
+  .dodo ul { list-style:none; display:flex; flex-direction:column; gap:4px; }
+  .dodo ul li { font-size:11.5px; line-height:1.55; color:var(--text-body); padding-left:14px; position:relative; }
+  .dodo ul li::before { content:'➤'; position:absolute; left:0;top:2px; color:var(--brand-green); font-size:9px; }
+
+  .takeaway { background:linear-gradient(90deg,#B71C1C,#D32F2F,#B71C1C); border:2px solid #B71C1C; border-radius:4px; padding:7px 30px; text-align:center; position:relative; }
+  .takeaway-text { font-size:14px; font-weight:800; color:white; letter-spacing:2px; }
+  .reference-line { font-size:10px; color:#8A8A8A; text-align:right; padding:2px 6px 0; font-style:italic; }
+
+  .page-footer { background:var(--bg-light); border-top:1px solid var(--border-color); padding:4px 20px; font-size:10px; color:var(--text-light); display:flex; justify-content:space-between; align-items:center; }
+  .page-footer .fl { display:flex; gap:14px; } .page-footer .fr { display:flex; gap:10px; align-items:center; }
+  .qr-hint { font-size:9px; color:var(--text-light); }
+
+  /* ══════════════════════════════════════════
+     LAYOUT A — side (Beacon经典侧边式)
+     左侧：图片(上)+事故描述(下)
+     右侧：你知道吗(上)+你能做什么(下)
+     底部全宽：保护层失效 + HSE工具 + core takeaway
+     ══════════════════════════════════════════ */
+  .layout-side .content-cols { display:flex; gap:18px; align-items:stretch; flex:1; }
+  .layout-side .col-left { width:50%; min-width:0; display:flex; flex-direction:column; gap:10px; }
+  /* Beacon 对齐：右栏知识/行动色块自动拉伸，与左栏等高填满幅面不留白 */
+  .layout-side .col-right { width:50%; flex:0 0 auto; display:flex; flex-direction:column; gap:10px; }
+  .layout-side .col-right .know,
+  .layout-side .col-right .dodo { padding:10px 11px; }
+  .layout-side .col-right .know { flex:1; }
+  .layout-side .col-right .dodo { flex:1; }
+  .layout-side .col-right .know ul,
+  .layout-side .col-right .dodo ul { flex:1; justify-content:flex-start; gap:3px; }
+  /* side 左栏：示意图随剩余空间等比长高（Beacon 大图风格），desc 自然流排 */
+  .layout-side .col-left .card-img { width:100%; height:auto; min-height:150px; }
+  .layout-side .col-left .desc-text { width:100%; flex:1; font-size:13.5px; line-height:1.85; word-break:normal; overflow-wrap:break-word; }
+  .layout-side .col-right .know ul li,
+  .layout-side .col-right .dodo ul li { font-size:12px; line-height:1.6; padding-left:13px; }
+  .layout-side .col-right .sect-tit { font-size:13px; margin-bottom:6px; }
+
+  /* Hide stack elements in side layout */
+  .layout-side .row-top, .layout-side .row-bot { display:none; }
+
+  /* ══════════════════════════════════════════
+     LAYOUT B — stack (堆叠式)
+     上半：事故描述+图片 左右分栏
+     下半：你知道吗(左) + 你能做什么(右)
+     底部全宽：保护层失效 + HSE工具 + core takeaway
+     ══════════════════════════════════════════ */
+  .layout-stack .content-cols { display:flex; flex-direction:column; gap:10px; flex:1; }
+  .layout-stack .row-top { display:flex; gap:16px; align-items:flex-start; }
+  .layout-stack .row-top .desc-text { flex:1; font-size:14px; line-height:1.78; }
+  .layout-stack .card-img { flex:0 0 255px; min-height:150px; max-height:170px; }
+  /* Beacon 对齐：下半知识/行动区自动拉伸吃掉富余空间，色块填满幅面不留白 */
+  .layout-stack .row-bot { display:flex; gap:16px; flex:1; }
+  .layout-stack .row-bot .know,
+  .layout-stack .row-bot .dodo { flex:1; padding:9px 14px; }
+  .layout-stack .row-bot .know ul,
+  .layout-stack .row-bot .dodo ul { flex:1; justify-content:flex-start; gap:3px; }
+  .layout-stack .row-bot .know ul li,
+  .layout-stack .row-bot .dodo ul li { font-size:12px; line-height:1.65; }
+  .layout-stack .know, .layout-stack .dodo { padding:11px 14px; }
+  .layout-stack .know ul li, .layout-stack .dodo ul li { font-size:12.5px; line-height:1.75; }
+
+  /* Hide side elements in stack layout */
+  .layout-stack .col-left, .layout-stack .col-right { display:none; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="header-bar">
+    <div class="header-left">在事故教训中成长</div>
+    <div class="header-right">
+      <span class="l1">基于真实事故案例</span>
+      <span class="l2">工艺安全 · 经验教训</span>
+    </div>
+  </div>
+
+  <div class="info-strip">
+    <div class="info-item"><span class="info-label">事故日期</span><span class="info-value">2019年7月19日 17:43</span></div>
+    <div class="info-item"><span class="info-label">事故地点</span><span class="info-value">河南省三门峡市义马市 河南煤气集团义马气化厂</span></div>
+    <div class="info-item"><span class="info-label">事故类型</span><span class="info-value">空分装置冷箱泄漏爆炸（砂爆）</span></div>
+    <div class="info-item"><span class="info-label">严重程度</span><span class="info-value severity-high">重大事故（15死16重伤，直接经济损失8170万元）</span></div>
+    <div class="info-item"><span class="info-label">涉事物料</span><span class="info-value">液氧 / 空气分离装置</span></div>
+  </div>
+
+  <div style="flex:1;padding:10px 18px 6px;display:flex;flex-direction:column;gap:6px;overflow:hidden;" class="layout-side">
+    <div class="accident-title">
+      <span>冷箱泄漏23天不停车，砂爆摧毁空分装置</span><span class="date-badge">分享日期：2026年9月</span>
+    </div>
+
+    <div class="content-cols">
+
+      <!-- ═══ Layout A (side) — 左侧 ═══ -->
+      <div class="col-left">
+        <div class="card-img"><svg viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFF3E0"/><stop offset="100%" stop-color="#FFE0B2"/></linearGradient>
+    <radialGradient id="fire" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFEB3B"/><stop offset="40%" stop-color="#FF9800"/><stop offset="100%" stop-color="#F44336"/></radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="4"/></filter>
+  </defs>
+
+  <rect width="460" height="280" fill="url(#bg)" rx="6"/>
+
+  <!-- Ground -->
+  <rect x="0" y="240" width="460" height="40" fill="#BCAAA4"/>
+
+  <!-- Equipment (simplified) -->
+  <g transform="translate(30,120)">
+    <rect x="0" y="0" width="90" height="120" rx="3" fill="#78909C" stroke="#455A64" stroke-width="1.5"/>
+    <rect x="0" y="0" width="90" height="25" rx="3" fill="#546E7A"/>
+    <text x="45" y="65" font-size="8" fill="white" text-anchor="middle">反应器/设备</text>
+  </g>
+
+  <!-- Explosion center -->
+  <g transform="translate(160,170)" filter="url(#glow)">
+    <circle cx="0" cy="0" r="45" fill="url(#fire)" opacity="0.8"/>
+    <circle cx="0" cy="0" r="25" fill="#FFF59D" opacity="0.9"/>
+  </g>
+
+  <!-- Shock wave -->
+  <circle cx="160" cy="170" r="70" fill="none" stroke="#FF5722" stroke-width="2" opacity="0.4" stroke-dasharray="8,4"/>
+  <circle cx="160" cy="170" r="90" fill="none" stroke="#FF5722" stroke-width="1.5" opacity="0.25" stroke-dasharray="6,6"/>
+
+  <!-- Fire plume -->
+  <g filter="url(#glow)" opacity="0.7">
+    <ellipse cx="250" cy="140" rx="20" ry="50" fill="#FF6D00"/>
+    <ellipse cx="240" cy="120" rx="18" ry="40" fill="#FF9100"/>
+    <ellipse cx="260" cy="100" rx="15" ry="35" fill="#FFAB40"/>
+    <ellipse cx="250" cy="80" rx="12" ry="25" fill="#FFCC80"/>
+  </g>
+
+  <!-- Debris -->
+  <rect x="300" y="130" width="8" height="12" rx="1" fill="#607D8B" transform="rotate(30,304,136)" opacity="0.6"/>
+  <rect x="340" y="150" width="6" height="10" rx="1" fill="#795548" transform="rotate(-20,343,155)" opacity="0.5"/>
+  <circle cx="360" cy="140" r="3" fill="#455A64" opacity="0.5"/>
+
+  <!-- Safety barriers -->
+  <g transform="translate(350,180)">
+    <rect x="0" y="0" width="80" height="28" rx="4" fill="#FFCDD2" stroke="#EF5350" stroke-width="1"/>
+    <text x="40" y="18" font-size="8" fill="#C62828" text-anchor="middle">保护层全部失效</text>
+  </g>
+
+  <text x="10" y="20" font-size="12" font-weight="bold" fill="#37474F">爆炸/火灾事故示意图</text>
+  <text x="130" y="260" font-size="10" fill="#BF360C" font-weight="bold" text-anchor="middle">爆燃中心</text>
+<circle cx="230" cy="150" r="16" fill="none" stroke="#D50032" stroke-width="2.5" stroke-dasharray="5,3" opacity="0.95"/><line x1="246" y1="150" x2="258" y2="150" stroke="#D50032" stroke-width="1.5"/><text x="262" y="144" font-size="10" font-weight="bold" fill="#D50032" text-anchor="start">引燃点</text></svg></div>
+        <div class="desc-text"><p>2019年7月19日17时43分，河南煤气集团义马气化厂C套空气分离装置发生重大爆炸事故，造成15人死亡、16人重伤，直接经济损失8170万元。</p>
+        <p style="margin-top:8px;">【事故】C套空分装置冷箱42米标高处V701阀连接管道泄漏，富氧液体持续渗入保温层珠光砂中，长达<span class="highlight">23天</span>未停车处置。低温液体在砂内急剧蒸发发生「<span class="highlight">砂爆</span>」，撑裂冷箱外壳并砸裂东侧500立方米液氧贮槽，大量液氧外泄。可燃物、助燃气、激发能三要素齐备引发第一次爆炸，富氧环境中的铝制填料、板式换热器随即发生更猛烈的第二次爆炸。</p>
+        <p style="margin-top:8px;">【启示】企业重生产轻安全、设备带病运行，停车决策层层请示、该断不断，是伤亡扩大的深层原因。</p></div>
+      </div>
+      <!-- ═══ Layout A (side) — 右侧 ═══ -->
+      <div class="col-right">
+        <div class="know"><div class="sect-tit">你知道吗？</div><ul><li>空分冷箱内低温富氧液体漏入珠光砂急剧蒸发，即发生「砂爆」撑裂外壳——低温介质泄漏必须立即停车</li>
+            <li>液氧是强氧化剂，液氧+可燃物+激发能三要素齐备即爆炸，处置必须远离可燃物火源</li>
+            <li>富氧环境使铝等金属变为可燃，二次爆炸破坏力远超首次</li>
+            <li>冷箱结霜、珠光砂异常沉降是泄漏前兆，应列入巡检必查项</li></ul></div>
+        <div class="dodo"><div class="sect-tit">你能做什么？</div><ul><li>发现冷箱结霜、砂层沉降，立即上报并停车检查</li>
+            <li>将冷箱压力、液位、泄漏征兆纳入每日巡检台账</li>
+            <li>明确紧急停车授权，隐患面前先停再议</li>
+            <li>液氧贮槽周边严控火源可燃物，保持安全距离</li></ul></div>
+      </div>
+
+      <!-- ═══ Layout B (stack) — 上半 ═══ -->
+      <div class="row-top">
+        <div class="desc-text"><p>2019年7月19日17时43分，河南煤气集团义马气化厂C套空气分离装置发生重大爆炸事故，造成15人死亡、16人重伤，直接经济损失8170万元。</p>
+        <p style="margin-top:8px;">【事故】C套空分装置冷箱42米标高处V701阀连接管道泄漏，富氧液体持续渗入保温层珠光砂中，长达<span class="highlight">23天</span>未停车处置。低温液体在砂内急剧蒸发发生「<span class="highlight">砂爆</span>」，撑裂冷箱外壳并砸裂东侧500立方米液氧贮槽，大量液氧外泄。可燃物、助燃气、激发能三要素齐备引发第一次爆炸，富氧环境中的铝制填料、板式换热器随即发生更猛烈的第二次爆炸。</p>
+        <p style="margin-top:8px;">【启示】企业重生产轻安全、设备带病运行，停车决策层层请示、该断不断，是伤亡扩大的深层原因。</p></div>
+        <div class="card-img"><svg viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFF3E0"/><stop offset="100%" stop-color="#FFE0B2"/></linearGradient>
+    <radialGradient id="fire" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#FFEB3B"/><stop offset="40%" stop-color="#FF9800"/><stop offset="100%" stop-color="#F44336"/></radialGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="4"/></filter>
+  </defs>
+
+  <rect width="460" height="280" fill="url(#bg)" rx="6"/>
+
+  <!-- Ground -->
+  <rect x="0" y="240" width="460" height="40" fill="#BCAAA4"/>
+
+  <!-- Equipment (simplified) -->
+  <g transform="translate(30,120)">
+    <rect x="0" y="0" width="90" height="120" rx="3" fill="#78909C" stroke="#455A64" stroke-width="1.5"/>
+    <rect x="0" y="0" width="90" height="25" rx="3" fill="#546E7A"/>
+    <text x="45" y="65" font-size="8" fill="white" text-anchor="middle">反应器/设备</text>
+  </g>
+
+  <!-- Explosion center -->
+  <g transform="translate(160,170)" filter="url(#glow)">
+    <circle cx="0" cy="0" r="45" fill="url(#fire)" opacity="0.8"/>
+    <circle cx="0" cy="0" r="25" fill="#FFF59D" opacity="0.9"/>
+  </g>
+
+  <!-- Shock wave -->
+  <circle cx="160" cy="170" r="70" fill="none" stroke="#FF5722" stroke-width="2" opacity="0.4" stroke-dasharray="8,4"/>
+  <circle cx="160" cy="170" r="90" fill="none" stroke="#FF5722" stroke-width="1.5" opacity="0.25" stroke-dasharray="6,6"/>
+
+  <!-- Fire plume -->
+  <g filter="url(#glow)" opacity="0.7">
+    <ellipse cx="250" cy="140" rx="20" ry="50" fill="#FF6D00"/>
+    <ellipse cx="240" cy="120" rx="18" ry="40" fill="#FF9100"/>
+    <ellipse cx="260" cy="100" rx="15" ry="35" fill="#FFAB40"/>
+    <ellipse cx="250" cy="80" rx="12" ry="25" fill="#FFCC80"/>
+  </g>
+
+  <!-- Debris -->
+  <rect x="300" y="130" width="8" height="12" rx="1" fill="#607D8B" transform="rotate(30,304,136)" opacity="0.6"/>
+  <rect x="340" y="150" width="6" height="10" rx="1" fill="#795548" transform="rotate(-20,343,155)" opacity="0.5"/>
+  <circle cx="360" cy="140" r="3" fill="#455A64" opacity="0.5"/>
+
+  <!-- Safety barriers -->
+  <g transform="translate(350,180)">
+    <rect x="0" y="0" width="80" height="28" rx="4" fill="#FFCDD2" stroke="#EF5350" stroke-width="1"/>
+    <text x="40" y="18" font-size="8" fill="#C62828" text-anchor="middle">保护层全部失效</text>
+  </g>
+
+  <text x="10" y="20" font-size="12" font-weight="bold" fill="#37474F">爆炸/火灾事故示意图</text>
+  <text x="130" y="260" font-size="10" fill="#BF360C" font-weight="bold" text-anchor="middle">爆燃中心</text>
+<circle cx="230" cy="150" r="16" fill="none" stroke="#D50032" stroke-width="2.5" stroke-dasharray="5,3" opacity="0.95"/><line x1="246" y1="150" x2="258" y2="150" stroke="#D50032" stroke-width="1.5"/><text x="262" y="144" font-size="10" font-weight="bold" fill="#D50032" text-anchor="start">引燃点</text></svg></div>
+      </div>
+      <!-- ═══ Layout B (stack) — 下半 ═══ -->
+      <div class="row-bot">
+        <div class="know"><div class="sect-tit">你知道吗？</div><ul><li>空分冷箱内低温富氧液体漏入珠光砂急剧蒸发，即发生「砂爆」撑裂外壳——低温介质泄漏必须立即停车</li>
+            <li>液氧是强氧化剂，液氧+可燃物+激发能三要素齐备即爆炸，处置必须远离可燃物火源</li>
+            <li>富氧环境使铝等金属变为可燃，二次爆炸破坏力远超首次</li>
+            <li>冷箱结霜、珠光砂异常沉降是泄漏前兆，应列入巡检必查项</li></ul></div>
+        <div class="dodo"><div class="sect-tit">你能做什么？</div><ul><li>发现冷箱结霜、砂层沉降，立即上报并停车检查</li>
+            <li>将冷箱压力、液位、泄漏征兆纳入每日巡检台账</li>
+            <li>明确紧急停车授权，隐患面前先停再议</li>
+            <li>液氧贮槽周边严控火源可燃物，保持安全距离</li></ul></div>
+      </div>
+    </div>
+
+    <!-- ═══ 历史事故 — 全宽（可选，history 非空时渲染）═══ -->
+    <div class="history-box"><div class="hs-title">🏛️ 历史事故</div><div class="hs-items"><span class="hs-tag">2021年湖北十堰：燃气泄漏爆炸，26死</span>
+          <span class="hs-tag">2013年吉林宝源丰：液氨泄漏爆炸火灾，121死</span></div></div>
+
+    <!-- ═══ 保护层失效分析 — 全宽 ═══ -->
+    <div class="protect-fail">
+      <div class="pf-title">🛡️ 保护层失效分析</div>
+      <div class="pf-items"><span class="pf-tag">🧊 冷箱富氧泄漏监测缺失</span>
+          <span class="pf-tag">🚨 泄漏预警体系失效</span>
+          <span class="pf-tag">🛑 泄漏23天未停车处置</span>
+          <span class="pf-tag">📋 停车决策机制僵化</span>
+          <span class="pf-tag">📦 液氧贮槽无防护隔离</span></div>
+    </div>
+
+    <!-- ═══ 安全要素 / HSE工具 — 全宽 ═══ -->
+    <div class="hse-tools">
+      <div class="ht-title">🔧 安全要素 / HSE 工具</div>
+      <div class="ht-items"><span class="ht-tag">🧊 空分装置专项检查</span>
+          <span class="ht-tag">🚨 泄漏检测与预警（GDS）</span>
+          <span class="ht-tag">🛑 紧急停车系统（ESD）</span>
+          <span class="ht-tag">📋 隐患排查治理</span>
+          <span class="ht-tag">⚙️ 设备完整性管理（MI）</span>
+          <span class="ht-tag">🎓 岗位技能与案例培训</span>
+          <span class="ht-tag">🚒 应急响应与疏散演练</span>
+          <span class="ht-tag">🏭 重大危险源管控</span></div>
+    </div>
+
+    <!-- ═══ Takeaway — ALWAYS full width at bottom ═══ -->
+    <div class="reference-line">🔗 参见：河南义马气化厂「7·19」事故调查报告（2020）</div>
+    <div class="takeaway"><span class="takeaway-text">★ 低温介质泄漏零容忍，发现即停车绝不带病运行 ★</span></div>
+  </div>
+
+  <div class="page-footer">
+    <div class="fl"><span>Ray谈化工 · 安全事故分享</span><span>编号：PSI-2019-002</span></div>
+    <div class="fr"><span>工艺安全 · 经验教训 · 防患未然</span><span class="qr-hint">[完整报告]</span></div>
+  </div>
+</div>
+
+</body>
+</html>

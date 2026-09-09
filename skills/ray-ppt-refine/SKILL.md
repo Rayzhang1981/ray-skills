@@ -226,7 +226,7 @@ python ~/.workbuddy/skills/ray-ppt-refine/scripts/refine_gate_check.py \
 | 编码 | 设计语言 | 一句话 | 档案路径 | 状态 |
 |------|---------|--------|---------|------|
 | **A** | 手绘线语言 | 用"线"建立视觉节奏（447 freeform）+ 暖纸色极简 + 固定位置灰度插图 | `design-languages/A-handdrawn-line/` | ✅ 已归档 |
-| **B** | 卡片+徽章 | 浅色卡片矩阵 + 1:1 方形徽章 + 功能色条 + 大数字 + 底部通栏提示 | `D:/RayClaw/skill-archives/ray-ppt-refine-B-card-badge-20260828/`（62MB assets 外置归档，2026-08-28） | 📦 已外置 |
+| **B** | 卡片+徽章 | 浅色卡片矩阵 + 1:1 方形徽章 + 功能色条 + 大数字 + 底部通栏提示 | `~/RayClaw/skill-archives/ray-ppt-refine-B-card-badge-20260828/`（62MB assets 外置归档，2026-08-28） | 📦 已外置 |
 | **C** | 大数字信息图 | 120pt 半透明数字背景 + 数据突出 + 章节编号 | `design-languages/C-big-number/` | ⬜ 空档案 |
 | **D** | 深色科技风 | 深空蓝/黑底 + 霓虹强调 + 科技感 | `design-languages/D-dark-tech/` | ⬜ 空档案 |
 | **E** | 政务公文风 | 红头文件 + 仿宋 + 严谨庄重 | `design-languages/E-gov-doc/` | ⬜ 空档案 |
@@ -254,7 +254,7 @@ python ~/.workbuddy/skills/ray-ppt-refine/scripts/refine_gate_check.py \
 | **底部通栏提示** | 关键页底部全宽提示条（白字加粗居中） | 关键警示页 | `banner()` 双位置（bottom y=6.45 / top y=1.18，内容满页用 top） |
 | **章节预告卡片** | 章节页底部居中 3 张深蓝卡片+功能色顶条 | 章节页 | `section()` previews 参数 |
 
-> 完整档案（改造路径/素材/经验引用）：已外置归档 `D:/RayClaw/skill-archives/ray-ppt-refine-B-card-badge-20260828/`（含 profile.md），需要时按路径取用
+> 完整档案（改造路径/素材/经验引用）：已外置归档 `~/RayClaw/skill-archives/ray-ppt-refine-B-card-badge-20260828/`（含 profile.md），需要时按路径取用
 
 ### 配图落地三坑（v1.3 新增，实战验证 2026-08-17）
 

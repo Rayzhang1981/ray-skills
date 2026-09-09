@@ -15,7 +15,7 @@
 
 ## 在架技能（SkillHub 已发布 · 21 个）
 
-✅ = 源码已在本仓库 `skills/`；⏳ = 版权/脱敏评估中，暂未收录源码
+✅ = 源码已在本仓库 `skills/`；⏳ = 版权/隐私原因，源码不公开（SkillHub 版不受影响）
 
 | 技能 | 版本 | 一句话 | 源码 | SkillHub |
 |------|------|--------|:---:|----------|
@@ -29,19 +29,21 @@
 | ray-ppt-generator | 3.19.0 | python-pptx 快速生成可编辑 PPTX | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-ppt-generator) |
 | ray-ppt-refine | 2.5.0 | 已有 PPTX 排版美化与合规验收 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-ppt-refine) |
 | ray-ppt-video | 2.7.0 | PPTX → 配音培训视频（FFmpeg） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-ppt-video) |
-| ray-rca | 1.1.0 | 事故根本原因分析（RCA）端到端 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-rca) |
 | ray-deep-research | 1.3.2 | 溯源对比法深度研究对象 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-deep-research) |
 | ray-synth-search | 1.7.1 | 多源检索 + 交叉验证的日常搜索主力 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-synth-search) |
-| ray-chem-property | 3.5.0 | 化学品物性数据批量搜集（111 列） | ⏳ 数据版权评估中 | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-chem-property) |
-| ray-hazop-lopa | 1.3.1 | HAZOP/LOPA 定量分析报告生成器 | ⏳ 模板去敏中 | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-hazop-lopa) |
-| ray-pse-sharing | 1.13.0 | 事故报告 → 一页 A4 分享卡 | ⏳ 素材去敏中 | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-pse-sharing) |
-| ray-pse-video | 2.4.0 | 事故报告 → 安全培训视频 | ⏳ 素材去敏中 | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-pse-video) |
-| ray-self-reflection | 3.15.0 | 自我反思 · 经验萃取 | ⏳ references 抽离中 | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-self-reflection) |
-| ray-standard-search | 3.0.1 | 化工标准与法规快查 | ⏳ 凭据剥离中 | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-standard-search) |
-| ray-translate | 3.3.3 | 化工安全文档中英双向翻译 | ⏳ 术语库去敏中 | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-translate) |
-| ray-household-finance | 2.4.1 | 家庭财务管理框架 | ⏳ 隐私评估中 | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-household-finance) |
+| ray-standard-search | 3.0.1 | 化工标准与法规快查（IMA 为可选源） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-standard-search) |
+| ray-pse-sharing | 1.13.0 | 事故报告 → 一页 A4 分享卡 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-pse-sharing) |
+| ray-pse-video | 2.4.0 | 事故报告 → 安全培训视频 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-pse-video) |
+| ray-self-reflection | 3.15.0 | 自我反思 · 经验萃取 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-self-reflection) |
+| ray-translate | 3.3.3 | 化工安全文档中英双向翻译 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-translate) |
+| ray-hazop-lopa | 1.3.1 | HAZOP/LOPA 定量分析报告生成器 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-hazop-lopa) |
+| ray-chem-property | 3.5.0 | 化学品物性数据批量搜集（索引库随 SkillHub 版分发） | ✅* | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-chem-property) |
+| ray-household-finance | 2.4.1 | 家庭财务管理框架（示例为虚构数据） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-household-finance) |
+| ray-rca | 1.1.0 | 事故根本原因分析（RCA）端到端 | ⏳ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-rca) |
 
-> 另有 30+ 技能（CCPS 方法论认知层 17 个、私用 4 个等）仅在 SkillHub/私有环境分发，未公开源码，详见各 Skill 说明。
+> \* ray-chem-property 开源版含脚本与流程，完整物性索引库（授权数据）仅随 SkillHub 版分发。
+> ⏳ ray-rca 融合第三方专有方法（ABS SOURCE™），源码不公开。
+> 另有 30+ 技能（CCPS 方法论认知层 17 个等）仅在私有环境分发，未公开源码。
 
 ---
 
@@ -69,6 +71,8 @@ ray-skills/
 
 `skills/<name>/` 是本地 `~/.workbuddy/skills/<name>` 当前版的**发布镜像**（只收录通过分层评估的技能）。
 日常更新：改本地 → SkillHub 发布 → `bash scripts/sync_from_local.sh` 同步仓库 → push。
+
+> sync 脚本自动排除：`data/`（如 chem-property 授权索引库）、`anchor_db.json`（pse-sharing 本地锚点库）、运行时产物。
 
 ## 贡献
 

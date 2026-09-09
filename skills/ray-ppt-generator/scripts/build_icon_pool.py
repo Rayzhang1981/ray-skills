@@ -13,7 +13,7 @@ from PIL import Image
 CDN = "https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/{}.svg"
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
 HERE = os.path.dirname(os.path.abspath(__file__))
-# 图标池外置（SkillHub 发布拒收 .png，图片资产一律放 D:/RayClaw/skill-archives/）
+# 图标池外置（SkillHub 发布拒收 .png，图片资产一律放 ~/RayClaw/skill-archives/）
 POOL = r"D:\RayClaw\skill-archives\ray-ppt-generator-icon-pool-20260904"
 SVG_TMP = os.path.join(HERE, "_svg_tmp")
 

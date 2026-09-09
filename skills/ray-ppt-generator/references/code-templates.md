@@ -764,12 +764,12 @@ SEQ_LADDER = ['#0F4C81', '#156096', '#1E78B4', '#E87722', '#BE5014']  # 冷→�
 
 ### 2.26 内建安全图标池 + add_icon 函数（2026-09-04 实战验证 ★★）
 
-> **40 个安全语义图标（外置资产，非 skill 内置）**：PNG 池归档在 `D:/RayClaw/skill-archives/ray-ppt-generator-icon-pool-20260904/`（256×256 透明底，Lucide 线性风格，ISC 可商用）——**skill 目录内不放任何图片**（SkillHub 发布拒收 .png，故外置）。覆盖防护/警示（shield/shield-alert/triangle-alert/bell/flame/skull/radiation/siren）、安全行为（check/x/eye/search/list-checks/clipboard-check/user-check）、管理（settings/file-text/book-open/graduation-cap/clock/timer/target/megaphone/phone-call）等。命名规范 `{语义}_{色值}.png`（如 `shield_0F4C81.png`）。
+> **40 个安全语义图标（外置资产，非 skill 内置）**：PNG 池归档在 `<icon-archive>/ray-ppt-generator-icon-pool-20260904/`（256×256 透明底，Lucide 线性风格，ISC 可商用）——**skill 目录内不放任何图片**（SkillHub 发布拒收 .png，故外置）。覆盖防护/警示（shield/shield-alert/triangle-alert/bell/flame/skull/radiation/siren）、安全行为（check/x/eye/search/list-checks/clipboard-check/user-check）、管理（settings/file-text/book-open/graduation-cap/clock/timer/target/megaphone/phone-call）等。命名规范 `{语义}_{色值}.png`（如 `shield_0F4C81.png`）。
 
 ```python
 # add_icon 便捷函数 —— 从外置图标池插一个图标（透明 PNG）
 import os
-ICON_ARCHIVE = r"D:/RayClaw/skill-archives/ray-ppt-generator-icon-pool-20260904"
+ICON_ARCHIVE = r"<icon-archive>/ray-ppt-generator-icon-pool-20260904"
 
 def _find_icon(key, color):
     """在外置池定位图标文件；池缺失/无此图标→提示跑重建脚本"""

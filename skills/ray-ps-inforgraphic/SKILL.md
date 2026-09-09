@@ -72,12 +72,12 @@ Process Safety Infographic Generator.
 | kb_id | `ab9n_5rblYBTLWXftfs9AB5WAAfnCTixKA0FTYFNyVs=` |
 | API 路径 | `openapi/wiki/v1/search_knowledge` |
 | 凭证路径 | `~/.config/ima/client_id` + `~/.config/ima/api_key` |
-| 脚本路径 | `C:/Users/rayzh/.workbuddy/skills/腾讯ima/ima_api.cjs` |
+| 脚本路径 | `~/.workbuddy/skills/腾讯ima/ima_api.cjs` |
 
 **调用命令：**
 
 ```bash
-node "C:/Users/rayzh/.workbuddy/skills/腾讯ima/ima_api.cjs" \
+node "~/.workbuddy/skills/腾讯ima/ima_api.cjs" \
   "openapi/wiki/v1/search_knowledge" \
   '{"knowledge_base_id":"ab9n_5rblYBTLWXftfs9AB5WAAfnCTixKA0FTYFNyVs=","query":"KEYWORD","top_k":10,"search_mode":"hybrid"}'
 ```
@@ -323,16 +323,16 @@ Step 3 要点提炼完成
 - [ ] 换个主题这布局还成立吗？（成立 → 做成了模板而非设计）
 
 **文件保存路径：**  
-`D:/RayClaw/{当前日期}-{任务标识}/{关键词}_infograph.html`
+`~/RayClaw/{当前日期}-{任务标识}/{关键词}_infograph.html`
 
 **预览：**
 ```
-preview_url(file:///D:/RayClaw/{路径}/{关键词}_infograph.html)
+preview_url(file:///~/RayClaw/{路径}/{关键词}_infograph.html)
 ```
 
 **交付：**
 ```
-deliver_attachments(["D:/RayClaw/{路径}/{关键词}_infograph.html"], "交付{关键词}安全信息图 HTML")
+deliver_attachments(["~/RayClaw/{路径}/{关键词}_infograph.html"], "交付{关键词}安全信息图 HTML")
 ```
 
 **底部收尾条署名与来源标注（必做）：**

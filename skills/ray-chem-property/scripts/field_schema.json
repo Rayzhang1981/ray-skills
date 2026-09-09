@@ -1,0 +1,961 @@
+{
+ "_meta": {
+  "template_sheet": "物性汇总表",
+  "description": "工艺物料安全物性数据表 107 列规范映射（2026-08-26 新增 Emergency Guidelines 应急准则列）。col 为列字母，num 为 1 基列号，group 为分区。列 A 为空表头忽略。",
+  "header_rows": [
+   4,
+   5,
+   6,
+   7,
+   8
+  ],
+  "data_start_row": 9,
+  "template_units_row": 8
+ },
+ "groups": {
+  "identifiers": "化学品标识",
+  "physical": "物理特性",
+  "ghs_physical": "物理危害(GHS/GB30000)",
+  "ghs_health": "健康危害(GHS/GB30000)",
+  "ghs_env": "环境危害(GHS/GB30000)",
+  "regulatory": "法规名录",
+  "nfpa": "NFPA 704",
+  "flammability": "燃爆数据",
+  "exposure": "接触限值",
+  "toxicity": "毒性数据",
+  "emergency": "应急准则/Emergency Guidelines",
+  "other": "其他",
+  "supplementary": "补充数据 Supplementary"
+ },
+ "fields": [
+  {
+   "key": "seq",
+   "col": "B",
+   "num": 1,
+   "group": "identifiers",
+   "cn": "序号",
+   "en": "#"
+  },
+  {
+   "key": "name_cn",
+   "col": "C",
+   "num": 2,
+   "group": "identifiers",
+   "cn": "物料名称",
+   "en": "Material"
+  },
+  {
+   "key": "name_en",
+   "col": "D",
+   "num": 3,
+   "group": "identifiers",
+   "cn": "英文名",
+   "en": "Chemical name"
+  },
+  {
+   "key": "cas",
+   "col": "E",
+   "num": 4,
+   "group": "identifiers",
+   "cn": "CAS号码",
+   "en": "CAS number"
+  },
+  {
+   "key": "abbrev",
+   "col": "F",
+   "num": 5,
+   "group": "identifiers",
+   "cn": "简写/代号",
+   "en": "Abbrev./Code"
+  },
+  {
+   "key": "formula",
+   "col": "G",
+   "num": 6,
+   "group": "physical",
+   "cn": "分子式",
+   "en": "Molecular Formula"
+  },
+  {
+   "key": "mw",
+   "col": "H",
+   "num": 7,
+   "group": "physical",
+   "cn": "分子量",
+   "en": "Molecular weight",
+   "unit": "g/mol"
+  },
+  {
+   "key": "mp",
+   "col": "I",
+   "num": 8,
+   "group": "physical",
+   "cn": "熔点",
+   "en": "Melting point",
+   "unit": "°C"
+  },
+  {
+   "key": "state20",
+   "col": "J",
+   "num": 9,
+   "group": "physical",
+   "cn": "20℃状态",
+   "en": "State at 20°C"
+  },
+  {
+   "key": "bp",
+   "col": "K",
+   "num": 10,
+   "group": "physical",
+   "cn": "沸点(1atm)",
+   "en": "Boiling point",
+   "unit": "°C"
+  },
+  {
+   "key": "cp",
+   "col": "L",
+   "num": 11,
+   "group": "physical",
+   "cn": "比热容Cp(25℃,1atm)",
+   "en": "Heat Capacity",
+   "unit": "KJ/kg*℃"
+  },
+  {
+   "key": "density_20",
+   "col": "M",
+   "num": 12,
+   "group": "physical",
+   "cn": "密度(20℃)",
+   "en": "Density 20°C",
+   "unit": "kg/m3"
+  },
+  {
+   "key": "density_25",
+   "col": "N",
+   "num": 13,
+   "group": "physical",
+   "cn": "密度(25℃)",
+   "en": "Density 25°C",
+   "unit": "kg/m3"
+  },
+  {
+   "key": "sp_grav_water",
+   "col": "O",
+   "num": 14,
+   "group": "physical",
+   "cn": "比重(对水)",
+   "en": "Specific gravity /water"
+  },
+  {
+   "key": "sp_grav_air",
+   "col": "P",
+   "num": 15,
+   "group": "physical",
+   "cn": "比重(对空气)",
+   "en": "Specific gravity /air"
+  },
+  {
+   "key": "visc_0",
+   "col": "Q",
+   "num": 16,
+   "group": "physical",
+   "cn": "黏度(0℃)",
+   "en": "Viscosity 0°C",
+   "unit": "mPa.s/CP"
+  },
+  {
+   "key": "visc_20",
+   "col": "R",
+   "num": 17,
+   "group": "physical",
+   "cn": "黏度(20℃)",
+   "en": "Viscosity 20°C",
+   "unit": "mPa.s/CP"
+  },
+  {
+   "key": "visc_25",
+   "col": "S",
+   "num": 18,
+   "group": "physical",
+   "cn": "黏度(25℃)",
+   "en": "Viscosity 25°C",
+   "unit": "mPa.s/CP"
+  },
+  {
+   "key": "visc_60",
+   "col": "T",
+   "num": 19,
+   "group": "physical",
+   "cn": "黏度(60℃)",
+   "en": "Viscosity 60°C",
+   "unit": "mPa.s/CP"
+  },
+  {
+   "key": "sol_water",
+   "col": "U",
+   "num": 20,
+   "group": "physical",
+   "cn": "水中溶解度",
+   "en": "Solubility in water",
+   "unit": "g/l@℃"
+  },
+  {
+   "key": "sol_organic",
+   "col": "V",
+   "num": 21,
+   "group": "physical",
+   "cn": "有机物中溶解度",
+   "en": "Solubility in organics",
+   "unit": "g/l@溶剂"
+  },
+  {
+   "key": "ph",
+   "col": "W",
+   "num": 22,
+   "group": "physical",
+   "cn": "pH(20℃水溶液)",
+   "en": "pH"
+  },
+  {
+   "key": "vp_20",
+   "col": "X",
+   "num": 23,
+   "group": "physical",
+   "cn": "饱和蒸气压(20℃)",
+   "en": "Vapor Pressure 20°C",
+   "unit": "mbar/Hpa"
+  },
+  {
+   "key": "vp_25",
+   "col": "Y",
+   "num": 24,
+   "group": "physical",
+   "cn": "饱和蒸气压(25℃)",
+   "en": "Vapor Pressure 25°C",
+   "unit": "mbar/Hpa"
+  },
+  {
+   "key": "vp_60",
+   "col": "Z",
+   "num": 25,
+   "group": "physical",
+   "cn": "饱和蒸气压(60℃)",
+   "en": "Vapor Pressure 60°C",
+   "unit": "mbar/Hpa"
+  },
+  {
+   "key": "antoine_a",
+   "col": "AA",
+   "num": 26,
+   "group": "physical",
+   "cn": "安托万参数A",
+   "en": "Antoine A"
+  },
+  {
+   "key": "antoine_b",
+   "col": "AB",
+   "num": 27,
+   "group": "physical",
+   "cn": "安托万参数B",
+   "en": "Antoine B"
+  },
+  {
+   "key": "antoine_c",
+   "col": "AC",
+   "num": 28,
+   "group": "physical",
+   "cn": "安托万参数C",
+   "en": "Antoine C"
+  },
+  {
+   "key": "hvap",
+   "col": "AD",
+   "num": 29,
+   "group": "physical",
+   "cn": "汽化热",
+   "en": "Heat of Vaporization",
+   "unit": "KJ/mol*K"
+  },
+  {
+   "key": "critical_temp",
+   "col": "AE",
+   "num": 30,
+   "group": "physical",
+   "cn": "临界温度",
+   "en": "Critical Temp Tc",
+   "unit": "K"
+  },
+  {
+   "key": "critical_pressure",
+   "col": "AF",
+   "num": 31,
+   "group": "physical",
+   "cn": "临界压力",
+   "en": "Critical Pressure Pc",
+   "unit": "MPa"
+  },
+  {
+   "key": "haz_explosive",
+   "col": "AG",
+   "num": 32,
+   "group": "ghs_physical",
+   "cn": "爆炸物",
+   "en": "Explosive"
+  },
+  {
+   "key": "haz_flam_gas",
+   "col": "AH",
+   "num": 33,
+   "group": "ghs_physical",
+   "cn": "易燃气体",
+   "en": "Flammable gas"
+  },
+  {
+   "key": "haz_aerosol",
+   "col": "AI",
+   "num": 34,
+   "group": "ghs_physical",
+   "cn": "气溶胶",
+   "en": "Aerosol"
+  },
+  {
+   "key": "haz_ox_gas",
+   "col": "AJ",
+   "num": 35,
+   "group": "ghs_physical",
+   "cn": "氧化性气体",
+   "en": "Oxidizing gas"
+  },
+  {
+   "key": "haz_press_gas",
+   "col": "AK",
+   "num": 36,
+   "group": "ghs_physical",
+   "cn": "加压气体",
+   "en": "Gas under pressure"
+  },
+  {
+   "key": "haz_flam_liq",
+   "col": "AL",
+   "num": 37,
+   "group": "ghs_physical",
+   "cn": "易燃液体",
+   "en": "Flammable liquid"
+  },
+  {
+   "key": "haz_flam_solid",
+   "col": "AM",
+   "num": 38,
+   "group": "ghs_physical",
+   "cn": "易燃固体",
+   "en": "Flammable solid"
+  },
+  {
+   "key": "haz_self_react",
+   "col": "AN",
+   "num": 39,
+   "group": "ghs_physical",
+   "cn": "自反应物质",
+   "en": "Self-reactive"
+  },
+  {
+   "key": "haz_pyro_liq",
+   "col": "AO",
+   "num": 40,
+   "group": "ghs_physical",
+   "cn": "自燃液体",
+   "en": "Pyrophoric liquid"
+  },
+  {
+   "key": "haz_pyro_solid",
+   "col": "AP",
+   "num": 41,
+   "group": "ghs_physical",
+   "cn": "自燃固体",
+   "en": "Pyrophoric solid"
+  },
+  {
+   "key": "haz_self_heat",
+   "col": "AQ",
+   "num": 42,
+   "group": "ghs_physical",
+   "cn": "自热物质和混合物",
+   "en": "Self-heating"
+  },
+  {
+   "key": "haz_water_flam",
+   "col": "AR",
+   "num": 43,
+   "group": "ghs_physical",
+   "cn": "遇水放出易燃气体",
+   "en": "Water-reactive"
+  },
+  {
+   "key": "haz_ox_liq",
+   "col": "AS",
+   "num": 44,
+   "group": "ghs_physical",
+   "cn": "氧化性液体",
+   "en": "Oxidizing liquid"
+  },
+  {
+   "key": "haz_ox_solid",
+   "col": "AT",
+   "num": 45,
+   "group": "ghs_physical",
+   "cn": "氧化性固体",
+   "en": "Oxidizing solid"
+  },
+  {
+   "key": "haz_org_peroxide",
+   "col": "AU",
+   "num": 46,
+   "group": "ghs_physical",
+   "cn": "有机过氧化物",
+   "en": "Organic peroxide"
+  },
+  {
+   "key": "haz_metal_corr",
+   "col": "AV",
+   "num": 47,
+   "group": "ghs_physical",
+   "cn": "金属腐蚀物",
+   "en": "Corrosive to metals"
+  },
+  {
+   "key": "haz_acute_tox",
+   "col": "AW",
+   "num": 48,
+   "group": "ghs_health",
+   "cn": "急性毒性",
+   "en": "Acute toxicity"
+  },
+  {
+   "key": "haz_skin_corr",
+   "col": "AX",
+   "num": 49,
+   "group": "ghs_health",
+   "cn": "皮肤腐蚀/刺激",
+   "en": "Skin corrosion/irritation"
+  },
+  {
+   "key": "haz_eye_dam",
+   "col": "AY",
+   "num": 50,
+   "group": "ghs_health",
+   "cn": "严重眼损伤/眼刺激",
+   "en": "Serious eye damage/irritation"
+  },
+  {
+   "key": "haz_sens",
+   "col": "AZ",
+   "num": 51,
+   "group": "ghs_health",
+   "cn": "呼吸道或皮肤致敏",
+   "en": "Respiratory/skin sensitization"
+  },
+  {
+   "key": "haz_mutagen",
+   "col": "BA",
+   "num": 52,
+   "group": "ghs_health",
+   "cn": "生殖细胞致突变",
+   "en": "Germ cell mutagenicity"
+  },
+  {
+   "key": "haz_carcinogen",
+   "col": "BB",
+   "num": 53,
+   "group": "ghs_health",
+   "cn": "致癌性",
+   "en": "Carcinogenicity"
+  },
+  {
+   "key": "haz_repro",
+   "col": "BC",
+   "num": 54,
+   "group": "ghs_health",
+   "cn": "生殖毒性",
+   "en": "Reproductive toxicity"
+  },
+  {
+   "key": "haz_stot_se",
+   "col": "BD",
+   "num": 55,
+   "group": "ghs_health",
+   "cn": "特异性靶器官毒性-I",
+   "en": "STOT single exposure"
+  },
+  {
+   "key": "haz_stot_re",
+   "col": "BE",
+   "num": 56,
+   "group": "ghs_health",
+   "cn": "特异性靶器官毒性-II",
+   "en": "STOT repeated exposure"
+  },
+  {
+   "key": "haz_aspiration",
+   "col": "BF",
+   "num": 57,
+   "group": "ghs_health",
+   "cn": "吸入危害",
+   "en": "Aspiration hazard"
+  },
+  {
+   "key": "haz_ozone",
+   "col": "BG",
+   "num": 58,
+   "group": "ghs_env",
+   "cn": "危害臭氧层",
+   "en": "Ozone layer"
+  },
+  {
+   "key": "haz_aquatic_chronic",
+   "col": "BH",
+   "num": 59,
+   "group": "ghs_env",
+   "cn": "危害水生环境-长期",
+   "en": "Aquatic chronic"
+  },
+  {
+   "key": "haz_aquatic_acute",
+   "col": "BI",
+   "num": 60,
+   "group": "ghs_env",
+   "cn": "危害水生环境-急性",
+   "en": "Aquatic acute"
+  },
+  {
+   "key": "reg_hazchem",
+   "col": "BJ",
+   "num": 61,
+   "group": "regulatory",
+   "cn": "是否列入危险化学品",
+   "en": "Hazardous chemical (危化品名录2022)"
+  },
+  {
+   "key": "reg_precursor",
+   "col": "BK",
+   "num": 62,
+   "group": "regulatory",
+   "cn": "是否列入易制毒化学品",
+   "en": "Precursor (易制毒条例2017)"
+  },
+  {
+   "key": "reg_expl_precursor",
+   "col": "BL",
+   "num": 63,
+   "group": "regulatory",
+   "cn": "是否列入易制爆化学品",
+   "en": "Explosive precursor (易制爆名录2023)"
+  },
+  {
+   "key": "reg_key_superv",
+   "col": "BM",
+   "num": 64,
+   "group": "regulatory",
+   "cn": "是否列入重点监管化学品",
+   "en": "Key supervised chemical"
+  },
+  {
+   "key": "reg_high_toxic",
+   "col": "BN",
+   "num": 65,
+   "group": "regulatory",
+   "cn": "是否列入高毒物品目录",
+   "en": "High toxic (卫法监发[2003]142号)"
+  },
+  {
+   "key": "nfpa_health",
+   "col": "BO",
+   "num": 66,
+   "group": "nfpa",
+   "cn": "NFPA健康危害",
+   "en": "NFPA Health"
+  },
+  {
+   "key": "nfpa_flam",
+   "col": "BP",
+   "num": 67,
+   "group": "nfpa",
+   "cn": "NFPA可燃性",
+   "en": "NFPA Flammability"
+  },
+  {
+   "key": "nfpa_react",
+   "col": "BQ",
+   "num": 68,
+   "group": "nfpa",
+   "cn": "NFPA反应性",
+   "en": "NFPA Reactivity"
+  },
+  {
+   "key": "nfpa_special",
+   "col": "BR",
+   "num": 69,
+   "group": "nfpa",
+   "cn": "NFPA特殊危害性",
+   "en": "NFPA Special"
+  },
+  {
+   "key": "nfpa_diamond",
+   "col": "BS",
+   "num": 70,
+   "group": "nfpa",
+   "cn": "NFPA菱形图",
+   "en": "NFPA Diamond"
+  },
+  {
+   "key": "fp_open",
+   "col": "BT",
+   "num": 71,
+   "group": "flammability",
+   "cn": "闪点(开杯)",
+   "en": "Flash point open cup",
+   "unit": "°C"
+  },
+  {
+   "key": "fp_closed",
+   "col": "BU",
+   "num": 72,
+   "group": "flammability",
+   "cn": "闪点(闭杯)",
+   "en": "Flash point closed cup",
+   "unit": "°C"
+  },
+  {
+   "key": "fire_class",
+   "col": "BV",
+   "num": 73,
+   "group": "flammability",
+   "cn": "火灾危险类别(石化规)",
+   "en": "Fire Hazard Class (GB 50160)"
+  },
+  {
+   "key": "ignition_temp",
+   "col": "BW",
+   "num": 74,
+   "group": "flammability",
+   "cn": "引燃温度",
+   "en": "Ignition temperature",
+   "unit": "°C"
+  },
+  {
+   "key": "autoignition",
+   "col": "BX",
+   "num": 75,
+   "group": "flammability",
+   "cn": "自燃温度",
+   "en": "Auto ignition temp",
+   "unit": "°C"
+  },
+  {
+   "key": "lel",
+   "col": "BY",
+   "num": 76,
+   "group": "flammability",
+   "cn": "LEL(爆炸下限)",
+   "en": "LEL",
+   "unit": "%"
+  },
+  {
+   "key": "uel",
+   "col": "BZ",
+   "num": 77,
+   "group": "flammability",
+   "cn": "UEL(爆炸上限)",
+   "en": "UEL",
+   "unit": "%"
+  },
+  {
+   "key": "locc",
+   "col": "CA",
+   "num": 78,
+   "group": "flammability",
+   "cn": "LOCC(极限氧浓度)",
+   "en": "Limiting oxygen concentration",
+   "unit": "%"
+  },
+  {
+   "key": "mie",
+   "col": "CB",
+   "num": 79,
+   "group": "flammability",
+   "cn": "MIE(最小点火能量)",
+   "en": "Minimum ignition energy",
+   "unit": "mJ"
+  },
+  {
+   "key": "flame_speed",
+   "col": "CC",
+   "num": 80,
+   "group": "flammability",
+   "cn": "层流火焰速度",
+   "en": "Laminar flame speed",
+   "unit": "m/s"
+  },
+  {
+   "key": "conductivity",
+   "col": "CD",
+   "num": 81,
+   "group": "flammability",
+   "cn": "液体电导率",
+   "en": "Electric conductivity",
+   "unit": "pS/m"
+  },
+  {
+   "key": "heat_combustion",
+   "col": "CE",
+   "num": 82,
+   "group": "flammability",
+   "cn": "燃烧热(25℃@1bar)",
+   "en": "Heat of combustion",
+   "unit": "KJ/mol"
+  },
+  {
+   "key": "expl_group",
+   "col": "CF",
+   "num": 83,
+   "group": "flammability",
+   "cn": "爆炸性混合物分级",
+   "en": "Explosive material group (GB50058)"
+  },
+  {
+   "key": "ign_temp_group",
+   "col": "CG",
+   "num": 84,
+   "group": "flammability",
+   "cn": "引燃温度分组",
+   "en": "Ignition temp group (GB50058)"
+  },
+  {
+   "key": "erpg1",
+   "col": "CH",
+   "num": 85,
+   "group": "exposure",
+   "cn": "ERPG-1",
+   "en": "ERPG-1",
+   "unit": "PPM"
+  },
+  {
+   "key": "erpg2",
+   "col": "CI",
+   "num": 86,
+   "group": "exposure",
+   "cn": "ERPG-2",
+   "en": "ERPG-2",
+   "unit": "PPM"
+  },
+  {
+   "key": "erpg3",
+   "col": "CJ",
+   "num": 87,
+   "group": "exposure",
+   "cn": "ERPG-3",
+   "en": "ERPG-3",
+   "unit": "PPM"
+  },
+  {
+   "key": "aegl1_10",
+   "col": "CK",
+   "num": 88,
+   "group": "exposure",
+   "cn": "AEGL-1(10min)",
+   "en": "AEGL-1 10min",
+   "unit": "PPM"
+  },
+  {
+   "key": "aegl1_60",
+   "col": "CL",
+   "num": 89,
+   "group": "exposure",
+   "cn": "AEGL-1(60min)",
+   "en": "AEGL-1 60min",
+   "unit": "PPM"
+  },
+  {
+   "key": "aegl2_10",
+   "col": "CM",
+   "num": 90,
+   "group": "exposure",
+   "cn": "AEGL-2(10min)",
+   "en": "AEGL-2 10min",
+   "unit": "PPM"
+  },
+  {
+   "key": "aegl2_60",
+   "col": "CN",
+   "num": 91,
+   "group": "exposure",
+   "cn": "AEGL-2(60min)",
+   "en": "AEGL-2 60min",
+   "unit": "PPM"
+  },
+  {
+   "key": "aegl3_10",
+   "col": "CO",
+   "num": 92,
+   "group": "exposure",
+   "cn": "AEGL-3(10min)",
+   "en": "AEGL-3 10min",
+   "unit": "PPM"
+  },
+  {
+   "key": "aegl3_60",
+   "col": "CP",
+   "num": 93,
+   "group": "exposure",
+   "cn": "AEGL-3(60min)",
+   "en": "AEGL-3 60min",
+   "unit": "PPM"
+  },
+  {
+   "key": "pac1",
+   "col": "CQ",
+   "num": 94,
+   "group": "exposure",
+   "cn": "PAC-1",
+   "en": "PAC-1",
+   "unit": "mg/m3 or ppm"
+  },
+  {
+   "key": "pac2",
+   "col": "CR",
+   "num": 95,
+   "group": "exposure",
+   "cn": "PAC-2",
+   "en": "PAC-2"
+  },
+  {
+   "key": "pac3",
+   "col": "CS",
+   "num": 96,
+   "group": "exposure",
+   "cn": "PAC-3",
+   "en": "PAC-3"
+  },
+  {
+   "key": "teel1",
+   "col": "CT",
+   "num": 97,
+   "group": "exposure",
+   "cn": "TEEL-1",
+   "en": "TEEL-1",
+   "unit": "ppm"
+  },
+  {
+   "key": "teel2",
+   "col": "CU",
+   "num": 98,
+   "group": "exposure",
+   "cn": "TEEL-2",
+   "en": "TEEL-2",
+   "unit": "ppm"
+  },
+  {
+   "key": "teel3",
+   "col": "CV",
+   "num": 99,
+   "group": "exposure",
+   "cn": "TEEL-3",
+   "en": "TEEL-3",
+   "unit": "ppm"
+  },
+  {
+   "key": "idlh",
+   "col": "CW",
+   "num": 100,
+   "group": "exposure",
+   "cn": "IDLH(立即威胁生命或健康浓度)",
+   "en": "IDLH",
+   "unit": "ppm"
+  },
+  {
+   "key": "ld50_oral",
+   "col": "CX",
+   "num": 101,
+   "group": "toxicity",
+   "cn": "LD50(鼠经口)",
+   "en": "LD50 oral rat",
+   "unit": "mg/kg"
+  },
+  {
+   "key": "lc50_inh",
+   "col": "CY",
+   "num": 102,
+   "group": "toxicity",
+   "cn": "LC50(鼠吸入)",
+   "en": "LC50 inh rat",
+   "unit": "mg/l (4h)"
+  },
+  {
+   "key": "tox_class_gbz230",
+   "col": "CZ",
+   "num": 103,
+   "group": "toxicity",
+   "cn": "毒物危害程度分级",
+   "en": "Toxicant hazardous class (GBZ230)"
+  },
+  {
+   "key": "acute_tox_class",
+   "col": "DA",
+   "num": 104,
+   "group": "toxicity",
+   "cn": "急性毒性分级",
+   "en": "Acute toxic class (GB30000)"
+  },
+  {
+   "key": "emergency_guidelines",
+   "num": 105,
+   "col": "DB",
+   "group": "emergency",
+   "cn": "应急准则",
+   "en": "Emergency Guidelines",
+   "unit": ""
+  },
+  {
+   "key": "odor",
+   "col": "DC",
+   "num": 106,
+   "group": "other",
+   "cn": "气味(特性)",
+   "en": "Odour characteristics"
+  },
+  {
+   "key": "odor_threshold",
+   "col": "DD",
+   "num": 107,
+   "group": "other",
+   "cn": "检测阈值(25℃)",
+   "en": "Detection threshold",
+   "unit": "ppm"
+  },
+  {
+   "key": "un_number",
+   "col": "DE",
+   "num": 108,
+   "group": "regulatory",
+   "cn": "UN 编号",
+   "en": "UN Number",
+   "unit": "UN"
+  },
+  {
+   "key": "transport_category",
+   "col": "DF",
+   "num": 109,
+   "group": "regulatory",
+   "cn": "运输类别",
+   "en": "Transport Category",
+   "unit": "GB 12268/IMDG"
+  },
+  {
+   "key": "remark",
+   "col": "DG",
+   "num": 110,
+   "group": "other",
+   "cn": "备注",
+   "en": "Remark"
+  }
+ ]
+}
