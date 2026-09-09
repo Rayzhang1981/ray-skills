@@ -4,12 +4,12 @@
 
 > 🌐 **English version (default):** [README.md](README.md)
 
-本仓库是 Ray 系列 WorkBuddy Skills 的**源仓库（Source）**，与 [SkillHub 分发市场（我的技能主页）](https://skillhub.cn/skills/user_fb8bdb79) 构成双轨：
+本仓库是 Ray 系列 WorkBuddy Skills 的**源仓库（Source）**，与 [SkillHub 分发市场（我的主页）](https://skillhub.cn/user/user_fb8bdb79) 构成双轨：
 
 | 轨道 | 角色 | 链接 |
 |------|------|------|
 | **GitHub（本仓库）** | 源码 + 版本演变历史 + Issue/PR 协作 | `github.com/Rayzhang1981/ray-skills` |
-| **SkillHub** | 一键安装 + 更新 + 审核背书 | [Ray 的技能页](https://skillhub.cn/skills/user_fb8bdb79) |
+| **SkillHub** | 一键安装 + 更新 + 审核背书 | [Ray 的主页](https://skillhub.cn/user/user_fb8bdb79) |
 
 两个轨道互相导流：SkillHub 简介指向本仓库源码，本 README 指向 SkillHub 安装。
 

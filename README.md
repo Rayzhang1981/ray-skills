@@ -2,12 +2,12 @@
 
 > **Original by Rayzhang1981** · Built from a process safety engineer's perspective · Chemical engineering + process safety + productivity tooling
 
-This repository is the **source repo** of the Ray series of WorkBuddy Skills, running dual-track with the [SkillHub marketplace (my skill page)](https://skillhub.cn/skills/user_fb8bdb79):
+This repository is the **source repo** of the Ray series of WorkBuddy Skills, running dual-track with the [SkillHub marketplace (my profile)](https://skillhub.cn/user/user_fb8bdb79):
 
 | Track | Role | Link |
 |-------|------|------|
 | **GitHub (this repo)** | Source code + full version history + Issue/PR collaboration | `github.com/Rayzhang1981/ray-skills` |
-| **SkillHub** | One-click install + updates + review endorsement | [Ray's skill page](https://skillhub.cn/skills/user_fb8bdb79) |
+| **SkillHub** | One-click install + updates + review endorsement | [Ray's profile](https://skillhub.cn/user/user_fb8bdb79) |
 
 Each track feeds the other: SkillHub listings point back to this source repo, and this README points to SkillHub for installation.
 
