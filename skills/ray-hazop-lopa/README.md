@@ -2,7 +2,7 @@
 
 工艺技术文件 → HAZOP/LOPA 定量分析报告的端到端工作流。输入工艺规程、反应热评估报告（RC1/ARC/DSC）、设备清单、参考文献 PDF，输出 26 列 LOPA 定量报告（可交付 HTML，主报告 + 附件分页 Tab 切换），并可选导出 PDF / Word / 行动项 Excel。
 
-基于企业内部 LOPA 项目实战沉淀（2026-08-11 V2.0 融合版），由「功易安」工艺安全专家工作流提炼。
+基于 A1 装置氧化工段（4-羟基-TEMPO，双氧水氧化）项目实战沉淀（2026-08-11 V2.0 融合版），由「功易安」工艺安全专家工作流提炼。
 
 ## 功能
 
@@ -24,7 +24,7 @@ cp -r ray-hazop-lopa ~/.workbuddy/skills/
 ```bash
 # 报告生成：直接描述任务（AI 调用本 skill 执行五步工作流）
 # 工具脚本（venv python）：
-PY=~/.workbuddy/binaries/python/envs/default/Scripts/python.exe
+PY=~/.workbuddy/.workbuddy/binaries/python/envs/default/Scripts/python.exe
 $PY scripts/calc_kinetics.py            # 动力学
 $PY scripts/calc_relief.py              # 泄放四方法
 $PY scripts/calc_mawp.py                # MAWP
@@ -65,7 +65,8 @@ ray-hazop-lopa/
 | v1.1 | 2026-08-11 | +8 个工具脚本（计算/QA/提取/输出/导出）；生态联动 |
 | v1.2 | 2026-08-26 | 角色边界 + Red-team 复查（报告生成后必做） |
 | v1.3 | 2026-09-02 | 工作表纪律（外部对比吸收）：空单元格写 None 绝不 blank / 排除偏差留痕 / LOPA 转介行标准化 |
-| v1.3.1 | 2026-09-06 | 12 点清单新增 11.5「需求值 ≠ 信用值」：需求 PFD 不得填入 SIF 概率列当信用值，信用取定级带值（SIL1 取 0.1）；识别特征=减缓后频率恒等于容忍标准（f×(T/f)≡T） |
+| v1.3.1 | 2026-09-06 | 12 点清单新增 11.5「需求值 ≠ 信用值」（赤峰 C1 装置 R4 回流）：需求 PFD 不得填入 SIF 概率列当信用值，信用取定级带值（SIL1 取 0.1）；识别特征=减缓后频率恒等于容忍标准（f×(T/f)≡T） |
+| v1.4.0 | 2026-09-17 | 脱敏收口：设备参数改量级表述并指向包外 an-core；补装置代号指针；脚本默认值通用化 |
 
 ## Roadmap
 

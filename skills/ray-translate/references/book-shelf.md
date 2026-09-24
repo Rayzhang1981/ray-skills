@@ -3,7 +3,7 @@
 > **定位：裁决层，不是建库主料**——四库条目日常靠 grep + 在线裁决源；书库只在"裁决优先级 1-3 级都无法定夺"时按需查页。
 >
 > ⚠️ 本目录所有 PDF 均为**扫描版，文字层=0**：查页用 `ocr-pdf-images` skill 单页/页范围 OCR，**绝不全量 OCR**（总页数 3000+，全量必超时）。
-> 路径：`D:\Work\02-Tech Documents\Process Designing\Books\化学化工English\`
+> 路径：`<厂内共享盘>\02-Tech Documents\Process Designing\Books\化学化工English\`
 
 ## 目录卡
 

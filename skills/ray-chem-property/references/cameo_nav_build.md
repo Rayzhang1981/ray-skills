@@ -87,6 +87,11 @@ python scripts/gen_enhanced_nav.py
 
 ## 步骤 6：上传回 IMA
 
+> ⚠️ **运行层差异（2026-09-14 加）**：本步骤的 `create_media` / `add_knowledge` **仅 WorkBuddy 侧的 ima 连接器提供**。
+> DSH 侧（本地 stdio 桥接器）只暴露 `search_knowledge` / `get_knowledge_list` / `get_knowledge_base_list` / `ima_refresh_token`，
+> 因此**导航表的重建/上传请在 WorkBuddy 侧执行**；DSH 侧只做"读"（搜索 + 列举）。
+> 上传完成后仍可在 DSH 侧用 `get_knowledge_list` 验证解析状态。
+
 ```
 1. mcp__ima-mcp__create_media
      file_name/file_size/content_type/file_ext/knowledge_base_id → 返回 media_id + COS 凭证

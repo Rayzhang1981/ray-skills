@@ -3,7 +3,7 @@
 ray-hazop-lopa · 计算模块①：分解动力学
 两点 Arrhenius 外推（Ea）→ 各温度绝热温升速率 → 温升时间线（数值积分）→ 污染 kF 放大坍缩
 用法: python calc_kinetics.py [--T1 66.1 --r1 0.109 --T2 118.3 --r2 15.26 --T0 45 --Tend 130]
-      python calc_kinetics.py --mass 21349 --cp 3.43 --H 2888 --phi 5.45 --kf "1.46,11.6,98.9,1398,10366,107415"
+      python calc_kinetics.py --mass 20000 --cp 3.43 --H 2888 --phi 5.45 --kf "1.46,11.6,98.9,1398,10366,107415"
 默认参数为 50% 双氧水（No.2026PG0096 实测锚点）。
 单位红线：r 为绝热温升速率 ℃/min；输入 ARC 样品速率时须 ×Phi（--r1 0.02*5.45 形式）。
 """
@@ -17,7 +17,7 @@ def main():
     ap.add_argument('--r2', type=float, default=2.8*5.45, help='锚点2绝热温升速率 ℃/min')
     ap.add_argument('--T0', type=float, default=45.0, help='起始温度（联锁点）℃')
     ap.add_argument('--Tend', type=float, default=130.0, help='终止温度 ℃')
-    ap.add_argument('--mass', type=float, default=21349.0, help='体系质量 kg（50% 溶液）')
+    ap.add_argument('--mass', type=float, default=20000.0, help='体系质量 kg（50% 溶液）')
     ap.add_argument('--cp', type=float, default=3.43, help='比热 kJ/(kg·K)')
     ap.add_argument('--H', type=float, default=2888.0, help='分解热 kJ/kg 纯')
     ap.add_argument('--kf', default='1.46,11.6,98.9,1398,10366,107415', help='赵红乔 kF 列表（逗号分隔）')

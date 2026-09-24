@@ -1,0 +1,27 @@
+{
+  "note": "chem_index.json 的已核验扩展清单（母版 52 种之外，纯增量）。字段 groups 必须是 reactive_groups.json 的 68 组名。赋值依据 = CAMEO Chemicals 官方数据单 'Belongs to the Following Reactive Group(s)'（2026-09-24 由 20 种化学品相容性矩阵任务回流，ray-chem-compat v1.2.0）。新化学品经实战核验后按此格式追加。",
+  "updated": "2026-09-24",
+  "chemicals": [
+    {"cn": "硝酸", "en": "NITRIC ACID", "cas": "7697-37-2", "groups": ["Acids, Strong Oxidizing", "Water and Aqueous Solutions"], "origin": "CAMEO official (CH19337/CH4044 family)", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "氢氧化钠", "en": "SODIUM HYDROXIDE", "cas": "1310-73-2", "groups": ["Bases, Strong"], "origin": "CAMEO CG=5 Caustics -> Bases, Strong", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "氢氧化钾", "en": "POTASSIUM HYDROXIDE", "cas": "1310-58-3", "groups": ["Bases, Strong"], "origin": "CAMEO CG=5 Caustics -> Bases, Strong", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "氨水", "en": "AMMONIUM HYDROXIDE", "cas": "1336-21-6", "groups": ["Bases, Weak", "Water and Aqueous Solutions"], "origin": "CAMEO CH2434 official", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "过氧化氢", "en": "HYDROGEN PEROXIDE", "cas": "7722-84-1", "groups": ["Oxidizing Agents, Strong", "Water and Aqueous Solutions"], "origin": "CAMEO official (CH19279/CH5023)", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "次氯酸钠", "en": "SODIUM HYPOCHLORITE", "cas": "7681-52-9", "groups": ["Oxidizing Agents, Strong", "Salts, Basic", "Water and Aqueous Solutions"], "origin": "CAMEO CH4503 official", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "亚硫酸氢钠", "en": "SODIUM BISULFITE", "cas": "7631-90-5", "groups": ["Sulfite and Thiosulfate Salts", "Water and Aqueous Solutions"], "origin": "CAMEO CH9514/SHX official", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "甲苯", "en": "TOLUENE", "cas": "108-88-3", "groups": ["Hydrocarbons, Aromatic"], "origin": "CAMEO CG=32 Aromatic", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "二甲苯", "en": "XYLENE (mixed isomers)", "cas": "1330-20-7", "groups": ["Hydrocarbons, Aromatic"], "origin": "CAMEO CG=32 Aromatic (isomer family)", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "乙酸乙酯", "en": "ETHYL ACETATE", "cas": "141-78-6", "groups": ["Esters, Sulfate Esters, Phosphate Esters, Thiophosphate Esters, and Borate Esters"], "origin": "CAMEO CG=34 Ester", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "二氯甲烷", "en": "DICHLOROMETHANE", "cas": "75-09-2", "groups": ["Halogenated Organic Compounds"], "origin": "CAMEO CG=36 Halogenated", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "四氢呋喃", "en": "TETRAHYDROFURAN", "cas": "109-99-9", "groups": ["Ethers"], "origin": "CAMEO CG=41 Ether", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "苯", "en": "BENZENE", "cas": "71-43-2", "groups": ["Hydrocarbons, Aromatic"], "origin": "CAMEO official (BENZENE)", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "乙二醇", "en": "ETHYLENE GLYCOL", "cas": "107-21-1", "groups": ["Alcohols and Polyols"], "origin": "CAMEO official (ETHYLENE GLYCOL)", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "丙二醇", "en": "PROPYLENE GLYCOL", "cas": "57-55-6", "groups": ["Alcohols and Polyols"], "origin": "CAMEO official (PROPYLENE GLYCOL)", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "乙酸酐", "en": "ACETIC ANHYDRIDE", "cas": "108-24-7", "groups": ["Anhydrides"], "origin": "CAMEO CH2276 official", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "硫酸铜（无水）", "en": "CUPRIC SULFATE (anhydrous)", "cas": "7758-98-7", "groups": ["Salts, Acidic"], "origin": "CAMEO CH3025 official（单组；profile 点名与丙二醇 pH>7 反应）", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "三氯化铁（无水）", "en": "FERRIC CHLORIDE", "cas": "7705-08-0", "groups": ["Acids, Strong Non-oxidizing", "Water and Aqueous Solutions"], "origin": "CAMEO CH3467 official（按水溶液强酸行为归组）", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "碳酸钠（无水）", "en": "SODIUM CARBONATE", "cas": "497-19-8", "groups": ["Carbonate Salts"], "origin": "CAMEO RG62 group example", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "硝酸钾", "en": "POTASSIUM NITRATE", "cas": "7757-79-1", "groups": ["Nitrate and Nitrite Compounds, Inorganic"], "origin": "CAMEO CH1370 official", "confidence": "A", "verified": "2026-09-24"},
+    {"cn": "硫磺", "en": "SULFUR", "cas": "7704-34-9", "groups": ["Reducing Agents, Strong"], "origin": "CAMEO CH4562 official（单组）", "confidence": "A", "verified": "2026-09-24"}
+  ]
+}

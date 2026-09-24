@@ -1,7 +1,7 @@
 import openpyxl, math, json, os
 SRC = os.environ['SARA_SRC']
 OUT = os.environ['SARA_OUT']
-LOG = os.environ.get('SARA_LOG', './output/sara_log.txt')
+LOG = os.environ.get('SARA_LOG', '~/LingXi/2026-08-26-物性书索引构建/output/sara_log.txt')
 def log(m):
     with open(LOG, 'a', encoding='utf-8') as f:
         f.write(m + '\n')

@@ -1,0 +1,632 @@
+{
+ "sheet": "2-相容性矩阵 ",
+ "count": 52,
+ "chemicals": [
+  {
+   "idx": 1,
+   "row": 5,
+   "cn": "乙酸",
+   "en": "ACETIC ACID, SOLUTION, MORE THAN 80% ACID",
+   "groups": [
+    "Acids, Carboxylic",
+    "Water and Aqueous Solutions"
+   ],
+   "origin": "pathB",
+   "confidence": "A",
+   "cas": "64-19-7"
+  },
+  {
+   "idx": 2,
+   "row": 6,
+   "cn": "丙酮",
+   "en": "ACETONE",
+   "groups": [
+    "Ketones"
+   ],
+   "origin": "pathB",
+   "confidence": "A",
+   "cas": "67-64-1"
+  },
+  {
+   "idx": 3,
+   "row": 7,
+   "cn": "空气",
+   "en": "AIR, COMPRESSED",
+   "groups": [
+    "Oxidizing Agents, Weak"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 4,
+   "row": 8,
+   "cn": "液氨",
+   "en": "AMMONIA, ANHYDROUS",
+   "groups": [
+    "Bases, Weak"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 5,
+   "row": 9,
+   "cn": "硝酸铵水溶液",
+   "en": "AMMONIUM NITRATE, LIQUID (HOT CONCENTRATED SOLUTION)",
+   "groups": [
+    "Nitrate and Nitrite Compounds, Inorganic",
+    "Salts, Acidic",
+    "Water and Aqueous Solutions"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 6,
+   "row": 10,
+   "cn": "二氧化碳",
+   "en": "CARBON DIOXIDE",
+   "groups": [
+    "Not Chemically Reactive"
+   ],
+   "origin": "pathB",
+   "confidence": "A",
+   "cas": "124-38-9"
+  },
+  {
+   "idx": 7,
+   "row": 11,
+   "cn": "一氯二氟甲烷（氟利昂22）",
+   "en": "CHLORODIFLUOROMETHANE",
+   "groups": [
+    "Fluorinated Organic Compounds"
+   ],
+   "origin": "pathB",
+   "confidence": "A",
+   "cas": "75-45-6"
+  },
+  {
+   "idx": 8,
+   "row": 12,
+   "cn": "柠檬酸",
+   "en": "CITRIC ACID",
+   "groups": [
+    "Acids, Carboxylic",
+    "Alcohols and Polyols"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 9,
+   "row": 13,
+   "cn": "三聚氯氰",
+   "en": "CYANURIC CHLORIDE",
+   "groups": [
+    "Acyl Halides, Sulfonyl Halides, and Chloroformates",
+    "Amines, Phosphines, and Pyridines"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 10,
+   "row": 14,
+   "cn": "环己烷",
+   "en": "CYCLOHEXANE",
+   "groups": [
+    "Hydrocarbons, Aliphatic Saturated"
+   ],
+   "origin": "pathB",
+   "confidence": "A",
+   "cas": "110-82-7"
+  },
+  {
+   "idx": 11,
+   "row": 15,
+   "cn": "二正丁胺",
+   "en": "DI-N-BUTYLAMINE",
+   "groups": [
+    "Amines, Phosphines, and Pyridines"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 12,
+   "row": 16,
+   "cn": "二叔丁基过氧化氢",
+   "en": "DI-TERT-BUTYL PEROXIDE",
+   "groups": [
+    "Peroxides, Organic"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 13,
+   "row": 17,
+   "cn": "丁二酸二甲酯",
+   "en": "DIMETHYL SUCCINATE",
+   "groups": [
+    "Esters, Sulfate Esters, Phosphate Esters, Thiophosphate Esters, and Borate Esters"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 14,
+   "row": 18,
+   "cn": "乙醇",
+   "en": "ETHANOL",
+   "groups": [
+    "Alcohols and Polyols"
+   ],
+   "origin": "pathB",
+   "confidence": "A",
+   "cas": "64-17-5"
+  },
+  {
+   "idx": 15,
+   "row": 19,
+   "cn": "环氧乙烷",
+   "en": "ETHYLENE OXIDE",
+   "groups": [
+    "Epoxides",
+    "Polymerizable Compounds"
+   ],
+   "origin": "pathB",
+   "confidence": "A",
+   "cas": "75-21-8"
+  },
+  {
+   "idx": 16,
+   "row": 20,
+   "cn": "甲醛",
+   "en": "FORMALDEHYDE, SOLUTION, FLAMMABLE",
+   "groups": [
+    "Aldehydes",
+    "Water and Aqueous Solutions"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 17,
+   "row": 21,
+   "cn": "甲酸",
+   "en": "FORMIC ACID",
+   "groups": [
+    "Acids, Carboxylic"
+   ],
+   "origin": "pathB",
+   "confidence": "A",
+   "cas": "64-18-6"
+  },
+  {
+   "idx": 18,
+   "row": 22,
+   "cn": "1,6己二胺",
+   "en": "HEXAMETHYLENEDIAMINE, SOLID",
+   "groups": [
+    "Amines, Phosphines, and Pyridines"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 19,
+   "row": 23,
+   "cn": "盐酸",
+   "en": "HYDROCHLORIC ACID, SOLUTION",
+   "groups": [
+    "Acids, Strong Non-oxidizing",
+    "Water and Aqueous Solutions"
+   ],
+   "origin": "pathB",
+   "confidence": "A",
+   "cas": "7647-01-0"
+  },
+  {
+   "idx": 20,
+   "row": 24,
+   "cn": "氢气",
+   "en": "HYDROGEN",
+   "groups": [
+    "Reducing Agents, Weak"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 21,
+   "row": 25,
+   "cn": "双氧水（50%）",
+   "en": "HYDROGEN PEROXIDE, AQUEOUS SOLUTION, STABILIZED, WITH MORE THAN 60% HYDROGEN PEROXIDE",
+   "groups": [
+    "Oxidizing Agents, Strong",
+    "Water and Aqueous Solutions"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 22,
+   "row": 26,
+   "cn": "氧化镁",
+   "en": "MAGNESIUM OXIDE",
+   "groups": [
+    "Salts, Basic"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 23,
+   "row": 27,
+   "cn": "马来酸酐",
+   "en": "MALEIC ANHYDRIDE",
+   "groups": [
+    "Anhydrides",
+    "Hydrocarbons, Aliphatic Unsaturated"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 24,
+   "row": 28,
+   "cn": "天然气",
+   "en": "METHANE",
+   "groups": [
+    "Hydrocarbons, Aliphatic Saturated"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 25,
+   "row": 29,
+   "cn": "甲醇",
+   "en": "METHANOL",
+   "groups": [
+    "Alcohols and Polyols"
+   ],
+   "origin": "pathB",
+   "confidence": "A",
+   "cas": "67-56-1"
+  },
+  {
+   "idx": 26,
+   "row": 30,
+   "cn": "硬脂酸甲酯",
+   "en": "METHYL STEARATE",
+   "groups": [
+    "Esters, Sulfate Esters, Phosphate Esters, Thiophosphate Esters, and Borate Esters"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 27,
+   "row": 31,
+   "cn": "正丁胺",
+   "en": "N-BUTYLAMINE",
+   "groups": [
+    "Amines, Phosphines, and Pyridines"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 28,
+   "row": 32,
+   "cn": "庚烷",
+   "en": "N-HEPTANE",
+   "groups": [
+    "Hydrocarbons, Aliphatic Saturated"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 29,
+   "row": 33,
+   "cn": "正辛烷",
+   "en": "N-OCTANE",
+   "groups": [
+    "Hydrocarbons, Aliphatic Saturated"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 30,
+   "row": 34,
+   "cn": "液氮",
+   "en": "NITROGEN",
+   "groups": [
+    "Not Chemically Reactive"
+   ],
+   "origin": "pathB",
+   "confidence": "A",
+   "cas": "液氮"
+  },
+  {
+   "idx": 31,
+   "row": 35,
+   "cn": "混合二甲苯",
+   "en": "O-XYLENE",
+   "groups": [
+    "Hydrocarbons, Aromatic"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 32,
+   "row": 36,
+   "cn": "磷酸",
+   "en": "PHOSPHORIC ACID",
+   "groups": [
+    "Acids, Weak"
+   ],
+   "origin": "pathB",
+   "confidence": "A",
+   "cas": "磷酸"
+  },
+  {
+   "idx": 33,
+   "row": 37,
+   "cn": "聚乙烯",
+   "en": "POLYETHYLENE AS",
+   "groups": [
+    "Hydrocarbons, Aliphatic Saturated"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 34,
+   "row": 38,
+   "cn": "聚丙烯",
+   "en": "POLYPROPYLENE",
+   "groups": [
+    "Hydrocarbons, Aliphatic Saturated"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 35,
+   "row": 39,
+   "cn": "氢氧化钾（固体）",
+   "en": "POTASSIUM HYDROXIDE, [DRY SOLID, FLAKE, BEAD, OR GRANULAR]",
+   "groups": [
+    "Bases, Strong"
+   ],
+   "origin": "pathB",
+   "confidence": "A",
+   "cas": "1310-58-3"
+  },
+  {
+   "idx": 36,
+   "row": 40,
+   "cn": "骨架镍（铝镍合金氢化催化剂 ）al-ni hydrofining catalyst",
+   "en": "RANEY NICKEL",
+   "groups": [
+    "Metals, Elemental and Powder, Active"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 37,
+   "row": 41,
+   "cn": "癸二酸",
+   "en": "SEBACIC ACID",
+   "groups": [
+    "Acids, Carboxylic"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 38,
+   "row": 42,
+   "cn": "硼氢化钠",
+   "en": "SODIUM BOROHYDRIDE",
+   "groups": [
+    "Metal Hydrides, Metal Alkyls, Metal Aryls, and Silanes"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 39,
+   "row": 43,
+   "cn": "氯化钠",
+   "en": "SODIUM CHLORIDE",
+   "groups": [
+    "Non-Redox-Active Inorganic Compounds"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 40,
+   "row": 44,
+   "cn": "氢氧化钠溶液",
+   "en": "SODIUM HYDROXIDE SOLUTION",
+   "groups": [
+    "Bases, Strong",
+    "Water and Aqueous Solutions"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 41,
+   "row": 45,
+   "cn": "硫酸",
+   "en": "SULFURIC ACID",
+   "groups": [
+    "Acids, Strong Oxidizing"
+   ],
+   "origin": "pathB",
+   "confidence": "A",
+   "cas": "硫酸  化学品英文名 sulfuricacid"
+  },
+  {
+   "idx": 42,
+   "row": 46,
+   "cn": "叔丁醇",
+   "en": "TERT-BUTYL ALCOHOL",
+   "groups": [
+    "Alcohols and Polyols"
+   ],
+   "origin": "pathB",
+   "confidence": "A",
+   "cas": "75-65-0"
+  },
+  {
+   "idx": 43,
+   "row": 47,
+   "cn": "叔丁基过氧化氢",
+   "en": "TERT-BUTYL HYDROPEROXIDE, NOT MORE THAN 80% IN DI-TERT-BUTYL PEROXIDE AND/OR SOLVENT",
+   "groups": [
+    "Peroxides, Organic"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 44,
+   "row": 48,
+   "cn": "钛酸四异丙酯",
+   "en": "TETRAISOPROPYL TITANATE",
+   "groups": [
+    "Bases, Strong"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 45,
+   "row": 49,
+   "cn": "对甲基苯磺酸（PTSA）",
+   "en": "TOLUENE SULFONIC ACID, LIQUID, WITH MORE THAN 5% FREE SULFURIC ACID",
+   "groups": [
+    "Acids, Strong Oxidizing"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 46,
+   "row": 50,
+   "cn": "叔辛胺",
+   "en": "",
+   "groups": [
+    "Amines, Phosphines, and Pyridines"
+   ],
+   "origin": "fallback",
+   "confidence": "B",
+   "note": "另一候选『Bases, Weak』在本校验下多 1 处判错（空气），故取胺类基团；建议在 CRW4 复核",
+   "evidence": [
+    "【S】叔辛胺 SDS（CAS 107-45-9）第十部分 稳定性和反应性：『禁配物：强氧化剂、酸类、酰基氯、酸酐』『聚合危害：不聚合』『分解产物：氮氧化物』",
+    "【A】结构类比：脂肪族叔胺；CRW 同类既有条目（二正丁胺／正丁胺／1,6己二胺）均归『Amines, Phosphines, and Pyridines』",
+    "【校验】SDS 禁配物映射到矩阵 15 个成员，单侧校验 **0 处判成 Y**：强氧化剂→N,N,N,N,C；酸类→N,N,N,N,C,N,N,N；酰基氯(三聚氯氰)→N；酸酐(马来酸酐)→N",
+    "⚠️ CRW 无『Amines, Tertiary』这一基团（官方帮助全文 0 次命中），该名可能为 CRW 界面的『基团类别』而非基团；本项为映射结论"
+   ]
+  },
+  {
+   "idx": 47,
+   "row": 51,
+   "cn": "水合肼",
+   "en": "",
+   "groups": [
+    "Reducing Agents, Strong",
+    "Azo, Diazo, Azido, Hydrazine, and Azide Compounds",
+    "Water and Aqueous Solutions"
+   ],
+   "origin": "fallback",
+   "confidence": "B",
+   "note": "CRW 无该物质数据表。三组基团为兜底推断（B 级），建议在 CRW4 以自定义化学品方式复核后升为 A 级",
+   "evidence": [
+    "【S】《危险化学品安全技术全书·通用卷 3rd Ed》水合肼[含水36%] 条目（CAS 10217-52-4，p1423–1424）：第五部分『与氧化剂能发生强烈反应，引起燃烧或爆炸。遇氧化汞、金属钠、氯化亚锡、2,4-二硝基氯化苯发生剧烈反应』；第七部分『避免与氧化剂、酸类、金属粉末接触』『应与氧化剂、酸类、金属粉末、食用化学品分开存放，切忌混储』；用途栏『用作还原剂、溶剂、抗氧剂』",
+    "【A】Bretherick's 8th Ed 条目 4515 Hydrazine（CAS 302-01-2）27 项不相容子条目：Oxidants／Sodium hydroxide／Methanol, Nitromethane／Metal catalysts, Heavy metals, Rust, Titanium compounds／Carbon dioxide, Stainless steel／Calcium／Potassium／Sodium／Metal salts／Dinitrogen oxide 等",
+    "【B】基团命名直证：CRW 基团『Azo, Diazo, Azido, Hydrazine, and Azide Compounds』名称即含 Hydrazine",
+    "【B】CRW 惯例：其给全部水溶液均附『Water and Aqueous Solutions』（双氧水50%／盐酸／氢氧化钠溶液／硝酸铵水溶液皆如此）；手册将水合肼定性为混合物（√混合物）",
+    "【校验】合并标尺 18 项单侧校验：16 项判 N、1 项判 C（磷酸）、1 项判 Y（二氧化碳）；该唯一 Y 经查明属【材质轴】——Bretherick 原文标题为『Carbon dioxide, Stainless steel』，需两者同时存在方催化分解，化学轴判 Y 正确。**化学轴上 0 处判错**"
+   ],
+   "moc_finding": "Bretherick p1004『Carbon dioxide, Stainless steel』：不锈钢容器中肼分解速率与 CO₂ 浓度成正比（>20 ppm、<250 ppm）+ 伴随腐蚀 → 须进入材质矩阵"
+  },
+  {
+   "idx": 48,
+   "row": 52,
+   "cn": "水",
+   "en": "WATER",
+   "groups": [
+    "Water and Aqueous Solutions"
+   ],
+   "origin": "pathB",
+   "confidence": "A"
+  },
+  {
+   "idx": 49,
+   "row": 53,
+   "cn": "氮气",
+   "en": "",
+   "groups": [
+    "Not Chemically Reactive"
+   ],
+   "origin": "duplicate",
+   "confidence": "A",
+   "duplicate_of": "液氮",
+   "note": "与「液氮」为同一物质（英文名均 NITROGEN），按决策合并"
+  },
+  {
+   "idx": 50,
+   "row": 54,
+   "cn": "碳钢",
+   "en": "",
+   "groups": null,
+   "origin": "material",
+   "confidence": "N/A"
+  },
+  {
+   "idx": 51,
+   "row": 55,
+   "cn": "不锈钢304",
+   "en": "",
+   "groups": null,
+   "origin": "material",
+   "confidence": "N/A"
+  },
+  {
+   "idx": 52,
+   "row": 56,
+   "cn": "不锈钢316L",
+   "en": "",
+   "groups": null,
+   "origin": "material",
+   "confidence": "N/A"
+  }
+ ],
+ "updated": "2026-09-23 18:15:01",
+ "decisions": {
+  "merge": {
+   "氮气": "液氮"
+  },
+  "assigned": {
+   "叔辛胺": [
+    "Amines, Phosphines, and Pyridines"
+   ],
+   "水合肼": [
+    "Reducing Agents, Strong"
+   ]
+  }
+ }
+}

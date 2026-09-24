@@ -1,0 +1,93 @@
+[
+ {
+  "code": "R1",
+  "statement_en": "Exothermic reaction at ambient temperatures (releases heat)",
+  "statement_zh": "常温下放热反应（释放热量）",
+  "label_zh": "放热",
+  "source": "CRW4 官方帮助 Reactivity_Hazard_Statements.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "code": "R2",
+  "statement_en": "Reaction products may be unstable above ambient temperatures",
+  "statement_zh": "反应产物在常温以上可能不稳定",
+  "label_zh": "产物不稳定",
+  "source": "CRW4 官方帮助 Reactivity_Hazard_Statements.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "code": "R3",
+  "statement_en": "Reaction may be particularly intense, violent, or explosive",
+  "statement_zh": "反应可能特别剧烈、猛烈，或具有爆炸性",
+  "label_zh": "剧烈反应",
+  "source": "CRW4 官方帮助 Reactivity_Hazard_Statements.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "code": "R4",
+  "statement_en": "Polymerization reaction may become intense and may cause pressurization",
+  "statement_zh": "聚合反应可能加剧并导致压力升高",
+  "label_zh": "聚合升压",
+  "source": "CRW4 官方帮助 Reactivity_Hazard_Statements.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "code": "E",
+  "statement_en": "Reaction products may be explosive or sensitive to shock or friction",
+  "statement_zh": "反应产物可能具有爆炸性，或对撞击、摩擦敏感",
+  "label_zh": "冲击敏感",
+  "source": "CRW4 官方帮助 Reactivity_Hazard_Statements.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "code": "F",
+  "statement_en": "Reaction products may be flammable",
+  "statement_zh": "反应产物可能易燃",
+  "label_zh": "产物易燃",
+  "source": "CRW4 官方帮助 Reactivity_Hazard_Statements.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "code": "G",
+  "statement_en": "Reaction liberates gaseous products and may cause pressurization",
+  "statement_zh": "反应释放气体产物，可能导致压力升高",
+  "label_zh": "放出气体",
+  "source": "CRW4 官方帮助 Reactivity_Hazard_Statements.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "code": "C",
+  "statement_en": "Reaction products may be corrosive",
+  "statement_zh": "反应产物可能具有腐蚀性",
+  "label_zh": "产物腐蚀",
+  "source": "CRW4 官方帮助 Reactivity_Hazard_Statements.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "code": "T",
+  "statement_en": "Reaction products may be toxic",
+  "statement_zh": "反应产物可能有毒",
+  "label_zh": "产物有毒",
+  "source": "CRW4 官方帮助 Reactivity_Hazard_Statements.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "code": null,
+  "statement_en": "Reaction generates water soluble toxic products",
+  "statement_zh": "反应生成水溶性有毒产物",
+  "label_zh": "水溶性毒物",
+  "source": "CRW4 官方帮助 Reactivity_Hazard_Statements.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "code": "X",
+  "statement_en": "Possible exposure to radiation",
+  "statement_zh": "可能存在辐射照射风险",
+  "label_zh": "辐射",
+  "source": "CRW4 官方帮助 Reactivity_Hazard_Statements.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "code": "UR",
+  "statement_en": "May be hazardous but unknown",
+  "statement_zh": "可能有危害，但情况未知",
+  "label_zh": "危害未知",
+  "source": "CRW4 官方帮助 Reactivity_Hazard_Statements.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "code": "NR",
+  "statement_en": "No known hazardous reaction",
+  "statement_zh": "未见已知危害性反应",
+  "label_zh": "无已知反应",
+  "source": "CRW4 官方帮助 Reactivity_Hazard_Statements.htm（原文）+ 本 skill 自译"
+ }
+]

@@ -3,7 +3,7 @@ name: ray-ps-inforgraphic
 slug: ray-ps-inforgraphic
 description: 当用户提到"化工安全信息图"、"生成安全信息图"、"关键词信息图"、"PS信息图"或提供化工安全主题关键词（如硝化、HAZOP、LOPA等）时使用此技能。也适用于把化工安全文章/事故报告做成信息图。不适用于：通用非安全主题信息图、AI生图海报、PPT页面。
 agent_created: true
-version: "2.2.0"
+version: "2.3.0"
 displayName: 化工安全信息图生成器
 ---
 
@@ -72,12 +72,12 @@ Process Safety Infographic Generator.
 | kb_id | `ab9n_5rblYBTLWXftfs9AB5WAAfnCTixKA0FTYFNyVs=` |
 | API 路径 | `openapi/wiki/v1/search_knowledge` |
 | 凭证路径 | `~/.config/ima/client_id` + `~/.config/ima/api_key` |
-| 脚本路径 | `~/.workbuddy/skills/腾讯ima/ima_api.cjs` |
+| 脚本路径 | `~/.workbuddy/.workbuddy/skills/skill_2053082144792322048/ima_api.cjs` |
 
 **调用命令：**
 
 ```bash
-node "~/.workbuddy/skills/腾讯ima/ima_api.cjs" \
+node "~/.workbuddy/.workbuddy/skills/skill_2053082144792322048/ima_api.cjs" \
   "openapi/wiki/v1/search_knowledge" \
   '{"knowledge_base_id":"ab9n_5rblYBTLWXftfs9AB5WAAfnCTixKA0FTYFNyVs=","query":"KEYWORD","top_k":10,"search_mode":"hybrid"}'
 ```
@@ -86,6 +86,8 @@ node "~/.workbuddy/skills/腾讯ima/ima_api.cjs" \
 - 知识库对**短关键词**响应更好（如"硝化"、"HAZOP"），复合长查询常返回空
 - 建议先用短词试探，命中后根据返回标题细化
 - 返回 `media_type: 1` = PDF 文档，`99` = 文件夹
+- 若 `info_list` 为空，直接进入 Step 2
+- ⚠️ 凭证失效判据：若返回 `{"code":200002,"msg":"skill auth failed"}`，说明 `~/.config/ima/` 的凭证已被后端拒绝（2026-09-12 实测：凭证写入于 2026-05-09、近 4 个月未更新即命中），**不是网络问题**——需到 https://ima.qq.com/agent-interface 重新获取凭证并覆盖这两个文件；此状态下直接进入 Step 2（Web 检索）
 - 若 `info_list` 为空，直接进入 Step 2
 
 ---
@@ -313,7 +315,7 @@ Step 3 要点提炼完成
 - [ ] 无字号低于可读下限（正文 ≥36px 竖版 / ≥18px 横版）
 - [ ] 无内容逃出画布边界；底部不留半空尴尬区
 - [ ] 三大高危写法已排除（nowrap+inline-block / var() 短属性 / linear-gradient，详见 references/rendering-pitfalls.md）
-- 有条件时用无头浏览器（Playwright）量测字形几何后截图实测，"浏览器能看 ≠ html2canvas 能导"
+- **无头浏览器实测（Playwright 本机可用，路径与姿势见「已知问题与限制」表）**：量测字形几何 + 实测 html2canvas 导出（含画布尺寸与 toBlob 字节数）——"浏览器能看 ≠ html2canvas 能导"，必须导出实物核对
 
 **门 2·成品自审**（Read 导出 PNG 或预览截图后逐项过，**未看过成品不交付**）：
 - [ ] 盖住文字仍能认出主题吗？（不能 → 视觉隐喻失败，重做布局）
@@ -368,7 +370,7 @@ deliver_attachments(["~/RayClaw/{路径}/{关键词}_infograph.html"], "交付{�
 
 | 问题 | 状态 |  workaround |
 |------|------|-------------|
-| Playwright Chromium 下载失败（ECONNRESET） | 未解决 | 输出 HTML，用户手动截图 |
+| Playwright 报 “Executable doesn't exist”（库找 `chromium_headless_shell-1223`，本机实装 `-1224`） | **已解决**（2026-09-12 实测可用） | 显式传 `executable_path` 指向 `%LOCALAPPDATA%\ms-playwright\chromium_headless_shell-1224\chrome-headless-shell-win64\chrome-headless-shell.exe`，即可无头渲染 / 量测字形几何 / 实测导出验证 |
 | IMA 知识库长查询返回空 | 已知限制 | 先用短关键词试探 |
 | 知乎等平台反爬 | 已知 | 跳过，换政府/协会网站 |
 
@@ -378,4 +380,5 @@ deliver_attachments(["~/RayClaw/{路径}/{关键词}_infograph.html"], "交付{�
 
 | 日期 | 变更内容 |
 |------|---------|
+| 2026-09-12 | v2.3.0：长图导出上限修复（画布单边 16384px → 自适应乘数），Playwright 可用性更正（`executable_path` 姿势，原「下载失败/未解决」结论作废），新增 `nowrap`+`inline-block` ≠ 竖排 辨析；详见 references/rendering-pitfalls.md 新增「画布单边上限 16384px」节与辨析小节 |
 | 2026-08-29 | v2.2.0：外部对比吸收 Epic/infographics 等差距项——数据真实性铁律、渲染预检+PNG 自审门、数据来源标注、Wong 色盲配色、故事线 pitch、盖字测试；html2canvas 代码块与历史维护记录卸载至 references/（完整历史见 references/changelog.md） |

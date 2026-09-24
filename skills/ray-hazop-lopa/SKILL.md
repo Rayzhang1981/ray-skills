@@ -2,8 +2,8 @@
 name: ray-hazop-lopa
 slug: ray-hazop-lopa
 displayName: "HAZOP/LOPA 定量分析报告生成器"
-description: 工艺技术文件→HAZOP/LOPA 分析报告端到端工作流。输入工艺规程、反应热评估报告（RC1/ARC/DSC）、设备清单、参考文献 PDF，输出 26 列 LOPA 定量报告（可交付 HTML，主报告+附件分页 Tab 切换）。触发词：HAZOP、LOPA、工艺危害分析、生成HAZOP报告、泄放面积校核、SIL定级、热风险评估报告分析、HAZOP记录审查。基于企业内部 LOPA 项目实战沉淀。
-version: 1.3.1
+description: 工艺技术文件→HAZOP/LOPA 分析报告端到端工作流。输入工艺规程、反应热评估报告（RC1/ARC/DSC）、设备清单、参考文献 PDF，输出 26 列 LOPA 定量报告（可交付 HTML，主报告+附件分页 Tab 切换）。触发词：HAZOP、LOPA、工艺危害分析、生成HAZOP报告、泄放面积校核、SIL定级、热风险评估报告分析、HAZOP记录审查。基于 A1 装置项目实战沉淀（2026-08-11 V2.0 融合版）。
+version: 1.4.0
 category: process-safety
 tags: [HAZOP, LOPA, 工艺安全, 热风险评估, 泄放面积, SIL, 过程安全]
 author: Rayzhang
@@ -84,7 +84,7 @@ agent_created: true
 - 矩阵维度标注准确（如 7×5，非 5×5）
 - 附件页含计算细节+图表；估算与实测差异诚实呈现（不掩盖简化假设）
 - 报告注明"AI 辅助初步分析，须由有资质 HAZOP 团队评审确认后方可作为正式文件"
-- 残余风险声明页必含（所有边界条件结论如"DN100 仅 ≥30min 级"必须声明）
+- 残余风险声明页必含（所有边界条件结论如"泄放口仅满足 ≥30min 级分解"必须声明）
 
 **工作表纪律（v1.3.0 新增，外部对比吸收）**——HAZOP 工作表/分析记录的硬性规则：
 1. **空单元格写 "None" 绝不 blank**——blank 会被误读为"团队漏了这项"，None 表示"明确评估过、不适用/无"
@@ -100,21 +100,25 @@ agent_created: true
 5. 时间类计算脚本打印时单位标签必须与变量实际单位一致（跨函数传值先核对）
 6. **nRT/V 分压计算 V 必须用 m³**（勿 ×1000 转 L）；**MPa→bar 是 ×10 不是 ÷10**（2026-08-11 calc_mawp/calc_massbal 双踩坑；手算 O₂ 分压曾把 MPa 当 bar）
 
-## 参考数据（来自企业内部实战项目校验，可作同类装置评估基准）
+## 参考数据（A1 装置项目已校验，可作同类装置基准）
 
-> ⚠️ 本节原始数据含企业内部实测参数，不随开源版分发。评估同类装置时请以本企业/委托方的实测数据为准，方法可参考 scripts 与 checklists。
+> **装置代号说明**：本节「A1 装置」为本厂装置代号（真名映射见包外 `gui-core.md` A2）；装置身份与设备安全设施精确值见包外 `an-core.md` A3。
+
+- 50% H₂O₂：起始分解 66.1℃（ARC Phi=5.45）、分解热 2888 kJ/kg 纯、2.8℃/min@118.3℃、Ea≈104.5 kJ/mol、45→130℃ 绝热 15.2h（洁净）、Fe²⁺ 46.6 mg/kg 坍缩至 7.7s
+- 泄放能力判据：**DN100 级**泄放口对 **20 m³ 级**储罐的全罐分解**常不足**（DIERS 两相流需求超出该量级；刘嚆常压法需 DN300+）；本厂 A1 装置的校核值见包外 `an-core.md` A3
+- 分解率 32.7% 是碱催化工艺固有（pH 9~10），应作基准工况非最坏工况
 
 ## 模板与清单
 
 - `templates/lopa-report-template.html`：26 列 LOPA 报告 HTML 骨架（Tab 分页 + 附件占位）
 - `checklists/lopa-12point-checklist.md`：12 点质量自检清单（勾选式）
 
-## scripts 计算与工具（全部用 venv python 运行，如 `~/.workbuddy/binaries/python/envs/default/Scripts/python.exe`）
+## scripts 计算与工具（全部用 venv python 运行：`C:\Users\rayzh\.workbuddy\binaries\python\envs\default\Scripts\python.exe`）
 
 | 脚本 | 功能 | 用法示例 |
 |------|------|---------|
 | `calc_kinetics.py` | 分解动力学：两点 Arrhenius→Ea→温升时间线→污染 kF 坍缩 | `calc_kinetics.py --T1 66.1 --r1 0.109 --T2 118.3 --r2 15.26` |
-| `calc_relief.py` | 泄放面积四方法：API520/DIERS/刘嚆/赵红乔 kF + 判定 | `calc_relief.py --DN 102 --Pset 50` |
+| `calc_relief.py` | 泄放面积四方法：API520/DIERS/刘嚆/赵红乔 kF + 判定 | `calc_relief.py --DN 100 --Pset 50` |
 | `calc_mawp.py` | MAWP 薄壁圆筒：P=2SEt/(D+0.8t) | `calc_mawp.py --D 1800 --t 10 --S 105 --name R203` |
 | `calc_massbal.py` | 物料平衡/尾气富氧/异常加料温升压升 | `calc_massbal.py --mode o2` / `--mode dT` |
 | `qa_scan.py` | 报告质量扫描：乱码/标签配对/场景编号/Rf/矩阵维度/残余风险 | `qa_scan.py 报告.html`（退出码 0=通过） |
@@ -123,7 +127,7 @@ agent_created: true
 | `export_actions.py` | 报告行动项表 → Excel（openpyxl） | `export_actions.py 报告.html` |
 | `sync_publish.sh` | 更新后同步三处副本 + SkillHub 预检/发布 | `bash sync_publish.sh --pub "v1.2.0 说明"` |
 
-验证基准：脚本正确性以各 calc 脚本内置单元断言为准（运行 `python <script> --selftest` 或对照工艺手册手算复核）。
+验证基准（A1 装置项目实测；**精确值见包外 `an-core.md` A3**）：kinetics Ea≈104.5 kJ/mol、绝热至 130℃ 约 15.2h；relief **DIERS 需求 > 现有 DN100 级泄放口**；mawp 双档（约 8 / 9 bar 级）；massbal 尾气量与温升属该储罐量级。
 
 ## 版本更新与同步（Junction 单一源模式：改源=改专家，无需同步）
 
@@ -147,7 +151,7 @@ New-Item -ItemType Junction -Path "C:\...\gong-yi-an\skills\ray-hazop-lopa" -Tar
 
 **版本管理**：每次内容变更递增 frontmatter `version`（1.1.0 → 1.1.1 / 1.2.0）；changelog 写入 README 版本记录表；上架状态验证 `skillhub search ray-hazop-lopa`。
 
-> 脚本速查表见上文「scripts 计算与工具」章节（含 sync_publish.sh）。
+> 脚本速查表见上文「scripts 计算与工具」章节（含 sync_publish.sh）。验证基准同前。
 
 ## 生态联动（与其他技能/专家协同）
 

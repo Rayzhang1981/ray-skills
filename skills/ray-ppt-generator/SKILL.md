@@ -2,7 +2,7 @@
 name: ray-ppt-generator
 slug: ray-ppt-generator
 displayName: PPT内容生成器
-version: "3.19.0"
+version: "3.20.0"
 description: 基于 python-pptx 快速生成可编辑 PPTX 文件。触发词：生成PPT、制作课件、批量PPT、PPTX导出、汇报PPT、培训课件、幻灯片、资料转PPT、文档转PPT、把这份资料/报告/文档做成PPT、总结成PPT、视频转PPT。适用于培训课件、安全汇报、流程图解、技术文档/事故报告/视频稿转 PPT 等场景。不依赖 ppt-implement，无预览弹窗干扰，输出可编辑的 PowerPoint 文件。
 agent_created: true
 ---
@@ -159,35 +159,38 @@ def set_font(run, name='Microsoft YaHei', size=Pt(14), bold=False, color=DARK_TE
 
 ### 11. 版式函数调用契约（v3.9 新增，防双页）
 
-> 本 skill 的版式函数（`chain_slide` / `card_slide` / `stat_slide` / `table_slide` / `two_col_slide` / `checklist_slide` / `section_slide`）**内部自带建页**（函数内调用 `slide(prs)`）。
+> 本 skill 的**页面函数**（`references/code-templates.md` 的 `add_cover_slide` / `add_content_slide` / `add_table_slide` / `add_vertical_chain_slide` / `add_stat_panel_slide` / `add_chart_slide` / `timeline_deadline_slide` / `card_matrix_slide` / `traffic_light_slide` / `heatmap_table_slide` / `metro_lines_slide` / `stair_levels_slide` 等全部 2.x 函数）**内部自带建页**（函数体内调用 `prs.slides.add_slide(layout)`）。
 
-**铁律：调用这些版式函数的页面函数内，不得再写 `s = slide(prs)` + `title_bar(...)`**——否则产生双页（页面函数建一页 + 版式函数又建一页）。实战踩坑：65 页版多 6 页、90 页版多 13 页，同一错误犯 2 次。
+**铁律：调用任何页面函数（`add_*_slide(...)` / `*_slide(...)`）的页面函数内，不得再自己建页**——否则产生双页（页面函数建一页 + 版式函数又建一页）。实战踩坑：65 页版多 6 页、90 页版多 13 页，同一错误犯 2 次。
+
+⚠️ **v3.20.0 修正**：本原则原列举的 `chain_slide` / `card_slide` / `stat_slide` / `table_slide` / `two_col_slide` / `checklist_slide` / `section_slide` 这 7 个名字**在 `references/` 里从来没有定义过**（历史遗留，全目录 grep `def <名>(` 零命中）——按名字复制会找不到函数。规则不变，名字以本行上方所列实际函数为准。
 
 **写法模板（版式函数页面）**：
 ```python
 def p46():
     steps = [...]              # 只写数据
-    s = chain_slide(prs, 46, '标题', '副标题', steps, tag='...', foot=True)  # 函数内建页+标题栏
+    s = add_vertical_chain_slide(prs, '标题', steps, colors, layout, tag='...')  # 函数体内已建页
     notes(s, '口播稿...')
 ```
 
 **写法模板（手写布局页面）**：
 ```python
 def p05():
-    s = slide(prs)             # 自己建页
-    title_bar(s, '01', '标题', '副标题', tag='...')
+    s = prs.slides.add_slide(prs.slide_layouts[6])   # 自己建页（手写布局）
+    add_title_bar(s, '标题', '副标题', tag='...')
     # ... 手写 rect/txt ...
-    footer(s, 5)
+    add_footer(s, 5, total=10, reg_no='文件编号')
 ```
 
 **判断口诀**："本页用版式函数 → 页函数只写数据；本页手写 → 页函数自己建页。二选一，绝不混用。"
 
-**🔍 生成前 grep 自查（v3.11 新增，防复发强制钩子）**：规则写入不等于自动遵守——v3.9 晋升后实战写新页（y01/y02/y05）依然犯了 3 次。写完全部页面函数、运行脚本前，先跑自查：
+**🔍 生成前自查（v3.20.0 由 grep 钩子改脚本，防复发）**：规则写入不等于自动遵守——v3.9 晋升后实战写新页（y01/y02/y05）依然犯了 3 次。写完全部页面函数、运行脚本前，先跑：
 ```bash
-# 找"页面函数内同时出现 s=slide(prs) 与版式函数调用"的双页隐患
-grep -n -A3 "s = slide(prs)" gen_*.py | grep -E "chain_slide|card_slide|stat_slide|table_slide|two_col_slide|checklist_slide|section_slide" 
+python scripts/qa_ppt.py --dblpage gen_*.py          # 双页隐患静态扫描（不读 pptx）
+python scripts/qa_ppt.py <生成的.pptx>               # 生成后三项体检（见原则 12）
 ```
-有命中 → 删掉该函数里多余的 `s = slide(prs)` + `title_bar(...)` 行，把版式函数调用改为 `s = X_slide(...)`。自查不过不运行。
+有命中 → 删掉该页函数里多余的自建页行，把页面函数调用改为 `s = <页面函数>(...)`。自查不过不运行。
+> 为什么弃用原 grep 钩子：① Windows/DSH 环境**没有 `grep` 命令**，钩子不可执行；② 原正则只覆盖"自建页 + 调版式函数"这一种写法，另两种（只调版式函数 / 纯手写）不触发；③ 原钩子硬编码了 7 个不存在的函数名。
 
 ### 12. 布局行高自适应 + 越界检测（v3.9 新增，防溢出）
 
@@ -311,6 +314,16 @@ PALETTES 字典代码（RGB 元组）见 `references/code-templates.md` 第 1 �
 
 生成 PPTX 时**同步导出一份独立演讲稿 MD**——与每页一一对应的口播稿，是演讲者手上的完整脚本（区别于写在 PPTX notes 里的提示信号）。
 
+**实现（v3.20.0 补，原仅有要求、没有做法）——单源导出，天然抗漂移**：
+
+**不要"另写一遍"演讲稿**——那是两处真相，改一处必漂移。正解＝**写完 PPTX 的 `notes_slide` 后，从 PPTX 回读生成 MD**：
+
+```bash
+python scripts/export_speech.py <生成的.pptx> <演讲稿.md> --titles "封面,结论先行,措施一,措施二,..."
+```
+
+`scripts/export_speech.py` 逐页读 `slide.notes_slide.notes_text_frame.text` 成文；页标题用 `--titles`（或 `--titles-file`）传入——**脚本不猜标题**，标题散在 `add_title_bar` 的文本框里，猜错比留空更坏。改口播稿 = 改 PPTX 备注层 → 重跑导出，MD 永远与 deck 同步。
+
 **格式决策（md 权威源 + word 可选）**：
 
 | 格式 | 角色 | 何时用 |
@@ -351,8 +364,12 @@ PALETTES 字典代码（RGB 元组）见 `references/code-templates.md` 第 1 �
 
 ### 视觉 QA（转图片逐页看，v3.3 升级）
 
-**先跑越界检测脚本（v3.9 强制，见核心原则 12），再转图片逐页看——不要只信代码。** 检查：
+- **生成后必跑 `python scripts/qa_ppt.py <文件.pptx>`**（QA 第一动作，不能只靠肉眼）：一次跑三项——① **越界**（shape 右下角 ≤ 页面边界，含文本/形状）② **正文区重叠**（`y∈[1.55,7.05]` 内文本两两相交 > 0.06 in² 即报）③ **文本溢出**（按 CJK em 宽度估算行数 × 行高 vs 框高）。越界即修。
 - [ ] **越界检测脚本 0 报错**（python-pptx 重读，shape 右下角 ≤ 页面边界）
+- [ ] **交叉引用自洽**：文案里凡出现"见第 N 页"的，回读第 N 页确认内容**确实在该页**（实战：写了一处指向并不存在的页内容，脚本查不出）
+- [ ] **无孤立标点 / 单字成行（widow）**：末行只剩一个标点或一两个字 ＝ 文本框偏窄，收窄措辞或加宽框
+- [ ] **装饰件不压正文**：越界检测只查"出不出画布"，**查不出"压在文字上"**——装饰 rect/oval 必须目检确认未遮盖文本
+- [ ] **卡内标题不加装饰线**：本 skill 只禁了"页标题下装饰线"，卡片内小标题下的短色条**同样是 AI 指纹**，一并禁
 - [ ] 文字无溢出（中文长文本最容易溢出——确认所有 text_frame 都 word_wrap）
 - [ ] 无重叠（文本框/形状碰撞）、元素间距 ≥ 0.3"
 - [ ] 边距足够（距幻灯片边缘 ≥ 0.5"）
@@ -430,7 +447,7 @@ PALETTES 字典代码（RGB 元组）见 `references/code-templates.md` 第 1 �
 
 - 2026-09-02｜[LRN-20260902-002]｜场景：摸底原 deck 颜色/填充｜经验：python-pptx `sh.fill.type` 枚举访问在部分 shape 抛异常（fill.type 为 None 或不可枚举）——**直接读 XML `spPr/a:solidFill/a:srgbClr` 最稳**（`sh._element.spPr.find(qn('a:solidFill'))`），文字颜色同理走 `rPr/a:solidFill`。摸底脚本里用 XML 读法一次拿全｜死路：靠 `sh.fill.fore_color.rgb` 枚举（部分 shape 报错）｜来源：EHS 课件插页摸底｜计数：1｜状态：pending
 
-- 2026-09-02｜[LRN-20260902-003]｜场景：VL 视觉 QA 链路退化（08-27 验证过的链路本次部分失效）｜经验：DASHSCOPE qwen3.8-max **超时**、opencode-go **403**、Tesseract 未装 → ray-ppt-ocr-eyes 链路本次不可用。**替代方案 = 几何排版验证**：①卡片/文本边界关系检查（文本框是否在卡片内）；②按 68 字符/行（4.64in 宽 12pt）分词估算换行行数 × 0.21in 行高 vs 框高——数学上证明无溢出，比目测可靠。QA 时 VL 不可用不必卡死，几何验证可独立交付；但注意原 deck 角部装饰圆（如 10.42,-1.39）是**刻意出界**的装饰语言，越界检测须排除装饰圆只查文本/卡片｜死路：VL 不可用时放弃视觉 QA（交付无验证）；把装饰圆当越界误报（反复排查浪费时间）｜来源：EHS 课件 OSHA/SOP 插页 QA｜计数：1｜状态：pending｜深化：VL 链路恢复后把几何验证与 VL 描述互补（几何查溢出，VL 查观感）
+- 2026-09-02｜[LRN-20260902-003]｜场景：VL 视觉 QA 链路退化（08-27 验证过的链路本次部分失效）｜经验：DASHSCOPE qwen3.8-max **超时**、opencode-go **403**、Tesseract 未装 → ray-ppt-ocr-eyes 链路本次不可用。**替代方案 = 几何排版验证**：①卡片/文本边界关系检查（文本框是否在卡片内）；②按 68 字符/行（4.64in 宽 12pt）分词估算换行行数 × 0.21in 行高 vs 框高——数学上证明无溢出，比目测可靠。QA 时 VL 不可用不必卡死，几何验证可独立交付；但注意原 deck 角部装饰圆（如 10.42,-1.39）是**刻意出界**的装饰语言，越界检测须排除装饰圆只查文本/卡片｜死路：VL 不可用时放弃视觉 QA（交付无验证）；把装饰圆当越界误报（反复排查浪费时间）｜来源：EHS 课件 OSHA/SOP 插页 QA｜计数：1｜状态：pending｜深化：VL 链路恢复后把几何验证与 VL 描述互补（几何查溢出，VL 查观感）（⚠️ 2026-09-12 补记：原生 Read 看图已普遍可用——VL 链路不再是唯一视觉通道；几何验证仍作互补，两者并用）
 
 - 2026-09-04｜[LRN-20260904-001]｜场景：PPT 高手美化建议落地（事故制度 deck 21 页重做）｜经验：①**6 个版式手法实战验证有效并升格为模板**（2.16-2.21：时限时间轴/卡片矩阵/红绿灯对比/热力图表格/双通道地铁图/阶梯分级）——判定标准是"转 PNG 逐页目检后用户/自评认可"，时间轴页是全 deck 评价最高的一页；②**图形隐喻纪律**：环形流程无循环箭头=散点图（退回条带布局更诚实）、旋转椭圆拼五瓣花生硬——隐喻要么连同连接语言完整实现，要么放弃；③**配色微调无感**：#005293→#0D3B66 这类邻近色切换用户第一眼几乎无变化感，换配色要么拉开色相/明度差距，要么干脆保留原体系只补手法（refine 铁律 3 印证）｜死路：把原页小字内容原样塞进新图形（信息密度不降，"换汤不换药"，用户评"效果一般"的根因）——重排必须伴随每页一个主角的减法｜来源：事故管理制度宣贯 PPT v2 美化轮｜计数：1｜状态：pending｜深化：下次美化轮先做"每页主角"规划（这一页 3 秒内先看到什么），再做版式替换
 
@@ -439,6 +456,8 @@ PALETTES 字典代码（RGB 元组）见 `references/code-templates.md` 第 1 �
 - 2026-09-04｜[LRN-20260904-003]｜场景：评估 iconfont 素材能否进 PPT 生成/美化链路｜经验：图标素材可行性 = **格式 × 库能力匹配**，不能凭"iconfont 很全"下结论。python-pptx 实测：PNG 可直接 `add_picture` ✅；**SVG 原生不支持**（add_picture 抛 UnidentifiedImageError）❌；venv 无 cairosvg/svglib（SVG→PNG 需新增依赖）；图标字体 python-pptx 无原生字形支持 ❌。可行路线：①单色简单语义图标（盾牌/警报）→ 下 PNG 做图标池 或 **拆 SVG path 用 FREEFORM 重绘**（保矢量可编辑）；②多色复杂插画 → 仍走 ImageGen/图库。能力边界已入 code-templates 2.25｜死路：默认"iconfont 资源能直接用"——SVG 是 iconfont 主力格式，python-pptx 插不进，直接套用会全线失败｜来源：iconfont 可用性评估｜计数：1｜状态：pending
 
 - 2026-09-04｜[LRN-20260904-004]｜场景：把"简单语义图标池"从想法做成资产（40 图标端到端）｜经验：**开源 Lucide + resvg 路线验证通过**，比 iconfont 更适合 python-pptx 链路——①源：lucide-static 走 jsdelivr CDN（免登录、ISC 可商用），**必须带 Mozilla UA**（urllib 裸 UA 会 404，curl 也要加）；②渲染：venv 装 `resvg-py`（纯 Rust abi3 wheel，秒装），API 是 **`svg_to_bytes(svg_string=, zoom=256/24)`**（不是 import resvg/调 render——模块只有 svg_to_bytes 一个导出）；③Lucide 是 outline 风格 `stroke=currentColor` 单 path → 重染只需把 `currentColor` 替换成目标 hex；④**图片资产一律外置** `~/RayClaw/skill-archives/`（SkillHub 发布拒收 .png——曾把 40 PNG 放 skill assets/ 内，发布必 400，已移出）；skill 内只留 build 脚本 + 路径指针，add_icon 双路径加载（外置池优先、缺失提示重建）｜死路：A. iconfont 自动化下载（需登录态/逆向接口，浏览器复用成本 >500MB 不值得）；B. `fetch(文件名带.svg)` 导致 CDN URL 变成 .svg.svg 404（fetch 应传纯图标名，模板内部补后缀）；C. PNG 内置进 skill 目录（阻塞发布）｜来源：iconfont 可用性评估的落地｜计数：1｜状态：pending｜深化：若未来要面性（filled）图标，Lucide 有 `lucide-static/filled/` 子目录同源可用；图标不够时改 ICONS dict 重跑 build 脚本即可
+
+- 2026-09-22｜[LRN-20260922-001]｜场景：新增 `scripts/qa_ppt.py --dblpage`（双页隐患静态扫描）后做负控——故意植入一个"自建页 + 调用自带建页的页面函数"的脚本，验证扫描器是否真能抓到｜经验：**扫描源码的脚本读文件必须用 `encoding="utf-8-sig"`**——PowerShell 的 `Set-Content -Encoding UTF8` 会写 BOM，而 BOM 会让 `re.match(r"def\s+")` 在行首失配 ⇒ **整个文件被静默跳过、报"0 命中"**（假阴性，退出码 0，无任何告警）。首轮负控正是这么漏掉的；改 `utf-8-sig` 后 BOM / 无 BOM 两种编码均能抓到（各 1 命中，exit=1）。**判据：「扫描器说没问题」必须先由一次"成功捕获"的负控背书**——"没有命中"在做负控之前不能当通过证据｜死路：只跑正控（对真实脚本报 0 命中）就认为扫描器可用——正控对假阴性零分辨力｜来源：701 反应热评估专报 PPT 回流审计 G3｜计数：1｜状态：pending
 
 > ✅ 已毕业（2026-08-16 用户确认）：LRN-001（版式函数调用契约）→ 核心原则 11；LRN-003（布局自适应+越界检测）→ 核心原则 12；LRN-004（装饰不越页）→ 核心原则 12；LRN-005（页码贴右下角）→ 常见坑表。毕业条目从缓冲区删除，规则已入主流程。
 

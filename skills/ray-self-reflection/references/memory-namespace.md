@@ -7,7 +7,7 @@
 | 经验类型 | 放哪 | 例子 |
 |---------|------|------|
 | **项目专属** | 对应项目 skill 的实战经验区 或 项目 MEMORY.md | "XX 装置的操作顺序" |
-| **领域专属** | 领域 skill（ray-ccps-* 等）或领域分类条目 | "HAZOP 引导词用法" |
+| **领域专属** | 领域 skill（ray-pha / ray-reactive-hazards 等工艺安全认知层，或领域分类条目） | "HAZOP 引导词用法" |
 | **全局偏好/规则** | 用户级 MEMORY.md（HOT） | "中文走 PowerShell" |
 
 **继承链**：全局 → 领域 → 项目（越具体优先级越高）。经验放错层 = 该见时不见（项目经验进了全局被淹没），或不该见时见（全局噪音进了项目）。
@@ -33,7 +33,7 @@
 ## 四、与三级存储的衔接
 
 ```
-HOT（常驻）：MEMORY.md ≤200 行 / ≤25KB
+HOT（常驻）：MEMORY.md（Claude Code ≤200 行 / ≤25,000 B；WorkBuddy 用户级 ≤4,000 字符、项目级 ≤8,000 字符）
 WARM（按需）：项目 skill 实战经验区 / 当日日志
 COLD（归档）：references/experience-archive.md / changelog.md
 ```

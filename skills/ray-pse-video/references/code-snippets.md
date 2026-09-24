@@ -54,7 +54,7 @@ ffmpeg -i out_tmp.mp4 -c copy -movflags +faststart output.mp4
 import os, shutil
 
 base = r'E:\LingXi\PS Training Video'
-report_keyword = 'xx事故'  # 示例：事故报告目录关键词
+report_keyword = '隆莱'  # 事故报告目录的关键词
 
 # 找出所有同名前缀的目录
 dirs = []

@@ -96,15 +96,15 @@ $pres.Close(); $pp.Quit()
 
 ⚠️ **首次调用可能"看似无输出但已成功"**（exit 0 无打印）——先 `ls` 输出目录确认，别盲目重试。
 
-### ⚠️ 无多模态模型时的"看图"降级链路（2026-08-27 实战验证，23 页逐页通过）
+### ⚠️ 读不了图时的"看图"降级链路（2026-08-27 实战验证，23 页逐页通过；**2026-09-12 起：先试原生 Read**）
 
-当前模型（如 DeepSeek 纯文本）**直接 Read PNG 会报"不支持读图"**——铁律 3 的"转图逐页看"会在这断头。降级链路：
+**先试原生 Read**：2026-09 起主流模型普遍原生多模态（deepseek-flash-V4.1、glm-flash-5.3 等），多数情况直接 Read PNG 即可看图——**只有 Read 报"不支持读图"（或宿主模型确为纯文本）时**，才需要下面的降级链路：
 
 ```bash
 # ray-ppt-ocr-eyes：OCR 文字层 + VL 视觉描述层（opencode-go 默认，key 已固化）
-PY=~/.workbuddy/binaries/python/envs/default/Scripts/python.exe
+PY="~/.workbuddy/.workbuddy/binaries/python/envs/default/Scripts/python.exe"
 for n in 30 32 35 40; do
-  "$PY" "$HOME/.workbuddy/skills/ray-ppt-ocr-eyes/scripts/ocr_eyes.py" \
+  "$PY" "~/.workbuddy/.workbuddy/skills/ray-ppt-ocr-eyes/scripts/ocr_eyes.py" \
         "E:\\LingXi\\...\\_render\\S$n.png" --provider opencode-go 2>&1 \
     | sed -n '/【视觉描述/,$p'
 done

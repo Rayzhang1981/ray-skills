@@ -2,7 +2,7 @@
 """
 ray-hazop-lopa · 计算模块③：MAWP 估算（薄壁圆筒）
 P = 2·S·E·t / (D + 0.8·t)
-用法: python calc_mawp.py            # 默认示例双罐参数
+用法: python calc_mawp.py            # 默认 701 双罐
       python calc_mawp.py --D 1800 --t 10 --S 105 --E 0.8 --name "R203"
 单位红线：D/t 用 mm，S 用 MPa，输出 bar（1 MPa = 10 bar）。
 """
@@ -10,8 +10,8 @@ import argparse, math
 
 def main():
     ap = argparse.ArgumentParser(description="MAWP 薄壁圆筒估算")
-    ap.add_argument('--D', type=float, default=1900.0, help='公称直径 mm')
-    ap.add_argument('--t', type=float, default=8.0, help='壁厚 mm')
+    ap.add_argument('--D', type=float, default=1000.0, help='公称直径 mm')
+    ap.add_argument('--t', type=float, default=10.0, help='壁厚 mm')
     ap.add_argument('--S', type=float, default=117.0, help='材料许用应力 MPa（304 常温~117，高温取~105）')
     ap.add_argument('--E', type=float, default=0.8, help='焊接接头系数')
     ap.add_argument('--name', default='设备', help='设备名称')

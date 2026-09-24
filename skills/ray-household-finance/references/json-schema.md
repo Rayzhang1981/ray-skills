@@ -6,19 +6,19 @@
 
 ```json
 {
-  "date": "2024-01-15",           // 快照日期（示例为虚构数据）
+  "date": "2026-08-09",           // 快照日期
   "source": "excel",               // 数据源标识：excel|screenshot|manual|api|...
   "mm_funds": [                    // 活期宝/货基
-    {"name": "示例货基A", "yield_rate": "0.3000（1.2000%）",
-     "shares": 10000, "unpaid": 0, "cumulative_gain": 0}
+    {"name": "浙商日添金货币B", "yield_rate": "0.3558（1.3190%）",
+     "shares": 8488, "unpaid": 0, "cumulative_gain": 0}
   ],
   "funds": [                       // 非货币基金
-    {"name": "示例短债基金（000000）", "type_info": "债券型|最新净值：1.0000（01-12）",
-     "acls": "bond", "amount": 123456, "status": "正常",
-     "gain": 1000, "gpct": 0.0081, "gpct_s": "0.0081", "nav": "1.0000"}
+    {"name": "嘉实汇鑫中短债A（007529）", "type_info": "债券型|最新净值：1.1029（08-07）",
+     "acls": "bond", "amount": 121297, "status": "有在途交易",
+     "gain": 2266, "gpct": 0.0191, "gpct_s": "0.0191", "nav": "1.1029"}
   ],
-  "mm_total": 1000000, "fund_total": 500000, "grand_total": 1500000,
-  "class_totals": {"mm": 1000000, "bond": 400000, "index": 50000, "qdii": 50000},
+  "mm_total": 1129796, "fund_total": 489654, "grand_total": 1619450,
+  "class_totals": {"mm": 1129796, "bond": 425602, "index": 34784, "qdii": 29268},
   "class_gains":  {"mm": 0, "bond": 0, "index": 0, "qdii": 0}
 }
 ```
@@ -61,10 +61,10 @@
 {
   "version": 1,
   "transactions": [
-    {"date": "2024-02-01", "fund_code": "000001", "fund_name": "示例债基（000001）",
+    {"date": "2026-08-28", "fund_code": "007529", "fund_name": "嘉实汇鑫中短债A（007529）",
      "type": "buy", "amount": 20000, "nav": 1.1029, "fee": 0},
-    {"date": "2024-03-15", "fund_code": "000001", "type": "sell", "amount": 5000, "nav": 1.1100, "fee": 0},
-    {"date": "2024-04-01", "fund_code": "000001", "type": "dividend", "amount": 120.5}
+    {"date": "2026-09-10", "fund_code": "007529", "type": "sell", "amount": 5000, "nav": 1.1100, "fee": 0},
+    {"date": "2026-09-15", "fund_code": "007529", "type": "dividend", "amount": 120.5}
   ]
 }
 ```

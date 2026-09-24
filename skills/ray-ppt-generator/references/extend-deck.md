@@ -11,7 +11,7 @@
 2. 建共享库 → build_lib.py（色板常量 + add_rect/add_text/add_title 等助手 + reorder_slides）
 3. 分片构建 → build_part1.py（改原页+建新页→中间产物）/ build_part2.py（打开中间产物继续→最终文件）
 4. 机械 QA  → 页数 / 每页标题清单 / CJK 或乱码扫描 / 备注覆盖 / 议程表全文核对
-5. 视觉 QA  → COM 导 PNG → 纯文本模型走 ray-ppt-ocr-eyes（VL 描述）逐页确认
+5. 视觉 QA  → COM 导 PNG → **先 Read 试原生看图**（2026-09 起主流模型已原生多模态）→ 读不了图才走 ray-ppt-ocr-eyes（VL 描述）逐页确认
 ```
 
 ## 第 1 步：摸底（动手前必做）
@@ -179,7 +179,7 @@ prs.save(OUT)
 4. 备注覆盖率（`notes_slide.notes_text_frame.text.strip()` 非空计数）
 5. 关键页全文打印（目录/议程表逐行核对时间轴）
 
-**视觉 QA**（模型无多模态时的链路，2026-08-27 实战验证）：
+**视觉 QA**（读不了图时的降级链路，2026-08-27 实战验证；**2026-09 起优先直接 Read 原生看图**）：
 
 ```powershell
 # PowerShell COM 导出关键页 PNG（注意：首次调用可能看似无输出，实为已导出，ls 验证）
@@ -188,10 +188,10 @@ $pres.Slides.Item(35).Export("E:\...\_render\S35.png", "PNG", 1280, 720)
 ```
 
 ```bash
-# 纯文本模型 → ray-ppt-ocr-eyes 看图（VL 描述布局：溢出/重叠/风格）
+# 视觉 QA：先 Read 试原生看图；读不了图（报 does not support reading images）才走 ray-ppt-ocr-eyes（VL 描述布局：溢出/重叠/风格）
 # ⚠️ 路径必须 Windows 格式，Git Bash 的 /e/... Python 不认
-PY=~/.workbuddy/binaries/python/envs/default/Scripts/python.exe
-"$PY" "$HOME/.workbuddy/skills/ray-ppt-ocr-eyes/scripts/ocr_eyes.py" \
+PY="~/.workbuddy/.workbuddy/binaries/python/envs/default/Scripts/python.exe"
+"$PY" "~/.workbuddy/.workbuddy/skills/ray-ppt-ocr-eyes/scripts/ocr_eyes.py" \
       "E:\\LingXi\\...\\_render\\S35.png" --provider opencode-go
 ```
 

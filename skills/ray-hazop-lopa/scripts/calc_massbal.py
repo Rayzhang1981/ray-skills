@@ -28,7 +28,7 @@ def main():
     ap.add_argument('--cp', type=float, default=3.43, help='体系比热 kJ/(kg·K)')
     ap.add_argument('--m_sys', type=float, default=1600.0, help='体系总质量 kg')
     ap.add_argument('--T0', type=float, default=65.0, help='起始温度 ℃')
-    ap.add_argument('--V_gas', type=float, default=5.5, help='釜气相空间 m³（ΔP 用，按釜实际；团队附件 6.7bar 对应 ~5.5m³，勿用计量罐容积）')
+    ap.add_argument('--V_gas', type=float, default=5.5, help='釜气相空间 m³（ΔP 用，按釜实际，勿用计量罐容积）')
     a = ap.parse_args()
 
     if a.mode == 'o2':
@@ -61,7 +61,7 @@ def main():
         print(f"  H2O2 溶液 {a.vol:.0f} L = {m_sol:.0f} kg | 纯 H2O2 {m_pure:.0f} kg | 分解 {m_dec:.0f} kg")
         print(f"  放热 {Q_heat/1000:.0f} MJ | 绝热温升 ΔT = {dT:.1f} K → {a.T0}℃ → {a.T0+dT:.1f}℃")
         print(f"  产氧 {o2_kg:.1f} kg = {o2_nm3:.1f} Nm³ = {o2_mol:.0f} mol")
-        print(f"  O2 分压（V_gas={a.V_gas} m³, T={a.T0+dT:.1f}℃）≈ {P_abs-1:.1f} bar 表压（团队附件 6.7 bar 口径）")
+        print(f"  O2 分压（V_gas={a.V_gas} m³, T={a.T0+dT:.1f}℃）≈ {P_abs-1:.1f} bar 表压")
 
 if __name__ == '__main__':
     main()

@@ -5,7 +5,7 @@ P203-679 表格：UN编号(x<90) | 名称(乱码) | 主类别 | 副危险 | 包�
 import fitz, re, json, os, sys
 
 SRC = sys.argv[1] if len(sys.argv) > 1 else r"D:/Work/02-Tech Documents/Process Designing/Calculation Tools/Property Data/Property Reference Books/TDG第23版第1卷+第2卷.pdf"
-OUT = sys.argv[2] if len(sys.argv) > 2 else r"./output/TDG-UN索引.json"
+OUT = sys.argv[2] if len(sys.argv) > 2 else r"~/LingXi/2026-08-26-物性书索引构建/output/TDG-UN索引.json"
 
 CLASS_RE = re.compile(r'^(1\.[1-6][A-Z]?|2\.[1-3]|3|4\.[1-3]|5\.[12]|6\.[12]|7|8|9)$')
 UN_RE = re.compile(r'^\d{4}$')

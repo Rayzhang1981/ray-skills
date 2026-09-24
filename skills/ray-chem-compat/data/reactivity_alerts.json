@@ -1,0 +1,86 @@
+[
+ {
+  "alert_en": "Air-reactive",
+  "alert_zh": "空气反应性",
+  "definition_en": "Likely to react rapidly or violently with dry air or moist air. May generate toxic and corrosive fumes upon exposure to air, or may catch fire.",
+  "definition_zh": "易与干燥或潮湿空气迅速或剧烈反应；接触空气可能产生有毒腐蚀性烟气，或起火。",
+  "source": "CRW4 官方帮助 Reactivity_Alerts.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "alert_en": "Decomposes at Elevated Temperatures (<120 degrees C)",
+  "alert_zh": "高温分解（<120 ℃）",
+  "definition_en": "Materials that are unstable and can readily decompose under rather mild conditions and may lead to decomposition by-products that may be hazardous. Many of these materials may be stored under refrigeration to stabilize the material.",
+  "definition_zh": "在较温和条件下即可分解的不稳定物质，分解产物可能有害；此类物质常需冷藏储存以保持稳定。",
+  "source": "CRW4 官方帮助 Reactivity_Alerts.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "alert_en": "Explosive",
+  "alert_zh": "爆炸性",
+  "definition_en": "A material synthesized or mixed deliberately to allow the very rapid release of chemical energy. Also, a chemical substance that is intrinsically unstable and liable to detonate under conditions that might reasonably be encountered.",
+  "definition_zh": "为快速释放化学能而合成或配制的物质；亦指本身不稳定、在合理可遇条件下可能爆轰的化学物质。",
+  "source": "CRW4 官方帮助 Reactivity_Alerts.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "alert_en": "Highly Flammable",
+  "alert_zh": "高度易燃",
+  "definition_en": "A substance having a flash point of less than 100 degrees F (and mixtures that include those substances).",
+  "definition_zh": "闪点低于 100 °F（约 37.8 ℃）的物质，以及含此类物质的混合物。",
+  "source": "CRW4 官方帮助 Reactivity_Alerts.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "alert_en": "Known Catalytic Activity",
+  "alert_zh": "已知催化活性",
+  "definition_en": "A catalyst is a substance that increases the rate of a chemical reaction by reducing the reaction's activation energy, but which is itself left unchanged by the reaction. Catalysts can increase the rate of a chemical reaction so much that reactions that are very slow and non-hazardous in the absence of a catalyst can become hazardous and release heat or gases very quickly when a catalyst is present. Due to the fact that a catalyst is unchanged by the reaction that it catalyzes, even small amounts of catalyst can cause a large increase in the reaction rate of the surrounding material.",
+  "definition_zh": "催化剂通过降低反应活化能加快反应速率，而自身在反应后不变。催化可使原本极慢且无危害的反应变为迅速放热或放气的危险反应；因催化剂不被消耗，极少量即可使周围物料反应速率大幅升高。",
+  "source": "CRW4 官方帮助 Reactivity_Alerts.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "alert_en": "Peroxidizable Compound",
+  "alert_zh": "可过氧化",
+  "definition_en": "Apt to undergo spontaneous reaction with oxygen (a component of air) at room temperature, to form peroxides and other products. Ethers and aldehydes are particularly subject to peroxide formation. Peroxides can be formed when the ethers or aldehydes react with radical-forming impurities, such as metals, and then react with the oxygen in the air. The peroxides thus formed are dangerously explosive, especially when deposited as crystals after evaporation of the liquid portion of the ether or aldehyde.",
+  "definition_zh": "在室温下易与空气中的氧自发反应生成过氧化物等产物。醚类与醛类尤易生成过氧化物：先与金属等自由基引发性杂质反应，再与空气中的氧反应。所生成的过氧化物具有危险爆炸性，尤以醚/醛液体挥发后析出结晶时为甚。",
+  "source": "CRW4 官方帮助 Reactivity_Alerts.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "alert_en": "Polymerizable",
+  "alert_zh": "可聚合",
+  "definition_en": "Capable of undergoing self-reactions that release energy. Some polymerization reactions generate a great deal of heat which can further accelerate the polymerization reaction, a situation called a thermal runaway. The products of polymerization reactions are generally less reactive than the starting materials.",
+  "definition_zh": "可发生释能自反应。部分聚合反应放出大量热，进一步加速聚合，即所谓热失控。聚合产物通常比原料反应性低。",
+  "source": "CRW4 官方帮助 Reactivity_Alerts.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "alert_en": "Pyrophoric",
+  "alert_zh": "自燃性",
+  "definition_en": "Pyrophoric materials are substances that ignite instantly upon exposure to oxygen (air). Generally, these materials are stored in solvents or inert atmospheres to prevent exposure to air. Many pyrophoric materials are also water-reactive and can produce heat and hazardous gases when they come into contact with water or humid air.",
+  "definition_zh": "接触氧（空气）即瞬间着火的物质，通常储存在溶剂或惰性气氛中以防接触空气。许多自燃性物质同时具有遇水反应性，遇水或潮湿空气可放热并产生危险气体。",
+  "source": "CRW4 官方帮助 Reactivity_Alerts.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "alert_en": "Radioactive Material",
+  "alert_zh": "放射性物质",
+  "definition_en": "Spontaneously and continuously emitting ions or ionizing radiation. Radioactivity is not a chemical property, but an additional hazard that exists in addition to the chemical properties of a material.",
+  "definition_zh": "自发、持续发射离子或电离辐射。放射性并非化学性质，而是在物质化学性质之外的附加危害。",
+  "source": "CRW4 官方帮助 Reactivity_Alerts.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "alert_en": "Strong Oxidizing Agent",
+  "alert_zh": "强氧化剂",
+  "definition_en": "Oxidizing agents gain electrons from other substances and are themselves thereby chemically reduced. Strong oxidizing agents accept electrons particularly well from a large range of other substances. The ensuing oxidation-reduction reactions may be vigorous or violent, and may release new substances that may themselves take part in additional reactions. Strong oxidizing agents should be kept well separated from strong reducing agents. In some cases, the presence of a strong oxidizing agent can greatly increase the severity of a fire.",
+  "definition_zh": "氧化剂从其他物质夺取电子而自身被还原。强氧化剂易从大量其他物质夺取电子，随之发生的氧化还原反应可能剧烈甚至猛烈，并生成可继续参与反应的新物质。强氧化剂应与强还原剂严格隔离。某些情况下强氧化剂会显著加重火灾后果。",
+  "source": "CRW4 官方帮助 Reactivity_Alerts.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "alert_en": "Strong Reducing Agent",
+  "alert_zh": "强还原剂",
+  "definition_en": "Reducing agents give up electrons to other substances. They are themselves thereby oxidized. Strong reducing agents donate electrons particularly well to a large range of other substances. The ensuing oxidation-reduction reactions may be vigorous or violent and may generate new substances that take part in further reactions.",
+  "definition_zh": "还原剂向其他物质给出电子而自身被氧化。强还原剂易向大量其他物质给出电子，随之发生的氧化还原反应可能剧烈甚至猛烈，并生成可继续参与反应的新物质。",
+  "source": "CRW4 官方帮助 Reactivity_Alerts.htm（原文）+ 本 skill 自译"
+ },
+ {
+  "alert_en": "Water-Reactive",
+  "alert_zh": "遇水反应性",
+  "definition_en": "Substances that may react rapidly or violently with liquid water and steam, producing heat (or fire) and in many cases toxic or flammable gases. (定义原文见官方帮助页，此处按可读段落截取)",
+  "definition_zh": "可能与液态水及蒸汽迅速或剧烈反应，放热（或起火），且多数情况下产生有毒或易燃气体。",
+  "source": "CRW4 官方帮助 Reactivity_Alerts.htm（原文）+ 本 skill 自译"
+ }
+]

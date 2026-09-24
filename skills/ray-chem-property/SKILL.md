@@ -2,7 +2,7 @@
 name: ray-chem-property
 slug: ray-chem-property
 displayName: 化学品物性数据搜集整理
-version: 3.5.0
+version: 3.6.0
 category: 化工安全
 agent_created: true
 description: >-
@@ -12,12 +12,11 @@ description: >-
   生成横版可视化 HTML 报告（一行一物料 + 导出 Excel 按钮，导出样式与母版一致 + 单元格来源注释），
   并回填到用户指定的「工艺物料安全物性数据表」Excel 模板。
   内置 13 类本地离线索引（CAMEO 1306/AEGL 196/PAC 3063/法规名录/危险品全书 999/CRC 3460/兰氏 2709/Perry 254/SARA 1694/TDG 2311 等，秒查）。
-  触发词：化学品物性、物性数据搜集、物料安全物性表、工艺物料物性、CAS 物性查询、物性数据表、CAMEO 导航、设备物料介质提取、危险品安全技术全书、CRC、兰氏、Perry。
+  另有反应性补充索引 2 类（2026-09-23 增）：CAMEO 材质反应性段（与水/常见材料/聚合/阻聚剂）+ 危险品全书禁配物段（危险反应/禁配物/分解产物）。
+  触发词：化学品物性、物性数据搜集、物料安全物性表、工艺物料物性、CAS 物性查询、物性数据表、CAMEO 导航、设备物料介质提取、危险品安全技术全书、CRC、兰氏、Perry、禁配物、水敏、遇水反应、聚合风险、阻聚剂、CG 配伍组、材质相容。
 ---
 
 # 化学品物性数据搜集整理（ray-chem-property）
-
-> 🔧 **开源版说明**：完整物性索引库（`data/`，含 CRC/Perry/兰氏等手册索引）含授权数据，**不随 GitHub 开源版分发**——本版只含脚本与流程。请通过 [SkillHub](https://skillhub.cn/skills/user_fb8bdb79/ray-chem-property) 安装获取含完整索引的版本，或在本地自行构建 `data/` 索引。
 
 ## 这个 skill 做什么
 
@@ -38,6 +37,8 @@ description: >-
 - Python venv（`~/.workbuddy/binaries/python/envs/default/Scripts/python.exe`），已装 `openpyxl`
 - 联网可访问 PubChem（脚本用 urllib 直连，无需额外包）
 - IMA 知识库（可选）：需用户在连接器面板连接 `ima 知识库`，MCP 工具 `mcp__ima-mcp__search_knowledge`
+  （**运行层差异**：DSH 侧经本地 stdio 桥接器同样有 `search_knowledge` / `get_knowledge_list` / `get_knowledge_base_list`；
+  单文件读取 `fetch_media_content` 与写入类 `create_media` / `add_knowledge` **仅 WorkBuddy 侧有**——详见 Step 4 的注）
 - 模板 Excel：用户指定的「工艺物料安全物性数据表」（111 列，2026-08-26 新增 Emergency Guidelines/UN编号/运输类别/临界温度/临界压力），路径按对话提供
 
 ## 工作流程（4 步 + 验证）
@@ -187,17 +188,42 @@ python scripts/gen_enhanced_nav.py  # 增强版（+中文名+CAS）
 
 **使用导航查物性**（Agent 链路）：用户给化学品 → 在导航表定位（中文名/英文名/CAS/缩写）→ 取 `media_id`
 → `mcp__ima-mcp__fetch_media_content` 精确读单文件 → 解析 NFPA(8.5)/闪点(4.1)/自燃(4.7)/沸点(9.3)/密度(9.7)/蒸气压(9.25)/TLV(3.4)。
+> ⚠️ **运行层差异（2026-09-14 加）**：`fetch_media_content` 目前**只在 WorkBuddy 侧的 ima 连接器可用**；
+> 在 DSH（本地 stdio 桥接器）只提供 `search_knowledge` / `get_knowledge_list` / `get_knowledge_base_list` / `ima_refresh_token`。
+> 在 DSH 下走到这一步时：**优先用本地离线索引（1-物性数据索引等 13 类，秒查、无需网络）**；
+> 本地索引缺项再请用户在 WorkBuddy 侧完成单文件读取，**不要**反复重试不存在的工具。
+> 判断当前运行时：能调通 `mcp__ima-mcp__search_knowledge` 但 `fetch_media_content` 报 unknown tool 即为 DSH。
 **中文检索局限**：独特中文名（如"苯酚磺酸锌"）能命中导航并高亮；高频词中文名（如"异丙苯过氧化氢"被"过氧化氢"稀释）
 排序靠后——此时配合 CAS/英文名检索，或走 IMA 客户端对话。
+
+## 反应性/相容性字段秒查（2026-09-23 增 · v3.6.0）
+
+> **分工铁律**：相容性**判定**与矩阵归 `ray-chem-compat`（L1 规则引擎 + 仲裁顺序）；
+> 本 skill 只做**物性表反应性字段补全**（111 列模板的"补充备注"级使用，不加列、不造判定）。
+
+```powershell
+# 本地秒查（零外部依赖，data/ 两件新索引）
+python scripts/query_reactivity.py --cas 10217-52-4     # 危险品全书：危险反应/禁配物/分解产物/pages
+python scripts/query_reactivity.py --name hydrazine     # CAMEO：与水/常见材料/聚合/阻聚剂 + CG 配伍组
+```
+
+| data/ 文件（新） | 键 | 字段 |
+|---|---|---|
+| `禁配物-危险品全书.json`（997 CAS） | CAS | 危险反应 / 避免接触的条件 / 禁配物 / 危险的分解产物 / pages（原书页码溯源） |
+| `材质反应性-CAMEO.json`（999 CAS + 269 无 CAS 按名） | CAS | water / common_materials / polymerize / inhibitor / CG 配伍组 |
+
+数据源：**与 ray-chem-compat 同源同书**（CAMEO 1306 份 CHRIS 数据表、危险品全书·通用卷 3rd Ed 原书 PDF），
+参照其 `_process/scripts/build_sheet1...`（对应本机两份独立生成器），**查询语义两条铁律**：
+①「未查到 ≠ 无害」（空白字段标"未查到"）；② 引用只作**描述性字段**，不构成判定结论（判定 → ray-chem-compat）。
 
 ## 目录结构（完整版见 references/field_source_map.md 附录）
 
 ```
 ray-chem-property/
 ├── SKILL.md              # 主文档（Step 0-5 工作流）
-├── scripts/ (16 个)      # field_schema.json + 15 脚本（见附录）
+├── scripts/ (17 个)      # field_schema.json + query_reactivity + 15 脚本（见附录）
 ├── references/ (4 个)    # field_source_map / conflict_rules / cameo_nav_build / pitfalls（31坑+18经验）
-├── data/ (18 个)         # CAMEO 导航×2 + AEGL/PAC/GBZ/危化品/有毒气体索引×5 + 危险品全书物性+应急准则+ERG2024+CRC97+兰氏15+Perry8+SARA+TDG索引 + raw×2
+├── data/ (20 个)         # 上列 18 + 禁配物-危险品全书 + 材质反应性-CAMEO（2026-09-23 增，反应性字段秒查）
 └── templates/            # 预留
 ```
 
@@ -258,3 +284,4 @@ Step 3  输出 HTML + 回填 Excel
 | 日期 | 变更 |
 |------|------|
 | 2026-09-02 | v3.5.0：token 瘦身（16972→<9000 tok，超限 2 倍问题修复）。①「关键坑」31 条 +「实战经验」18 条整体卸载至 `references/pitfalls.md`（124 行），正文只留「高频坑速查 Top 8」（最易踩 8 条 + 索引）；②description 的本地索引清单精简为一行概览（明细正文有，触发面不重复）；③目录结构 references 数 3→4。按需加载原则：完整坑库执行到对应脚本/步骤遇问题时才查，不常驻上下文。 |
+| 2026-09-23 | v3.6.0：**反应性字段秒查**（方案 B · 副本独立）。新增 `data/禁配物-危险品全书.json`（997 CAS：危险反应/禁配物/分解产物/pages 溯源）+ `data/材质反应性-CAMEO.json`（999 CAS + 269 无 CAS 按名：water/common_materials/polymerize/inhibitor/CG 配伍组）+ `scripts/query_reactivity.py`；SKILL.md 增「反应性/相容性字段秒查」节与分工铁律（判定归 ray-chem-compat，本 skill 只做字段补全）；触发词 +7（禁配物/水敏/遇水反应/聚合风险/阻聚剂/CG 配伍组/材质相容）。数据源与 ray-chem-compat 同源同书（双份漂移对策＝同书重建 + 指纹对账）；111 列 schema 与母版模板**未动**（加列属 MOC 级变更，另行立项）。 |

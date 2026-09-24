@@ -2,9 +2,10 @@
 name: ray-pse-video
 slug: ray-pse-video
 displayName: 事故报告转安全培训视频
-description: Use when converting a process safety incident report (PDF/Word/image) into a narrated safety training video with PPT, TTS, hard subtitles, and FFmpeg MP4 assembly. Triggers: "事故报告转视频", "安全培训视频", "incident report to training video", or converting any structure document into a slide-video workflow.
+description: >-
+  Use when converting a process safety incident report (PDF/Word/image) into a narrated safety training video with PPT, TTS, hard subtitles, and FFmpeg MP4 assembly. Triggers: "事故报告转视频", "安全培训视频", "incident report to training video", or converting any structure document into a slide-video workflow.
 agent_created: true
-version: 2.4.0
+version: 2.4.1
 ---
 
 # ray-PSE-Video — 事故报告转安全培训视频
@@ -33,7 +34,7 @@ version: 2.4.0
 **❌ 致命错误**：用 `run_in_background=true` 跑关键编码步骤。
 - 会话刷新后 `task_id` 丢失，进程状态不可见
 - 错误信息卡在缓冲区无法诊断
-- 本次事故视频项目 clip 编码中断两次，全因后台任务丢失
+- 本次隆莱项目 clip 编码中断两次，全因后台任务丢失
 
 **✅ 正确做法**：所有步骤前台同步执行，timeout 给够。
 
@@ -181,7 +182,7 @@ color: "868E96"
 # 避免 Git Bash/PowerShell 对中文路径的展开问题
 import subprocess, os
 env = os.environ.copy()
-env['NODE_PATH'] = os.path.expanduser('~/.workbuddy/binaries/node/workspace/node_modules')
+env['NODE_PATH'] = '~/.workbuddy/.workbuddy/binaries/node/workspace/node_modules'
 subprocess.run([node_exe, js_path, pptx_path], cwd=work_dir, env=env)
 ```
 
@@ -206,7 +207,7 @@ function titleSlide(title, subtitle, desc) {
 }
 ```
 
-> **教训**：某事故项目末尾页 subtitle 与 desc 重合。根因是 desc 的 y 从 3.5 移到 3.8 时才留下足够间距。subtitle 在 y=2.8 结束于 y=3.6，desc 从 y=3.8 开始 → 0.2" 间距刚好。若 desc 行数多（≥4 行），h 保持 1.2 不变。
+> **教训**：隆莱项目末尾页 subtitle（"— 江西隆莱生物制药…—"）与 desc 重合。根因是 desc 的 y 从 3.5 移到 3.8 时才留下足够间距。subtitle 在 y=2.8 结束于 y=3.6，desc 从 y=3.8 开始 → 0.2" 间距刚好。若 desc 行数多（≥4 行），h 保持 1.2 不变。
 
 ## PPT 设计规范与优化体系（按需加载）
 
@@ -447,10 +448,10 @@ for item in os.listdir(work_dir):
 
 ```
 # 正确目录：
-7-XX公司"X·X"事故调查报告/
+7-南昌进贤江西隆莱生物制药有限公司"12·31"较大窒息事故调查报告/
 
 # 幽灵目录（同时出现）：
-7-XX公司/
+7-南昌进贤江西隆莱生物制药有限公司/
   ├── u201c12·31/
   │   └── u201d较大窒息事故调查报告/
   │       └── video_work/  ← 空的！
@@ -461,11 +462,11 @@ for item in os.listdir(work_dir):
 
 > 代码片段见 `references/code-snippets.md`（幽灵目录清理脚本）。
 
-> **教训**：某事故项目的报告路径含 `"12·31"`（全角引号），Write 工具写入 `create_ppt.js` 时在上级目录创建了幽灵目录，内部分裂为 `u201c12·31/u201d较大窒息事故调查报告/video_work/`。此目录空无一物，但容易被误认为有效工作目录。
+> **教训**：隆莱项目的报告路径含 `"12·31"`（全角引号），Write 工具写入 `create_ppt.js` 时在上级目录创建了幽灵目录，内部分裂为 `u201c12·31/u201d较大窒息事故调查报告/video_work/`。此目录空无一物，但容易被误认为有效工作目录。
 
 ## 维护记录
 
-完整维护记录见 `references/changelog.md`（v2.4.0 卸载，按需加载）。最近变更：v2.4.0（维护记录卸载至 references）。
+完整维护记录见 `references/changelog.md`（v2.4.0 卸载，按需加载）。最近变更：v2.4.1（看图前提补记，见 references/pitfalls.md 第 28 节）。
 
 ## 复盘经验总结 + 常见坑位速查
 

@@ -5,7 +5,7 @@ ray-hazop-lopa · 计算模块②：泄放面积四方法交叉校核
   方法二  DIERS/OMEGA 两相流（主方法）
   方法三  刘嚆储罐泄压口（常压设计，法一/法二/经验值）
   方法四  赵红乔 kF 污染逐点核算
-用法: python calc_relief.py                 # 默认示例储罐参数
+用法: python calc_relief.py                 # 默认 701 储罐 V1101A 参数
       python calc_relief.py --DN 125 --Pset 60
 单位红线：P 压力统一 kPa；面积输出 mm² 与 cm² 并列；管径 mm。
 """
@@ -14,7 +14,7 @@ import argparse, math
 def main():
     ap = argparse.ArgumentParser(description="泄放面积四方法校核")
     # API 520（纯气体）
-    ap.add_argument('--W', type=float, default=1507.0, help='质量流量 kg/h（产氧）')
+    ap.add_argument('--W', type=float, default=1500.0, help='质量流量 kg/h（产氧）')
     ap.add_argument('--MW', type=float, default=32.0, help='分子量')
     ap.add_argument('--k', type=float, default=1.4, help='比热比')
     ap.add_argument('--T', type=float, default=383.0, help='泄放温度 K')
@@ -22,7 +22,7 @@ def main():
     ap.add_argument('--Kd', type=float, default=0.975, help='泄放系数')
     ap.add_argument('--Pback', type=float, default=5.0, help='超压叠加 kPa')
     # DIERS
-    ap.add_argument('--m', type=float, default=21349.0, help='体系质量 kg')
+    ap.add_argument('--m', type=float, default=20000.0, help='体系质量 kg')
     ap.add_argument('--cp', type=float, default=3.43, help='比热 kJ/(kg·K)')
     ap.add_argument('--dTdt_r', type=float, default=15.3, help='泄放点温升 ℃/min（全罐分解基准取最大 15.3；保守估算档 10）')
     ap.add_argument('--dTdt_m', type=float, default=15.3, help='最大温升 ℃/min')
@@ -35,9 +35,9 @@ def main():
     ap.add_argument('--Kf', type=float, default=1500.0, help='刘嚆法一 Kf')
     ap.add_argument('--p', type=float, default=5000.0, help='常压泄放压力 Pa')
     ap.add_argument('--t_pure', type=float, default=10.674, help='纯 H2O2 当量 t')
-    ap.add_argument('--V', type=float, default=21.0, help='罐容积 m³')
+    ap.add_argument('--V', type=float, default=20.0, help='罐容积 m³')
     ap.add_argument('--a', type=float, default=6.74, help='刘嚆法二系数（50%）')
-    ap.add_argument('--DN', type=float, default=102.0, help='现有管径内径 mm（DN100 按 102）')
+    ap.add_argument('--DN', type=float, default=100.0, help='管径内径 mm（须填内径非公称直径；DN100 内径约 102）')
     a = ap.parse_args()
 
     print("== 方法一：API 520 纯气体（参考下限）==")

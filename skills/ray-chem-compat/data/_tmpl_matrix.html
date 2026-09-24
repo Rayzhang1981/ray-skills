@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>化学品相容性交互矩阵（引擎版）</title>
+<style>
+ :root{--x:#5B9BD5;--n:#FF0000;--c:#FFFF00;--y:#00FF00;--sr:#FFC000;--bd:#c8ccd4;--tx:#1f2430;--mut:#6b7280;}
+ *{box-sizing:border-box}
+ body{margin:0;font:13px/1.5 "Microsoft YaHei UI","Microsoft YaHei",system-ui,sans-serif;color:var(--tx);background:#f6f7f9}
+ header{padding:14px 18px;background:#fff;border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:5}
+ h1{margin:0 0 4px;font-size:17px}
+ .sub{color:var(--mut);font-size:12px}
+ .bar{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-top:8px}
+ .legend{display:flex;gap:10px;flex-wrap:wrap;align-items:center;font-size:12px}
+ .lg{display:inline-flex;align-items:center;gap:5px}
+ .sw{width:15px;height:15px;border:1px solid #98a1b3;border-radius:2px;display:inline-block}
+ input[type=search]{padding:5px 9px;border:1px solid var(--bd);border-radius:5px;font-size:13px;width:200px}
+ #wrap{overflow:auto;padding:12px;max-height:calc(100vh - 150px)}
+ table{border-collapse:separate;border-spacing:0;background:#fff}
+ th,td{border-right:1px solid var(--bd);border-bottom:1px solid var(--bd);padding:0;font-weight:400}
+ thead th{position:sticky;top:0;background:#eef2f7;z-index:3;font-size:11px;padding:3px 4px;max-width:110px}
+ thead tr:nth-child(2) th{top:26px}
+ th.rh{position:sticky;left:0;background:#eef2f7;z-index:4;text-align:left;padding:3px 8px;white-space:nowrap;font-size:12px}
+ td{width:24px;height:22px;text-align:center;cursor:pointer;font-size:12px;user-select:none}
+ td.empty{background:#fbfbfc;cursor:default}
+ td.diag{outline:1px solid #7f8b9e;outline-offset:-1px}
+ td.hl{outline:2px solid #111;outline-offset:-2px}
+ tr.dim td,tr.dim th{opacity:.35}
+ #panel{position:fixed;right:0;top:0;width:390px;height:100vh;background:#fff;border-left:1px solid var(--bd);
+        box-shadow:-6px 0 18px rgba(0,0,0,.08);padding:14px;overflow:auto;display:none;z-index:9}
+ #panel.on{display:block}
+ #panel h2{margin:0 0 6px;font-size:15px}
+ #panel .kv{margin:6px 0;font-size:12.5px}
+ #panel .kv b{color:#374151}
+ #panel .doc{border-top:1px dashed var(--bd);margin-top:8px;padding-top:8px;white-space:pre-wrap;font-size:12px;color:#374151}
+ #panel .close{float:right;cursor:pointer;color:var(--mut);font-size:18px;line-height:1}
+ .tag{display:inline-block;padding:1px 6px;border-radius:9px;background:#eef2f7;margin:0 4px 4px 0;font-size:11.5px}
+ .warn{color:#b45309;font-weight:700}
+</style>
+</head>
+<body>
+<header>
+  <h1>化学品相容性交互矩阵 <span class="sub">（引擎版 · 由反应性基团笛卡尔积 × 2346 条基团对判定规则库生成）</span></h1>
+  <div class="sub" id="stat"></div>
+  <div class="bar">
+    <div class="legend" id="lg"></div>
+    <input type="search" id="q" placeholder="筛选化学品（高亮该行/列）">
+  </div>
+</header>
+<div id="wrap"><table id="mx"></table></div>
+<div id="panel"><span class="close" id="cl">✕</span><div id="pd"></div></div>
+<script>
+const P = __PAYLOAD__;
+const COLOR = {X:"#5B9BD5",N:"#FF0000",C:"#FFFF00",Y:"#00FF00",SR:"#FFC000","?":"#DDDDDD"};
+const LNAME = {X:"No self reaction（无自反应，仅对角）",N:"Not Compatible（不相容）",
+               C:"Caution（警告）",Y:"Compatible（相容）",SR:"Self Reactive（潜在自反应）","?":"未判定"};
+const LZH = {X:"不会自身发生反应",N:"不相容，存在危险化学反应",C:"警告，可能存在较小的危险性反应",
+             Y:"相容的，不会发生危险反应",SR:"潜在的自反应"};
+const ORDER=["X","N","C","Y","SR"];
+
+/* 图例 */
+const lg=document.getElementById('lg');
+ORDER.forEach(k=>{const d=document.createElement('span');d.className='lg';
+  d.innerHTML='<i class="sw" style="background:'+COLOR[k]+'"></i>'+k+' — '+LZH[k];lg.appendChild(d);});
+
+/* 统计 */
+let nc=0; P.sym.forEach(r=>{for(const ch of r){if(ch==='N'||ch==='C')nc++;}});
+const total=P.N*(P.N+1)/2;
+document.getElementById('stat').textContent =
+  '成员 '+P.N+' 名｜格 '+total+' 个（沿对角线只显示左下半）｜其中 N/C 需注意 '+nc+' 格｜点击格子看依据';
+
+/* 建表 */
+const mx=document.getElementById('mx');
+let h1='<thead><tr><th class="rh" rowspan="2">化学品</th>';
+for(let j=0;j<P.N;j++){h1+='<th>'+(j+1)+'</th>';}
+h1+='</tr><tr>';
+for(let j=0;j<P.N;j++){h1+='<th>'+P.members[j][0]+'</th>';}
+h1+='</tr></thead><tbody>';
+mx.innerHTML=h1+'</tbody>';
+const tb=mx.tBodies[0];
+for(let i=0;i<P.N;i++){
+  const tr=document.createElement('tr');
+  tr.innerHTML='<th class="rh">'+(i+1)+'. '+P.members[i][0]+'</th>';
+  for(let j=0;j<P.N;j++){
+    const td=document.createElement('td');
+    if(j<=i){
+      const s=P.sym[i][j];
+      td.textContent=s;
+      td.style.background=COLOR[s]||'#fff';
+      if(s==='X'||s==='SR')td.style.color='#fff';
+      td.dataset.i=i; td.dataset.j=j;
+      if(i===j)td.classList.add('diag');
+      td.addEventListener('click',()=>show(i,j));
+    }else{td.className='empty';}
+    tr.appendChild(td);
+  }
+  tb.appendChild(tr);
+}
+
+/* 详情面板 */
+const panel=document.getElementById('panel'), pd=document.getElementById('pd');
+document.getElementById('cl').onclick=()=>panel.classList.remove('on');
+function esc(s){return String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+function show(i,j){
+  const s=P.sym[i][j];
+  const a=P.members[j][0], b=P.members[i][0];
+  let h='<h2>'+esc(a)+' × '+esc(b)+'</h2>';
+  h+='<div class="kv"><b>判定：</b><span class="tag" style="background:'+COLOR[s]+'">'+s+'</span>'+LNAME[s]+'</div>';
+  h+='<div class="kv"><b>中文释义：</b>'+LZH[s]+'</div>';
+  const d=P.det[i+','+j];
+  if(d){
+    h+='<div class="kv"><b>触发基团对：</b>'+(d.t?esc(d.t):'（无同档命中对）')+'</div>';
+    h+='<div class="kv"><b>判定代码：</b>'+(d.c.length?d.c.map(x=>'<span class="tag">'+esc(x)+'</span>').join(''):'—')+'</div>';
+    h+='<div class="kv"><b>潜在气体：</b>'+(d.g.length?d.g.map(x=>'<span class="tag">'+esc(x)+'</span>').join(''):'—')+'</div>';
+    h+='<div class="kv"><b>基团对命中：</b>'+d.h+' 对（同档 '+d.n+' 对）</div>';
+    if(d.fb)h+='<div class="kv warn">※ 非库判：含兜底推断基团集（B 级），须复核</div>';
+    h+='<div class="doc"><b>依据（逐基团对）：</b>';
+    d.d.forEach((x,k)=>{h+='\\n\\n▸ '+esc(x.t)+'\\n'+esc(x.d);});
+    h+='</div>';
+  }else{
+    h+='<div class="kv" style="color:#6b7280">对角格：'+(s==='SR'?'含潜在自反应基团（自反应标记）':'无自反应（自对标记）')+'；该格不代表"与自己相容"。</div>';
+  }
+  pd.innerHTML=h; panel.classList.add('on');
+}
+
+/* 筛选高亮 */
+document.getElementById('q').addEventListener('input',e=>{
+  const q=e.target.value.trim();
+  const hit=-1;
+  let idx=-1;
+  if(q){idx=P.members.findIndex(m=>m[0].includes(q)||(m[1]||'').toUpperCase().includes(q.toUpperCase()));}
+  const rows=tb.rows;
+  for(let r=0;r<rows.length;r++){
+    const on=(idx<0)||(r===idx);
+    rows[r].classList.toggle('dim',!on);
+    for(let c=0;c<rows[r].cells.length;c++){
+      const td=rows[r].cells[c];
+      if(td.dataset && td.dataset.j!==undefined){
+        const j=+td.dataset.j;
+        td.classList.toggle('hl', idx>=0 && (r===idx||j===idx));
+      }
+    }
+  }
+});
+</script>
+</body>
+</html>

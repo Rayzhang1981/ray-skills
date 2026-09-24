@@ -1,0 +1,68 @@
+[
+ {
+  "file": "data/cameo_reactivity.json",
+  "desc": "L2-A CAMEO 反应性（1306 份 × 6 段 + CG 配伍组）",
+  "bytes": 596534,
+  "sha256": "E2463317FAB794B1"
+ },
+ {
+  "file": "data/whpdj_incompat.json",
+  "desc": "L2-D 危险品全书 3rd Ed 禁配物（1000 条 × 5 字段）",
+  "bytes": 487019,
+  "sha256": "8840976C7F07BDF2"
+ },
+ {
+  "file": "data/breth_entries.json",
+  "desc": "L2-B/C Bretherick 8th 条目索引（5218 条）",
+  "bytes": 2063656,
+  "sha256": "D074D442F4FF652B"
+ },
+ {
+  "file": "data/breth8_vol2_topics.json",
+  "desc": "L2-B 补充 Bretherick 反应性基团章节目录",
+  "bytes": 55820,
+  "sha256": "A627577E24EA33FE"
+ },
+ {
+  "file": "data/cache_breth8_pages.json",
+  "desc": "Bretherick 8th 全书 1481 页文本缓存（查询回源）",
+  "bytes": 4523685,
+  "sha256": "232CC9909C8E7C5E"
+ },
+ {
+  "file": "data/group_pair_rules.json",
+  "desc": "L1 判定层 基团对规则库（2346 条）",
+  "bytes": 1895885,
+  "sha256": "77BC53BE2C6558C6"
+ },
+ {
+  "file": "data/reactive_groups.json",
+  "desc": "L1 反应性基团知识库（68 基团）",
+  "bytes": 138926,
+  "sha256": "35A666D288CCEA6A"
+ },
+ {
+  "file": "data/hazard_statements.json",
+  "desc": "CRW 官方 13 条危害声明中译",
+  "bytes": 3690,
+  "sha256": "5759AC94A99B955A"
+ },
+ {
+  "file": "data/reactivity_alerts.json",
+  "desc": "12 类反应性预警",
+  "bytes": 8436,
+  "sha256": "7958EACF39216BFA"
+ },
+ {
+  "file": "data/chem_index.json",
+  "desc": "48 化学品成员表（衣物轴判定用）",
+  "bytes": 14126,
+  "sha256": "A474F36A7CBDFFF8"
+ },
+ {
+  "file": "data/sheet1_material.json",
+  "desc": "L3 材质矩阵底稿",
+  "bytes": 12307,
+  "sha256": "4E7925DE1CBBD7AF"
+ }
+]

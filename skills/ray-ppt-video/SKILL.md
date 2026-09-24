@@ -2,8 +2,9 @@
 name: ray-ppt-video
 slug: ray-ppt-video
 displayName: PPT转培训视频
-version: 2.7.0
-description: Use when converting a technical training PPTX into a narrated training video. Triggers: "PPT转视频", "生成培训视频", "PPT to training video", "课件转视频", or any request to turn slide decks into MP4 videos with AI voiceover and subtitles.
+version: 2.7.1
+description: >-
+  Use when converting a technical training PPTX into a narrated training video. Triggers: "PPT转视频", "生成培训视频", "PPT to training video", "课件转视频", or any request to turn slide decks into MP4 videos with AI voiceover and subtitles.
 agent_created: true
 ---
 
@@ -339,7 +340,7 @@ python scripts/assemble_video.py ... --subtitle-mode both
 
 ## ⚠️ 英文视频场景（English deck → English video，2026-09-03 血泪沉淀）
 
-> 源 PPT 与配音都是英文时（如 Rianlon 马来西亚新员工 EHS 培训），**默认走英文专用脚本链**，不要直接套用中文步骤。以下 4 条是本场景踩过的坑，违反任何一条都会出问题。
+> 源 PPT 与配音都是英文时（如本公司马来西亚新员工 EHS 培训），**默认走英文专用脚本链**，不要直接套用中文步骤。以下 4 条是本场景踩过的坑，违反任何一条都会出问题。
 
 ### E1. 英文字幕必须用 `tts_srt_en.py`（句子级精确时间轴）
 
@@ -494,7 +495,7 @@ python scripts/validate_inputs.py --pptx slides.pptx --narration narration.json 
 | 检查项 | 关键词/模式 | 替换为 |
 |--------|------------|--------|
 | 声音克隆参考音频路径 | `reference-voice.*\.wav` | `<你的参考音频路径>` |
-| 输出文件中的私有路径 | `E:/LingXi/`、`D:/Work/` 等绝对路径 | `<示例路径>` |
+| 输出文件中的私有路径 | `~/LingXi/`、`D:/Work/` 等绝对路径 | `<示例路径>` |
 | Qwen 模型密钥/环境变量 | `QWEN_API_KEY` 等含密钥的行 | `<你的KEY>` |
 | 用户名目录 | `C:\\Users\\<用户名>`（如用户名出现在脚本硬编码中） | `<用户目录>` |
 
@@ -514,8 +515,8 @@ python scripts/validate_inputs.py --pptx slides.pptx --narration narration.json 
 ## 实战经验
 
 - 2026-09-04｜[ERR-20260904-001]｜**未经确认自动重调语速凑时长 → 音频损坏无用功**｜场景：用户要求"20分钟视频"，+5% 语速实际做出 18.85 分钟，我未询问用户直接改 -8% 重跑想凑 20 分钟 → 部分覆盖已完成音频（部分 -8%/部分 0 字节），被迫全量重做｜死路：中断重跑时音频已处于混合状态；二次重跑又扩大损坏｜解法：①rm 全部音频 + 全量 +5% 重生成恢复一致 ②固化为「时长确认铁律」（见流程概览上方）：估算时长→用户确认→才 TTS；确认后时长冻结，禁止为凑整数自动改 --rate｜计数：1｜状态：resolved（已写主流程）
-- 2026-09-03｜场景：**英文 PPT 转英文培训视频**｜经验：英文项目**必须走英文专用脚本链**（`tts_srt_en.py` + `build_clean_en.py` + `reburn_subs_en.py`，见上文"英文视频场景"章节）——自带脚本字幕按中文标点拆、force_style 位置不可靠、无句子级时间轴｜来源：Rianlon 48页英文EHS课件→2h28m
-- 2026-09-03｜场景：**纯文本模型看 PPT 图片**｜经验：DeepSeek 等看不了 PNG → 用 `ray-ppt-ocr-eyes`（opencode-go qwen3.8-flash 默认）逐页 VL 描述，识别装饰图/信息图，确认无隐藏数据后再写旁白｜来源：同上
+- 2026-09-03｜场景：**英文 PPT 转英文培训视频**｜经验：英文项目**必须走英文专用脚本链**（`tts_srt_en.py` + `build_clean_en.py` + `reburn_subs_en.py`，见上文"英文视频场景"章节）——自带脚本字幕按中文标点拆、force_style 位置不可靠、无句子级时间轴｜来源：本公司 48页英文EHS课件→2h28m
+- 2026-09-03｜场景：**纯文本模型看 PPT 图片**｜经验：DeepSeek 等看不了 PNG → 用 `ray-ppt-ocr-eyes`（opencode-go qwen3.8-flash 默认）逐页 VL 描述，识别装饰图/信息图，确认无隐藏数据后再写旁白｜来源：同上（⚠️ 2026-09-12 补记：前提已变——先 Read 试原生看图，能看就直接看；确认读不了图才走 ocr-eyes）
 - 2026-09-03｜[ERR-20260903-001]｜**禁止在带字幕视频上重烧字幕**（叠层！）｜场景：修复字幕位置/大小，每轮都在已带字幕视频上再烧 → 两层字幕共存（用户反馈"上下各一处字幕"）｜死路：试图在 fixed/v2 视频上继续改＝越改越多层｜解法：必须从无字幕母版（build_clean_en.py 重建）开始，只烧一次｜计数：1｜状态：resolved（已写主流程 E3）
 - 2026-09-03｜[ERR-20260903-002]｜**ffmpeg subtitles 滤镜 force_style 的 MarginV/Alignment 不可靠**（浮中部）｜场景：命令行 force_style 设 MarginV=24 想让字幕贴底，实际渲染到画面中部叠 PPT 内容（用户 2 次反馈"字幕挡内容"）｜死路：反复调 MarginV 值无效、怀疑 VL 误读浪费大量验证｜解法：用 ASS 文件（样式写死在文件里）+ `ass=` 滤镜，libass 可靠执行贴底｜计数：1｜状态：resolved（已写主流程 E2）
 - 2026-09-03｜[ERR-20260903-003]｜**烧字幕必须验证单层**（像素带对比）｜场景：交付前以为修好了，实际两层字幕叠加未察觉｜解法：母版 vs 成品逐带对比（ImageChops），差异应只在底部字幕带；勿靠 VL/OCR 猜（会把 PPT 自身文字误当字幕）｜计数：1｜状态：resolved（已写主流程 E4）

@@ -6,7 +6,7 @@
 
 ## 复盘经验总结
 
-基于三个真实事故培训视频项目的完整迭代，总结如下可复用的经验。
+基于衢州巨化"9·4"事故、伊犁新天煤化工"10·16"窒息事故、及江西隆莱"12·31"窒息事故三个培训视频的完整迭代，总结如下可复用的经验。
 
 ### 0. SRT 字幕同步：SentenceBoundary + clip 时长
 
@@ -113,16 +113,16 @@ bash -c "python -c \"print('事故\\u201C9·16\\u201D')\""
 
 | 路径 | 做法 | 适用场景 |
 |------|------|----------|
-| **路径 1（首选）**：Write 工具写 `.py` 文件到系统 Temp 目录 | `Write("$LOCALAPPDATA/Temp/stage.py", code)` → `python -u temp/stage.py` | **任何含全角引号路径的项目** |
+| **路径 1（首选）**：Write 工具写 `.py` 文件到系统 Temp 目录 | `Write("~/.workbuddy/AppData/Local/Temp/stage.py", code)` → `python -u temp/stage.py` | **任何含全角引号路径的项目** |
 | **路径 2**：Python `subprocess.run()` 用 `cwd=` 参数 | Bash 只调 `python -u script.py`，脚本内部用 Python 拼路径 | TTS 生成、clip 编码 |
 | **路径 3**：Write 工具直接写 JS/Python 源文件到工作目录 | 但 Write 工具对全角引号路径也可能失败 → 降级为路径 1 | 能成功写入时可用 |
 
 ```python
 # ✅ 路径 1 — 写临时脚本 + 执行
 # 第一步：Write 工具写到临时目录（纯 ASCII 路径，零风险）
-Write("$LOCALAPPDATA/Temp/make_clips.py", code)
+Write("~/.workbuddy/AppData/Local/Temp/make_clips.py", code)
 # 第二步：shell 执行
-python -u "$LOCALAPPDATA/Temp/make_clips.py"
+python -u "~/.workbuddy/AppData/Local/Temp/make_clips.py"
 
 # ❌ 不要这样 — Bash 解析会破坏引号嵌套
 python -u -c "
@@ -431,7 +431,7 @@ Pixabay 等免费音效站 CDN 对无 Referer 的请求返回 403。ffmpeg `aeva
 
 ### 28. 字幕/水印渲染验证 — 像素统计法（2026-08-02 包钢任务）
 
-**场景**：视频烧录完成后需要确认字幕和水印真的渲染出来了，但模型不支持读图、tesseract bridge 本机故障（`tesseract.cmd --version` 报 "'M' 不是内部或外部命令"）。
+**场景**：视频烧录完成后需要确认字幕和水印真的渲染出来了，但模型不支持读图、tesseract bridge 本机故障（`tesseract.cmd --version` 报 "'M' 不是内部或外部命令"）。 ⚠️ **2026-09-12 补记**：本条前提已变——2026-09 起主流模型原生读图已普遍可用，像素统计法改为「读不了图时」的降级手段；判定以实测为准，不按模型名预设。
 
 **像素统计法（零依赖，纯 PIL）**：
 ```python

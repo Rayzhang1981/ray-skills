@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>中文危害标签矩阵（引擎版 · CRW 13 条危害声明中译）</title>
+<style>
+ body{margin:0;font:13px/1.55 "Microsoft YaHei UI","Microsoft YaHei",system-ui,sans-serif;color:#1f2430;background:#f6f7f9}
+ header{background:#fff;border-bottom:1px solid #c8ccd4;padding:12px 18px;position:sticky;top:0;z-index:5}
+ h1{margin:0 0 3px;font-size:17px}
+ .sub{color:#6b7280;font-size:12px}
+ .tabs{margin-top:9px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+ .tab{padding:5px 12px;border:1px solid #c8ccd4;border-radius:16px;cursor:pointer;background:#fff;font-size:12.5px}
+ .tab.on{background:#1f2430;color:#fff;border-color:#1f2430}
+ .lg{display:inline-flex;gap:8px;flex-wrap:wrap;font-size:11.5px;color:#374151;margin-left:6px}
+ .chip{display:inline-block;padding:1px 7px;border-radius:9px;background:#eef2f7;border:1px solid #dbe1ea;margin:1px 3px 1px 0;font-size:11.5px;white-space:nowrap}
+ .chip.N{background:#ffe5e5;border-color:#ffb3b3}
+ .chip.C{background:#fff8d6;border-color:#ffe680}
+ .chip.UR{background:#eee;border-color:#ccc;color:#555}
+ .chip.NR{background:#e8f7ea;border-color:#b7e0bd;color:#2f6b38}
+ table{border-collapse:collapse;background:#fff;width:100%}
+ th,td{border:1px solid #dbe1ea;padding:3px 6px;font-size:12px;vertical-align:top}
+ th{background:#eef2f7;position:sticky;top:0;z-index:3;text-align:left;font-weight:600}
+ td.c{text-align:center;width:44px}
+ td.yes{background:#e6f4ea;color:#1d6b2f;font-weight:700;text-align:center}
+ td.no{background:#fafbfc;color:#cbd0d8;text-align:center}
+ tr.fb{background:#fffdf3}
+ .wrap{padding:12px;overflow:auto;max-height:calc(100vh - 165px)}
+ .name{white-space:nowrap;font-weight:600}
+ .mut{color:#6b7280}
+ details summary{cursor:pointer}
+</style></head><body>
+<header>
+  <h1>中文危害标签矩阵 <span class="sub">（引擎版 · 标签体系＝CRW 官方 13 条危害声明中译）</span></h1>
+  <div class="sub" id="stat"></div>
+  <div class="tabs">
+    <span class="tab on" id="t1">视图一 · 化学品 × 危害标签</span>
+    <span class="tab" id="t2">视图二 · 化学品对 × 危害标签</span>
+    <span class="lg" id="lg"></span>
+  </div>
+</header>
+<div class="wrap" id="wrap"></div>
+<script>
+const P=__PAYLOAD__;
+const ORDER=P.order, LABL=P.lab;
+const SEV={X:3,N:2,C:1,Y:0};
+/* 严重度（用于排序/着色）：N 红 C 黄；管理码 UR 灰、NR 绿 */
+function cls(c){return c==='UR'?'UR':(c==='NR'?'NR':'');}
+function chips(cs){return cs.map(c=>'<span class="chip '+cls(c)+'" title="'+LABL[c][1]+'">'+LABL[c][0]+'</span>').join('');}
+document.getElementById('stat').textContent =
+  '化学品 '+P.chem.length+' 名｜需注意的化学品对 '+P.pairs.length+' 对｜标签 '+ORDER.length+' 类｜'
+  +'视图一点标签可看该标签的完整释义';
+const lg=document.getElementById('lg');
+lg.innerHTML=ORDER.map(c=>'<span class="chip '+cls(c)+'" title="'+LABL[c][1]+'">'+LABL[c][0]+'（'+c+'）</span>').join('');
+
+const wrap=document.getElementById('wrap');
+function view1(){
+  const MX=Math.max(1,...P.chem.flatMap(r=>Object.values(r.cnt)));
+  let h='<div class="mut" style="margin-bottom:6px">数字＝该化学品在<b>需要留意的 '+P.pairs.length+' 对</b>中、会产生该危害标签的对数（热力图：色深＝对数多）；「·」＝无。点击表头看标签完整释义。</div>';
+  h+='<table><thead><tr><th>化学品</th>';
+  ORDER.forEach(c=>{h+='<th title="'+LABL[c][1]+'" style="text-align:center">'+LABL[c][0]+'<br><span class="mut">'+c+'</span></th>';});
+  h+='<th style="text-align:center">涉及对数</th><th style="text-align:center">其中 N / C</th></tr></thead><tbody>';
+  P.chem.forEach((r,idx)=>{
+    h+='<tr class="'+(r.fb?'fb':'')+'"><td class="name">'+(idx+1)+'. '+r.name+(r.fb?' <span class="mut">*非库判</span>':'')+'</td>';
+    ORDER.forEach(c=>{const n=r.cnt[c]||0;
+      const a=n?0.12+0.62*(n/MX):0;
+      const st=n?'background:rgba(31,36,48,'+a.toFixed(2)+');color:'+(a>0.45?'#fff':'#1f2430')+';font-weight:'+(n?'700':'400'):'';
+      h+='<td style="text-align:center;'+st+'" title="'+LABL[c][1]+'：'+n+' 对">'+(n||'·')+'</td>';});
+    h+='<td class="c">'+r.pairs+'</td><td class="c">'+r.n+' / '+r.c+'</td></tr>';
+  });
+  h+='</tbody></table>';
+  wrap.innerHTML=h;
+}
+function view2(){
+  let h='<div class="mut" style="margin-bottom:6px">按严重度排序（N 先）；「*非库判」= 含兜底推断基团集（B 级），须复核</div>';
+  h+='<table><thead><tr><th style="width:60px">判定</th><th style="width:230px">化学品对</th><th>危害标签（中文）</th><th style="width:170px">代码</th></tr></thead><tbody>';
+  P.pairs.forEach(p=>{
+    const sub = p.sub.map(c=>'<span class="chip '+cls(c)+'" title="'+LABL[c][1]+'">'+LABL[c][0]+'</span>').join('');
+    const nr = p.nr ? '<span class="chip NR" title="'+LABL.NR[1]+'">含 NR（未见已知危害反应）</span>' : '';
+    h+='<tr class="'+(p.fb?'fb':'')+'"><td class="c"><span class="chip '+p.s+'">'+p.s+'</span></td>'
+      +'<td class="name">'+p.a+' × '+p.b+(p.fb?' <span class="mut">*</span>':'')+'</td>'
+      +'<td>'+(sub||'<span class="mut">—</span>')+nr+'</td><td class="mut">'+p.cs.join('、')+'</td></tr>';
+  });
+  h+='</tbody></table>';
+  wrap.innerHTML=h;
+}
+document.getElementById('t1').onclick=()=>{document.getElementById('t1').classList.add('on');
+  document.getElementById('t2').classList.remove('on');view1();};
+document.getElementById('t2').onclick=()=>{document.getElementById('t2').classList.add('on');
+  document.getElementById('t1').classList.remove('on');view2();};
+view1();
+</script></body></html>

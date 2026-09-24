@@ -2,7 +2,7 @@
 name: ray-ppt-refine
 slug: ray-ppt-refine
 displayName: PPT排版美化器
-version: 2.5.0
+version: 2.5.1
 description: >-
   对已有 PPTX 做排版美化与合规验收（不生成内容、不改内容结构）。触发词：美化PPT、PPT排版优化、调整PPT版式、统一PPT风格、PPT换肤、修复PPT文字溢出、PPT字体统一、PPT配色调整、把这份PPT改好看、规范PPT格式、优化幻灯片排版、PPT太丑。输入任意 PPTX（含非本生态生成的），输出美化后的 PPTX。内置设计语言资产库（8类高手版设计语言），自动匹配推荐。自包含，不依赖 ray-ppt-generator；需要从零生成内容用 ray-ppt-generator。v2.1.0 机读化门禁（refine_gate_check.py）+ 可编辑性红线（铁律 4）。
 agent_created: true
@@ -36,7 +36,7 @@ agent_created: true
 3. 只有 `"passed": true` 时才能进入批量修复 / 交付
 4. 如果 `"passed": false`，按 `user_code_errors[]` 修复后重跑
 
-> **当前模型无多模态（读不了 PNG）时**：视觉核验走 `ray-ppt-ocr-eyes` 降级链路（OCR+VL 逐页描述），见 `references/refine-toolkit.md` 第 2 节末尾——**链路存在 ≠ 可以跳过，"模型看不了图"不是跳过视觉 QA 的理由**。
+> **视觉核验先试原生 Read**：导出的 PNG 先直接 Read 一张——2026-09 起主流模型普遍原生多模态（deepseek-flash-V4.1、glm-flash-5.3 等），能看就直接看（更快、更省、细节不丢）。**只有 Read 报读不了图时**，才走 `ray-ppt-ocr-eyes` 降级链路（OCR+VL 逐页描述），见 `references/refine-toolkit.md` 第 2 节末尾——**链路存在 ≠ 可以跳过，"模型看不了图"不是跳过视觉 QA 的理由**。
 
 ---
 
@@ -362,7 +362,7 @@ python ~/.workbuddy/skills/ray-ppt-refine/scripts/refine_gate_check.py \
 
 - 2026-09-04｜[LRN-20260904-002]｜场景：对照拆解用户自做美化版（豆包 AI 生成 deck vs python-pptx 原版，21 页逐 shape 量化对比）｜经验：①**"看不见的结构"才是观感差距主因**——20pt 设计网格命中率 73% vs 4%（模板已回 generator 2.22）、序列同色相明度递进 vs 五色相乱跳（generator 2.23）、文字覆盖层解耦（generator 2.24）；②**外部 AI 生成 deck 指纹识别**：内嵌"XX AI 生成"角标 PNG（zipfile 翻 media/ 一眼定位）、Noto Sans SC 字体、全 AUTO_SHAPE 文字覆盖层结构（底层 roundRect 底色+上层透明 rect 文字）、Tailwind Slate 灰阶（#334155/#94A3B8/#E2E8F0）——对比分析第一步先验指纹，判断对手是"人手改"还是"AI 工具生成"；③**对比分析方法论**：dump 两版全部 shape（类型/坐标/字体/字号/颜色/文本）→ 全局统计（字体占比/字号阶梯/色板 census/网格命中率）→ 代表页逐 shape 对照；量化数据比"感觉更整齐"有说服力；④内容层确认：好版本真做减法（P13 字数 -30%、P17 -52%）+ 正向补强（"上报不追责"激励、"如有疑问联系安全科"出口）——印证诊断库"重排不减密"行｜死路：肉眼对比只说出"换了字体/换了颜色"表层差异，漏掉网格系统这类结构性差异｜来源：事故制度 deck 用户美化版拆解｜计数：1｜状态：resolved
 - 2026-09-04｜[LRN-20260904-001]｜场景：PPT 高手建议落地重做（事故制度 deck 21 页 v2）｜经验：①**6 个版式手法验证有效**（时限时间轴/卡片矩阵/红绿灯/热力图表格/地铁图/阶梯），已升格为 generator code-templates 2.16-2.21，refine 侧入诊断库"版式单调"行的修复指向；②三条反面教训入诊断库：图形隐喻半成品（环形无箭头=散点）/ 配色邻近色切换用户无感（#005293→#0D3B66 第一眼无变化）/ 重排不减密（新形状装旧内容="换汤不换药"，用户"效果一般"的根因）；③QA 链路实战确认：越界+重叠+文本流三脚本全绿 → COM 导 PNG 逐页目检，6 轮 fix-and-verify 收敛；踩坑：`Inches()` 收到裸 float 产生天文坐标（Emu 减法必须先转 in 再算）、heredoc 批量 replace 吞行（补丁后 grep 复核递增行）｜死路：倒置金字塔用旋转 180° 三角形+叠加文字（文字溢出斜边落白底）；改用宽度递减圆角条（文字框内永安全）｜来源：事故管理制度宣贯 PPT v2 美化轮｜计数：1｜状态：resolved
-- 2026-08-27｜[LRN-20260828-001]｜场景：无多模态模型的视觉 QA 断头｜根因：refine 全流程（铁律 3/反模式 1/Step 2/5）假设"导出 PNG 后模型能看图"，DeepSeek 纯文本模型直接 Read PNG 报"不支持读图"，视觉 QA 链路断头｜Fix：toolkit 第 2 节补降级链路——COM 导 PNG（附 PowerShell 原生 COM 备选 + 首次调用无输出陷阱）→ ray-ppt-ocr-eyes（OCR+VL 双层，opencode-go）逐页核验；路径必须 Windows 格式（Git Bash /e/ 不认）；左右分栏页 OCR 合并行是假象，布局判断以 VL 层为准。已在 generator v3.14.0 的 extend-deck.md 同步沉淀（23 页新增页逐页验证通过）｜死路：只跑越界/重叠几何检测就交付（LRN-20260818-001 已证明几何检测会假通过）｜来源：马来西亚 EHS 课件 47 页扩充｜计数：1｜状态：resolved
+- 2026-08-27｜[LRN-20260828-001]｜场景：无多模态模型的视觉 QA 断头｜根因：refine 全流程（铁律 3/反模式 1/Step 2/5）假设"导出 PNG 后模型能看图"，DeepSeek 纯文本模型直接 Read PNG 报"不支持读图"，视觉 QA 链路断头｜Fix：toolkit 第 2 节补降级链路——COM 导 PNG（附 PowerShell 原生 COM 备选 + 首次调用无输出陷阱）→ ray-ppt-ocr-eyes（OCR+VL 双层，opencode-go）逐页核验；路径必须 Windows 格式（Git Bash /e/ 不认）；左右分栏页 OCR 合并行是假象，布局判断以 VL 层为准。已在 generator v3.14.0 的 extend-deck.md 同步沉淀（23 页新增页逐页验证通过）｜死路：只跑越界/重叠几何检测就交付（LRN-20260818-001 已证明几何检测会假通过）｜来源：马来西亚 EHS 课件 47 页扩充｜计数：1｜状态：resolved（⚠️ 2026-09-12 补记：本条前提已变——原生多模态已成主流模型常态，Read PNG 通常直接可用；本条降级链路改为「读不了图时」启用，判定以实测为准）
 - 2026-08-19｜[LRN-20260819-008]｜场景：95页英文 deck 套用公司中文模板｜经验：**模板套用 ≠ 硬套模板文件——提取 DNA 重绘**。只读解析模板（clrScheme + shape 明细 + OCR）提取 DNA（品牌色/Logo/标语/版式语言），关键页重绘（封面/章节/结束），内容页只嵌品牌元素。QA 用"Logo 页数=82/96"验证注入正确｜死路：直接以模板文件为基础修改（中文残留+结构丢失）｜状态：pending
 
 ### pending 条目索引（待回流主流程）
@@ -381,6 +381,7 @@ python ~/.workbuddy/skills/ray-ppt-refine/scripts/refine_gate_check.py \
 
 | 日期 | 变更 |
 |------|------|
+| 2026-09-12 | **v2.5.1：视觉核验前置检查（原生读图优先）**。铁律区「当前模型无多模态时」条目改为「**先试原生 Read，只有读不了图才走降级链路**」——2026-09 起主流模型普遍原生多模态（deepseek-flash-V4.1、glm-flash-5.3 等），原表述会诱导跳过原生 Read 直接调 OCR；历史条目 LRN-20260828-001 补记前提已变。 |
 | 2026-09-04 | **v2.5.0：图标素材能力边界（iconfont 可用性评估，探针实测）**。诊断库新增「图标素材来源」行——python-pptx 实测 SVG 原生不支持（add_picture 抛 UnidentifiedImageError）、PNG 直接可用、venv 无 cairosvg/svglib、图标字体不支持。单色简单图标→PNG 池或 FREEFORM 重绘；多色复杂插画→ImageGen/图库。完整见 references/changelog.md。 |
 | 2026-09-04 | **v2.4.0：对照拆解用户自做美化版回流（豆包 AI 生成 deck，21 页逐 shape 量化对比）**。①诊断库新增「网格失准」行（20pt 网格命中率 73% vs 4% 是观感差距主因，修复=坐标对齐 20pt 格+字号取整）；②LRN-20260904-002（外部 AI deck 四指纹 + 对比必须 dump 量化）；③内容层减法实证。完整见 references/changelog.md。 |
 | 2026-09-02 | **v2.2.0：进化轮（对比外部 PPT 美化领域 Top 候选，克制吸收 1 项）**。Step 3 诊断清单新增「杠杆收敛」——汇报只挑 3-5 个最大改造杠杆，次要项一句话带过（防清单过长分散注意力）。 |

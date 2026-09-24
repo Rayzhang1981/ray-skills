@@ -8,7 +8,7 @@
     python excel.py <excel路径> <日期YYYY-MM-DD> [输出json路径]
 
 示例：
-    python excel.py <path/to/export.xlsx> <快照日期如2024-01-01>
+    python excel.py ~/LingXi/Financial/Financial-0809.xlsx 2026-08-09
 
 输出 _portfolio_data.json，字段：
     mm_funds: [{name, yield_rate, shares, unpaid, cumulative_gain}]
