@@ -40,7 +40,7 @@ Each track feeds the other: SkillHub listings point back to this source repo, an
 | ray-translate | 4.1.0 | CN↔EN translation for chemical safety documents | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-translate) |
 | ray-hazop-lopa | 1.4.0 | HAZOP/LOPA quantitative report generator | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-hazop-lopa) |
 | ray-chem-property | 3.6.0 | Batch chemical property data collection (111 fields; index DB via SkillHub) | ✅* | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-chem-property) |
-| ray-household-finance | 2.8.0 | Household finance management framework (examples are fictional) | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-household-finance) |
+| ray-household-finance | 2.9.2 | Household finance management framework (examples are fictional) | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-household-finance) |
 | ray-chem-compat | 1.4.1 | Chemical compatibility matrix (CRW/NOAA rule pairs + 3-tier knowledge base) | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-chem-compat) |
 | ray-mm | 2.4.1 | Meeting materials (audio/video/PPT/PDF/docs) → formatted Word minutes | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-mm) |
 | ray-rca | 1.1.0 | Root cause analysis end-to-end | ⏳ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-rca) |

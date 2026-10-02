@@ -41,7 +41,11 @@ def parse_date(s):
 
 
 def compute_positions(txns):
-    """按时间序聚合每只基金：投入/回收/份额与加权成本/已实现损益。"""
+    """按时间序聚合每只基金：投入/回收/份额与加权成本/已实现损益。
+
+    v2.9.0 红字分录：type=reversal 的分录按反向计入（冲销 buy 则减投入、
+    冲销 sell/dividend 则减回收），原始错误记录原样保留、净额抵销。
+    """
     pos = {}
     for t in sorted(txns, key=lambda x: str(x.get('date', ''))):
         code = str(t.get('fund_code', '')).strip()
@@ -51,7 +55,20 @@ def compute_positions(txns):
         nav = t.get('nav')
         p = pos.setdefault(code, {'name': t.get('fund_name') or code, 'invested': 0.0,
                                   'recovered': 0.0, 'shares': 0.0, 'cost': 0.0,
-                                  'realized': 0.0, 'nav_missing': 0})
+                                  'realized': 0.0, 'nav_missing': 0, 'reversed': 0.0})
+        if typ == 'reversal':
+            # 红字冲销：按 ref 判断冲销对象；无 ref 时按 nav 有无冲最近买/卖（保守：只冲金额口径）
+            ref = str(t.get('ref') or '').lower()
+            if 'buy' in ref:
+                p['invested'] -= amt
+            elif 'sell' in ref or 'dividend' in ref:
+                p['recovered'] -= amt
+            else:
+                # 无法定位冲销对象：按 nav 存在与否默认冲买入（最常见错误），并显式提示
+                p['invested'] -= amt
+                print(f'⚠️ {code} reversal 无 ref 指向，默认按冲销买入处理（若错请补 ref）')
+            p['reversed'] += amt
+            continue
         if typ == 'buy':
             p['invested'] += amt
             p['name'] = t.get('fund_name') or p['name']
@@ -141,8 +158,9 @@ def main():
         ret = gain / p['invested'] * 100 if p['invested'] else 0.0
         cost_s = f'{p["cost"]:.4f}' if p['cost'] else '--'
         miss = f'（nav缺失{p["nav_missing"]}笔）' if p['nav_missing'] else ''
+        rev = f'（含红字冲销 ¥{p["reversed"]:,.0f}）' if p['reversed'] else ''
         print(f'{code} | {p["name"]} | {p["invested"]:,.0f} | {p["recovered"]:,.0f} | '
-              f'{cur:,.0f} | {gain:+,.0f} | {ret:+.2f}% | {cost_s} | {p["shares"]:,.0f}{miss}')
+              f'{cur:,.0f} | {gain:+,.0f} | {ret:+.2f}% | {cost_s} | {p["shares"]:,.0f}{miss}{rev}')
         tot_i += p['invested']
         tot_r += p['recovered']
         tot_v += cur

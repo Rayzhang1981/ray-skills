@@ -40,7 +40,7 @@
 | ray-translate | 4.1.0 | 化工安全文档中英双向翻译 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-translate) |
 | ray-hazop-lopa | 1.4.0 | HAZOP/LOPA 定量分析报告生成器 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-hazop-lopa) |
 | ray-chem-property | 3.6.0 | 化学品物性数据批量搜集（索引库随 SkillHub 版分发） | ✅* | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-chem-property) |
-| ray-household-finance | 2.8.0 | 家庭财务管理框架（示例为虚构数据） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-household-finance) |
+| ray-household-finance | 2.9.2 | 家庭财务管理框架（示例为虚构数据） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-household-finance) |
 | ray-chem-compat | 1.4.1 | 化学品相容性矩阵（CRW/NOAA 规则对 + 三层知识库） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-chem-compat) |
 | ray-mm | 2.4.1 | 会议材料（音视频/PPT/PDF/文档）→ 格式化 Word 纪要 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-mm) |
 | ray-rca | 1.1.0 | 事故根本原因分析（RCA）端到端 | ⏳ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-rca) |
