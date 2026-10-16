@@ -44,9 +44,16 @@
 | ray-chem-compat | 1.7.1 | 化学品相容性矩阵（CRW/NOAA 规则对 + 三层知识库） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-chem-compat) |
 | ray-mm | 2.6.1 | 会议材料（音视频/PPT/PDF/文档）→ 格式化 Word 纪要 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-mm) |
 | ray-rca | 1.5.3 | 事故根本原因分析（RCA）端到端 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-rca) |
+| ray-material-selection | 2.9.0 | 选材方法论：腐蚀/机械闸门 + 数据源路由 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-material-selection) |
+| ray-stat-diag-compare | 1.2.2 | 工程统计数据诊断与比较 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-stat-diag-compare) |
+| ray-stat-doe | 1.1.0 | 工程统计实验设计与过程建模 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-stat-doe) |
+| ray-stat-guide | 1.1.0 | 工程统计方法导航 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-stat-guide) |
+| ray-stat-meas | 1.1.2 | 工程统计测量过程与不确定度 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-stat-meas) |
+| ray-stat-reliability | 1.1.0 | 工程统计可靠性数据分析 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-stat-reliability) |
+| ray-stat-spc | 1.1.2 | 工程统计过程监控与过程表征 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-stat-spc) |
 
 > \* ray-chem-property 开源版含脚本与流程，完整物性索引库（授权数据）仅随 SkillHub 版分发。
-> ⏳ ray-rca 融合第三方专有方法（ABS SOURCE™），源码不公开。
+> 方法论归属说明：ray-rca 蒸馏并引用 CCPS 事故调查指南与公开文档化的工具（如 ABS SOURCE™ 因果因子图），全部文字为原创综合。
 > 另有 30+ 技能（CCPS 方法论认知层 17 个等）仅在私有环境分发，未公开源码。
 
 ---

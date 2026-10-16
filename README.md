@@ -44,9 +44,16 @@ Each track feeds the other: SkillHub listings point back to this source repo, an
 | ray-chem-compat | 1.7.1 | Chemical compatibility matrix (CRW/NOAA rule pairs + 3-tier knowledge base) | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-chem-compat) |
 | ray-mm | 2.6.1 | Meeting materials (audio/video/PPT/PDF/docs) → formatted Word minutes | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-mm) |
 | ray-rca | 1.5.3 | Root cause analysis end-to-end | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-rca) |
+| ray-material-selection | 2.9.0 | Material selection methodology: corrosion/mechanical gates + data-source routing | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-material-selection) |
+| ray-stat-diag-compare | 1.2.2 | Engineering statistics: data assumption diagnostics + comparison test selection | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-stat-diag-compare) |
+| ray-stat-doe | 1.1.0 | Engineering statistics: DOE design selection and process modeling | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-stat-doe) |
+| ray-stat-guide | 1.1.0 | Engineering statistics: method navigation across the stat series | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-stat-guide) |
+| ray-stat-meas | 1.1.2 | Engineering statistics: measurement processes and uncertainty | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-stat-meas) |
+| ray-stat-reliability | 1.1.0 | Engineering statistics: reliability data analysis | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-stat-reliability) |
+| ray-stat-spc | 1.1.2 | Engineering statistics: process monitoring and characterization | ✅ | [Install](https://skillhub.cn/skills/user_fb8bdb79/ray-stat-spc) |
 
 > \* ray-chem-property open-source edition includes scripts & workflow; the full property index database (licensed data) ships only with the SkillHub edition.
-> ⏳ ray-rca integrates third-party proprietary methodology (ABS SOURCE™), source code is not public.
+> Methodology attribution: ray-rca distills and references CCPS incident-investigation guidance and publicly documented tools (e.g. ABS SOURCE™ causal-factor charting); all written content is original synthesis.
 > 30+ more skills (e.g. 17 CCPS methodology cognition skills) are distributed privately only.
 
 ---
