@@ -17,6 +17,29 @@ v2.5 改进：
 """
 
 import sys, os, json, argparse, base64, re, subprocess, tempfile, shutil
+
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
 sys.stdout.reconfigure(encoding='utf-8')
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -54,7 +77,7 @@ def build_image_html(img_info: dict, data: dict) -> str:
                         ".webp":"image/webp"}.get(ext, "image/png")
                 return f'<img src="data:{mime};base64,{b64}" alt="事故现场照片"/>'
             except Exception as e:
-                print(f"      ⚠ 无法加载照片: {e}")
+                print(f"      [!] 无法加载照片: {e}")
                 return f'<div class="no-image">⚠ 照片加载失败</div>'
         return f'<div class="no-image">⚠ 照片路径无效</div>'
 
@@ -183,7 +206,7 @@ def html_to_pdf(html_path: str, pdf_path: str) -> bool:
     """
     edge = find_edge()
     if not edge:
-        print("      ⚠ 未找到 Edge 浏览器，回退 Playwright ...")
+        print("      [!] 未找到 Edge 浏览器，回退 Playwright ...")
         return html_to_pdf_playwright(html_path, pdf_path)
 
     file_url = f"file:///{html_path.replace(os.sep, '/')}"
@@ -213,13 +236,13 @@ def html_to_pdf(html_path: str, pdf_path: str) -> bool:
             print(f"      PDF 已生成: {pdf_path} ({size_kb:.0f} KB)")
             return True
         else:
-            print(f"      ⚠ Edge 生成失败（文件太小或不存在），回退 Playwright ...")
+            print(f"      [!] Edge 生成失败（文件太小或不存在），回退 Playwright ...")
             return html_to_pdf_playwright(html_path, pdf_path)
     except subprocess.TimeoutExpired:
-        print("      ⚠ Edge 超时（30秒），回退 Playwright ...")
+        print("      [!] Edge 超时（30秒），回退 Playwright ...")
         return html_to_pdf_playwright(html_path, pdf_path)
     except Exception as e:
-        print(f"      ⚠ Edge 生成异常: {e}，回退 Playwright ...")
+        print(f"      [!] Edge 生成异常: {e}，回退 Playwright ...")
         return html_to_pdf_playwright(html_path, pdf_path)
 
 
@@ -232,7 +255,7 @@ def html_to_pdf_playwright(html_path: str, pdf_path: str) -> bool:
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
-        print("      ⚠ Playwright 未安装，无法渲染 PDF。请手动用浏览器打开 HTML 打印。")
+        print("      [!] Playwright 未安装，无法渲染 PDF。请手动用浏览器打开 HTML 打印。")
         return False
 
     try:
@@ -259,10 +282,10 @@ def html_to_pdf_playwright(html_path: str, pdf_path: str) -> bool:
             print(f"      PDF 已生成(Playwright): {pdf_path} ({size_kb:.0f} KB)")
             return True
         else:
-            print("      ⚠ Playwright 生成的 PDF 太小或不存在")
+            print("      [!] Playwright 生成的 PDF 太小或不存在")
             return False
     except Exception as e:
-        print(f"      ⚠ Playwright 渲染异常: {e}")
+        print(f"      [!] Playwright 渲染异常: {e}")
         return False
 
 
@@ -322,9 +345,9 @@ def main():
         out_path = out_pdf if success else out_html
 
         if not success:
-            print(f"      ⚠ Edge 与 Playwright 均失败，请手动用浏览器打开 {os.path.basename(out_html)} 并打印为 PDF")
+            print(f"      [!] Edge 与 Playwright 均失败，请手动用浏览器打开 {os.path.basename(out_html)} 并打印为 PDF")
 
-    print(f"\n[5/5] ✅ 完成！")
+    print(f"\n[5/5] [OK] 完成！")
     print(f"      HTML 中间文件: {os.path.basename(out_html)}")
     if not args.no_shot:
         ft = data.get("footer", {})

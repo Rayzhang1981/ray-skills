@@ -6,6 +6,29 @@ import math
 import sys
 import io
 
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+
 # Fix Unicode output on Windows (GBK codec)
 if sys.stdout.encoding != "utf-8":
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
@@ -153,7 +176,7 @@ def print_report(args, htype_label, U, Q, dT1, dT2, LMTD, area, design_area,
     print(f"  冷侧: {args.cold_tin:.1f} → {args.cold_tout:.1f} °C")
 
     svc_tag = f" [{service_used}]" if service_used else ""
-    print(f"  U 值: {U} W/(m²·°C){svc_tag}")
+    print(f"  U 值: {U} W/(m2·°C){svc_tag}")
     print(f"  F 系数: {args.f_factor:.2f}")
     print(f"  设计裕量: {args.margin}%")
 
@@ -163,33 +186,33 @@ def print_report(args, htype_label, U, Q, dT1, dT2, LMTD, area, design_area,
     print(f"  热负荷: {Q:.1f} kW")
 
     if LMTD is None:
-        print(f"  温差 ΔT₁: {dT1:.1f} °C")
-        print(f"  温差 ΔT₂: {dT2:.1f} °C")
+        print(f"  温差 ΔT1: {dT1:.1f} °C")
+        print(f"  温差 ΔT2: {dT2:.1f} °C")
         print(f"  LMTD: 无法计算 (温度交叉)")
-        print(f"  所需面积: — m²")
-        print(f"  设计面积: — m²")
+        print(f"  所需面积: — m2")
+        print(f"  设计面积: — m2")
     else:
-        print(f"  温差 ΔT₁: {dT1:.1f} °C")
-        print(f"  温差 ΔT₂: {dT2:.1f} °C")
+        print(f"  温差 ΔT1: {dT1:.1f} °C")
+        print(f"  温差 ΔT2: {dT2:.1f} °C")
         print(f"  LMTD: {LMTD:.1f} °C")
-        print(f"  所需面积: {area:.1f} m²")
+        print(f"  所需面积: {area:.1f} m2")
         print(f"  设计裕量: {args.margin}%")
-        print(f"  设计面积: {design_area:.1f} m²")
+        print(f"  设计面积: {design_area:.1f} m2")
 
     # Temperature checks
     print()
     print("【温度检查】")
     if LMTD is None:
-        print("  ❌ 温度交叉！无法实现，需调整参数")
+        print("  [X] 温度交叉！无法实现，需调整参数")
     elif warnings:
         for w in warnings:
             if "过大" in w:
-                print(f"  ⚠️  {w}")
+                print(f"  [!]  {w}")
             elif "过小" in w or "偏小" in w:
                 print(f"  {w}")
     else:
         status = "合理" if approach >= 10 else "可接受"
-        print(f"  温端趋近: {approach:.1f} °C  ✅ {status}")
+        print(f"  温端趋近: {approach:.1f} °C  [OK] {status}")
 
     # Recommendation
     print()
@@ -197,12 +220,12 @@ def print_report(args, htype_label, U, Q, dT1, dT2, LMTD, area, design_area,
     print(f"  换热器型式: {recommendation}")
     if LMTD is not None:
         recommended_area = math.ceil(area * (1 + args.margin / 100) / 5) * 5
-        print(f"  推荐面积: {recommended_area} m²")
+        print(f"  推荐面积: {recommended_area} m2")
 
     # Footer
     print()
     print(sep)
-    print("⚠️  此为初步估算，详细设计需用 HTRI 或 Aspen EDR 校核。")
+    print("[!]  此为初步估算，详细设计需用 HTRI 或 Aspen EDR 校核。")
     print("   实际 U 值受流速、污垢热阻、壳程结构等影响。")
     print(sep)
     print()
@@ -252,7 +275,7 @@ def main():
 
     # Design parameters
     parser.add_argument("--u_value", type=float, default=None,
-                        help="总传热系数 (W/(m²·°C))")
+                        help="总传热系数 (W/(m2·°C))")
     parser.add_argument("--service", type=str, default=None,
                         choices=list(U_PRESETS.keys()),
                         help="服务类型快捷选择 (自动填充 U 值)")

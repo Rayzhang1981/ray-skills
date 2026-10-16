@@ -11,6 +11,31 @@ ray-hazop-lopa · 计算模块②：泄放面积四方法交叉校核
 """
 import argparse, math
 
+import sys
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+import sys
+
 def main():
     ap = argparse.ArgumentParser(description="泄放面积四方法校核")
     # API 520（纯气体）
@@ -26,16 +51,16 @@ def main():
     ap.add_argument('--cp', type=float, default=3.43, help='比热 kJ/(kg·K)')
     ap.add_argument('--dTdt_r', type=float, default=15.3, help='泄放点温升 ℃/min（全罐分解基准取最大 15.3；保守估算档 10）')
     ap.add_argument('--dTdt_m', type=float, default=15.3, help='最大温升 ℃/min')
-    ap.add_argument('--rho_v', type=float, default=0.58, help='蒸汽密度 kg/m³')
+    ap.add_argument('--rho_v', type=float, default=0.58, help='蒸汽密度 kg/m3')
     ap.add_argument('--hfg', type=float, default=2230.0, help='汽化潜热 kJ/kg')
     ap.add_argument('--hfg_eff', type=float, default=136.9, help='DIERS 修正潜热 kJ/kg')
-    ap.add_argument('--G', type=float, default=2.86e4, help='单位面积泄放能力 kg/(m²·s)')
+    ap.add_argument('--G', type=float, default=2.86e4, help='单位面积泄放能力 kg/(m2·s)')
     # 刘嚆 / 赵红乔
     ap.add_argument('--c', type=float, default=50.0, help='H2O2 浓度 wt%')
     ap.add_argument('--Kf', type=float, default=1500.0, help='刘嚆法一 Kf')
     ap.add_argument('--p', type=float, default=5000.0, help='常压泄放压力 Pa')
     ap.add_argument('--t_pure', type=float, default=10.674, help='纯 H2O2 当量 t')
-    ap.add_argument('--V', type=float, default=20.0, help='罐容积 m³')
+    ap.add_argument('--V', type=float, default=20.0, help='罐容积 m3')
     ap.add_argument('--a', type=float, default=6.74, help='刘嚆法二系数（50%）')
     ap.add_argument('--DN', type=float, default=100.0, help='管径内径 mm（须填内径非公称直径；DN100 内径约 102）')
     a = ap.parse_args()
@@ -44,7 +69,7 @@ def main():
     C = 520*math.sqrt(a.k*(2.0/(a.k+1.0))**((a.k+1.0)/(a.k-1.0)))
     P_abs = a.Pset + 101.3 + a.Pback   # kPaA
     A_api = 13160.0*a.W*math.sqrt(a.T*1.0)/(C*a.Kd*P_abs*math.sqrt(a.MW))
-    print(f"  C={C:.1f} P_abs={P_abs:.1f} kPaA | A = {A_api:.0f} mm² = {A_api/100:.1f} cm²")
+    print(f"  C={C:.1f} P_abs={P_abs:.1f} kPaA | A = {A_api:.0f} mm2 = {A_api/100:.1f} cm2")
 
     print("\n== 方法二：DIERS/OMEGA 两相流（主方法）==")
     Qv = a.m*a.cp*(a.dTdt_r/60.0)/(a.rho_v*a.hfg)          # m³/s 蒸汽
@@ -53,8 +78,8 @@ def main():
     q = 0.5*a.cp*(a.dTdt_r+a.dTdt_m)*1000.0/60.0            # W/kg
     W = 1.77*(q*a.m)/(a.hfg_eff*1000.0)                     # kg/s
     A_diers = W/a.G*1e6                                     # mm²
-    print(f"  Qv={Qv:.2f} m³/s QG={QG:.3f} m³/s | 蒸汽占比 {pv_pr:.3f} ({'缓和混合' if pv_pr>0.1 else '欠缓和'})")
-    print(f"  q={q:.0f} W/kg | W={W:.1f} kg/s | A = {A_diers:.0f} mm² = {A_diers/100:.1f} cm²")
+    print(f"  Qv={Qv:.2f} m3/s QG={QG:.3f} m3/s | 蒸汽占比 {pv_pr:.3f} ({'缓和混合' if pv_pr>0.1 else '欠缓和'})")
+    print(f"  q={q:.0f} W/kg | W={W:.1f} kg/s | A = {A_diers:.0f} mm2 = {A_diers/100:.1f} cm2")
 
     print("\n== 方法三：刘嚆储罐泄压口（常压设计）==")
     A1t = 0.35*(a.c/(100.0-a.c))*(a.Kf/math.sqrt(0.01*a.p))
@@ -63,21 +88,21 @@ def main():
     d2 = a.a*a.V**0.493          # cm
     A2 = math.pi/4.0*d2**2
     A3 = 200.0*a.t_pure
-    print(f"  法一(Kf={a.Kf:.0f},p={a.p:.0f}Pa): {A1t:.1f} cm²/t → 总 {A1:.0f} cm² → 直径 {d1:.0f} mm")
-    print(f"  法二(d=a·V^0.493): d={d2*10:.0f} mm → A={A2:.0f} cm²")
-    print(f"  法三(200 cm²/t): 总 {A3:.0f} cm² → 直径 {math.sqrt(4*A3/math.pi)*10:.0f} mm")
+    print(f"  法一(Kf={a.Kf:.0f},p={a.p:.0f}Pa): {A1t:.1f} cm2/t → 总 {A1:.0f} cm2 → 直径 {d1:.0f} mm")
+    print(f"  法二(d=a·V^0.493): d={d2*10:.0f} mm → A={A2:.0f} cm2")
+    print(f"  法三(200 cm2/t): 总 {A3:.0f} cm2 → 直径 {math.sqrt(4*A3/math.pi)*10:.0f} mm")
 
     print("\n== 方法四：赵红乔 kF 污染逐点核算 ==")
     for fe,kf in [(0.12,1.46),(7.76,11.6),(31.04,98.9),(38.81,1398),(46.6,10366)]:
         A = 0.35*(a.c/(100.0-a.c))*(kf/math.sqrt(0.01*a.p))*a.t_pure
         d = math.sqrt(4*A/math.pi)*10
-        print(f"  Fe²⁺ {fe:6.2f} mg/kg (kF={kf:>7.0f}): 总 {A:7.0f} cm² → 直径 {d:6.0f} mm")
+        print(f"  Fe2+ {fe:6.2f} mg/kg (kF={kf:>7.0f}): 总 {A:7.0f} cm2 → 直径 {d:6.0f} mm")
 
     print("\n== 判定 ==")
     dn_a = math.pi/4.0*(a.DN**2)
-    print(f"  现有 DN{a.DN:.0f}: {dn_a:.0f} mm² = {dn_a/100:.1f} cm²")
-    print(f"  DIERS 需求 {A_diers:.0f} mm² {'>' if A_diers>dn_a else '<'} DN{a.DN:.0f} → {'不足，需升级' if A_diers>dn_a else '足够'}")
-    print(f"  API520 下限 {A_api:.0f} mm² {'>' if A_api>dn_a else '<'} DN{a.DN:.0f}（仅参考）")
+    print(f"  现有 DN{a.DN:.0f}: {dn_a:.0f} mm2 = {dn_a/100:.1f} cm2")
+    print(f"  DIERS 需求 {A_diers:.0f} mm2 {'>' if A_diers>dn_a else '<'} DN{a.DN:.0f} → {'不足，需升级' if A_diers>dn_a else '足够'}")
+    print(f"  API520 下限 {A_api:.0f} mm2 {'>' if A_api>dn_a else '<'} DN{a.DN:.0f}（仅参考）")
 
 if __name__ == '__main__':
     main()

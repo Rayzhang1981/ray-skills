@@ -3,7 +3,7 @@ name: ray-html-miniprogram
 slug: ray-html-miniprogram
 description: 当用户需要将化工计算 HTML 文件转换为微信小程序模块，或有 HTML 计算工具想转成小程序、从现有HTML提取计算逻辑创建新小程序页面、将化工/过程工程计算工具移动端化时使用此技能。
 agent_created: true
-version: "1.2.0"
+version: "1.3.0"
 displayName: 化工计算转微信小程序
 ---
 
@@ -340,6 +340,16 @@ function calcFriction(Re, eps_d) {
 ---
 
 **记住**：这个skill基于真实项目经验，每一步都有血泪教训。严格遵循工作流程，不要"聪明地"跳过步骤！
+
+
+## Gotchas
+
+> 经验回流口（合并原「环境怪癖」与「实战经验」两处落点）。构建与运行中踩的坑记这里，随运行累积。
+> ⚠️ `None known` 是合法值——禁止编造 gotcha 凑数，假怪癖会教模型错误约束。
+> 新回流条目带前缀：`- YYYY-MM-DD｜[LRN-YYYYMMDD-XXX]｜计数:N｜状态:…`（判重与归档用）；历史条目保持原样。
+> 归档阈值：本节 > 40 行 或 SKILL.md > 90 KB → 最旧批次移入 `references/experience-archive.md`，保留最近 3 轮。
+
+- None known
 
 ## 维护记录
 

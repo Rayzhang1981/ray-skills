@@ -170,7 +170,7 @@
 | controller | 控制器/调节器 | — | — | 行业通用(待核) | 2026-09-06 |
 | interlock | 联锁 | — | safety interlock 安全联锁 | 行业通用(待核) | 2026-09-06 |
 | alarm | 报警/报警器 | — | — | 行业通用(待核) | 2026-09-06 |
-| P&ID (piping and instrument diagram) | 管道仪表流程图 | — | 俗称 PID 图；❌勿与 PID 控制混淆 | 行业通用(待核) | 2026-09-06 |
+| P&ID (piping and instrumentation diagram) | 管道及仪表流程图 | ❌管道仪表流程图；工艺管道和仪表流程图 | 俗称 PID 图；❌勿与 PID 控制混淆；HG/T 20519 国标口径 | HG/T 20519 + CCPS对照表定稿2026-09-26 | 2026-10-08 |
 | PFD (process flow diagram) | 工艺流程图 | — | — | 行业通用(待核) | 2026-09-06 |
 | datasheet | 数据表 | — | equipment datasheet 设备数据表 | 行业通用(待核) | 2026-09-06 |
 | rotameter | 转子流量计 | — | — | 行业通用(待核) | 2026-09-06 |
@@ -270,3 +270,35 @@
 | MVR (mechanical vapor recompression) | 机械蒸汽再压缩 | ❌机械蒸汽再压缩机堆叠 | 蒸发节能单元，常缩写 MVR | 图纸观察(待核) | 2026-09-06 |
 | RTO (regenerative thermal oxidizer) | 蓄热式热氧化炉 | ❌再生热氧化器乱译 | 废气处理单元 | 图纸观察(待核) | 2026-09-06 |
 | fail open (FO) | 失效开（故障开位） | ❌打开失败 | 气动阀气源失效时阀位走向；FC=失效关、FL=失效保位 | 图纸观察(待核) | 2026-09-06 |
+| computerized maintenance management system | 计算机化维护管理系统 |  |  | CCPS对照表定稿2026-09-26（库内单译法） | 2026-10-06 |
+| decommissioning | 停运，设施退役 |  |  | CCPS对照表定稿2026-09-26（库内单译法） | 2026-10-06 |
+| inspection, testing and preventive maintenance | 检查、测试以及预防性维护 |  |  | CCPS对照表定稿2026-09-26（库内单译法） | 2026-10-06 |
+| ITPM program | ITPM 计划 |  |  | CCPS对照表定稿2026-09-26（库内单译法） | 2026-10-06 |
+| piping and instrumentation diagram | 管道及仪表流程图 | ❌管道仪表流程图；工艺管道和仪表流程图 | HG/T 20519 国标口径；缩写见 P&ID 行 | HG/T 20519 + CCPS对照表定稿2026-09-26 | 2026-10-08 |
+| replacement-in-kind | 同质同类替换 |  |  | CCPS对照表定稿2026-09-26（库内单译法） | 2026-10-06 |
+| worksite inspection | 作业现场检查 |  |  | CCPS对照表定稿2026-09-26（库内单译法） | 2026-10-06 |
+| Resistance temperature detectors | 热电阻 |  | 缩写 RTD | CCPS词汇表2026-10-07（待裁定（最高仅 50%，未过 60%）） | 2026-10-08 |
+| American Pipe Fittings Association | 美国管件协会 |  | 缩写 APFA | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| American Society for Testing and Materials | 美国材料和试验协会 |  | 缩写 ASTM | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| American Welding Society | 美国焊接协会 |  | 缩写 AWS | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Continuous Stirred Tank Reactor | 连续搅拌反应釜 |  | 缩写 CSTR | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Corrosion Cracking | 应力腐蚀开裂 |  | 缩写 SCC-Stress | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Eddy Current Testing | 涡流检测 |  | 缩写 ECT | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Heat Exchanger Institute | 美国传热学会 |  | 缩写 HEI | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Inspection, testing and prevention maintenance | 检查、测试以及预防性维护 |  |  | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Instrument Reliability Network | 仪表可靠性网络 |  | 缩写 IRN | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Intergranular Corrosion | 晶间腐蚀 |  | 缩写 IGC | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Liquid Penetrant Testing | 渗透探伤检测 |  | 缩写 PT | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Magnetic Particle Testing | 磁粉检测 |  | 缩写 MT | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Motor Control Center | 电机控制中心 |  | 缩写 MCC | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| National Association of Corrosion Engineers | 美国腐蚀工程师协会 |  | 缩写 NACE | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| National Board Inspection Code | 美国国家检验规范 |  | 缩写 NBIC | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| National Electrical Manufacturers Association | 美国国家电气制造商协会 |  | 缩写 NEMA | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| National Electrical Safety Code | 美国国家电气安全规范 |  | 缩写 NESC | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Nondestructive Testing Information Analysis Center | 美国无损检测信息分析中心 |  | 缩写 NTIAC | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Partial stroke testing | 部分行程测试 |  | 缩写 PST | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Pressure Safety Valve | 安全阀 |  | 缩写 PSV | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Pressure valve | 压力阀 |  | 缩写 PV | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Radiographic Testing | 射线检测 |  | 缩写 RT | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Tubular Exchanger Manufacturer Association | 列管式换热器制造商协会 |  | 缩写 TEMA | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |
+| Ultrasonic Testing | 超声波检测 |  | 缩写 UT | CCPS词汇表2026-10-07（库内单译法） | 2026-10-08 |

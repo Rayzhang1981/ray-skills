@@ -9,10 +9,33 @@ import sys, io, os, re, json, hashlib, collections
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 import fitz
 
-PDF = (r"D:\Work\02-Tech Documents\Process Designing\Calculation Tools\Property Data"
-       r"\Property Reference Books\Bretherick‘s Handbook of Reactive Chemical Hazards"
-       r"\Bretherick‘s Handbook of Reactive Chemical Hazards 8thEd-2017.pdf")
-OUT = r"E:\LingXi-DSH\sessions\Chemical Compatible Matrix\_process\build\breth_entries.json"
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+
+PDF = (r"<数据源PDF目录>"
+       r"/Property Reference Books/Bretherick‘s Handbook of Reactive Chemical Hazards"
+       r"/Bretherick‘s Handbook of Reactive Chemical Hazards 8thEd-2017.pdf")
+OUT = r"<输出目录>/breth_entries.json"
 CAS_RE = re.compile(r"\[(\d{2,7}-\d{2}-\d[0-9A-Za-z*]*)\]")
 NO_LINE = re.compile(r"^†?†?\s*(\d{1,4}[a-z]?)(?:\s+([^\[\n]{2,110}))?$")
 # ⚠️ 高危条目编号带 † 前缀（‡/† 两段实为 Bretherick 危度记号）——实测 p995 '†4515'

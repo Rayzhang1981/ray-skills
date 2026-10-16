@@ -21,6 +21,31 @@ control_valve/calc.py — 控制阀口径计算（ISA 75.01.01 / IEC 60534）
 import argparse
 import math
 
+import sys
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+import sys
+
 GPM_TO_M3H = 0.227124707  # 1 gpm = 0.2271 m³/h
 K_V = 0.865              # Cv → Kv 换算（Kv = 0.865 * Cv，1.15 倒数）
 
@@ -75,11 +100,11 @@ def main():
         print(f"液体控制阀口径（ISA 75.01.01）：")
         print(f"  流量: {q:.1f} gpm | Gf={args.gf} | dP={args.dp} psi")
         print(f"  Cv = {cv:.2f} (US gpm)")
-        print(f"  Kv = {cv * K_V:.2f} (m³/h)")
+        print(f"  Kv = {cv * K_V:.2f} (m3/h)")
         print(f"  选型建议: 取 Cv 的 1.2~1.5 倍选标准阀（正常工况留裕量）")
     else:
         if args.qunit not in ("scfh", "nm3h"):
-            print(f"⚠️ 气体工况流量单位应为 scfh 或 nm3h（收到 {args.qunit}），按 scfh 处理")
+            print(f"[!] 气体工况流量单位应为 scfh 或 nm3h（收到 {args.qunit}），按 scfh 处理")
         q = args.q if args.qunit == "scfh" else args.q / 0.0283168  # nm3h → scfh(近似)
         if not (args.p1 and args.p2 and args.t1):
             ap.error("气体工况需 --p1 --p2 --t1")
@@ -90,7 +115,7 @@ def main():
         print(f"  流量: {q:.0f} scfh | Gg={args.gg} | P1={args.p1} psia | P2={args.p2} psia | T={args.t1}°F")
         print(f"  压降比 x = {x:.3f}" + (" → **阻塞流**（用 xT 计算）" if choked else ""))
         print(f"  Cv = {cv:.2f} (US gpm)")
-        print(f"  Kv = {cv * K_V:.2f} (m³/h)")
+        print(f"  Kv = {cv * K_V:.2f} (m3/h)")
         print(f"  选型建议: 取 Cv 的 1.2~1.5 倍选标准阀；阻塞流时核对制造商噪声/闪蒸数据")
 
 

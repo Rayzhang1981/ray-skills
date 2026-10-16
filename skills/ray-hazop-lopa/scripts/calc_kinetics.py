@@ -9,6 +9,31 @@ ray-hazop-lopa · 计算模块①：分解动力学
 """
 import argparse, math
 
+import sys
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+import sys
+
 def main():
     ap = argparse.ArgumentParser(description="分解动力学 Arrhenius 外推")
     ap.add_argument('--T1', type=float, default=66.1, help='锚点1温度 ℃（起始分解）')
@@ -50,13 +75,13 @@ def main():
         print(f"  {fr:6.1f} → {to:6.1f} ℃ : {dt*60:7.1f} min（累计 {tot:6.2f} h）")
     print(f"  {a.T0} → {a.Tend} ℃ 总计: {tot:.2f} h = {tot*60:.0f} min")
 
-    print("\n== 产氧速率（全罐，Nm³/h；O2 密度 1.429）==")
+    print("\n== 产氧速率（全罐，Nm3/h；O2 密度 1.429）==")
     for Tc in [66.1,80,90,100,110,118.3,130]:
         r=rate(Tc)
         if r<=0: continue
         P=a.mass*a.cp*r/60.0          # kW
         o2=P/a.H*(32.0/68.0)/1.429*3600.0
-        print(f"  {Tc:6.1f} ℃ : {r:8.3f} ℃/min | 产氧 {o2:9.0f} Nm³/h")
+        print(f"  {Tc:6.1f} ℃ : {r:8.3f} ℃/min | 产氧 {o2:9.0f} Nm3/h")
 
     print("\n== 污染 kF 放大坍缩（时间反比）==")
     for k in [float(x) for x in a.kf.split(',')]:

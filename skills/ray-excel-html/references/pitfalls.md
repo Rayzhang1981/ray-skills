@@ -160,7 +160,7 @@ Edge 对 `position: absolute` 容器内复杂 `<table>` 结构存在渲染 bug�
 | 5 | 无任何 `!important` | 避免与 Edge 渲染冲突 |
 | 6 | padding 收紧至 ≤ 6px | 为内容留空间 |
 
-**参考文件**（已验证 Edge 正常）：`D:\RayClaw\PE Calculation\01-Pipelines\不可压缩流体压力降计算-Pipe Pressure Drop-V1.1.html` 中「管壁粗糙度 ε ⬡ 参考」的 tip 表格
+**参考文件**（已验证 Edge 正常）：`〔本机素材区〕PE Calculation\01-Pipelines\不可压缩流体压力降计算-Pipe Pressure Drop-V1.1.html` 中「管壁粗糙度 ε ⬡ 参考」的 tip 表格
 
 ---
 

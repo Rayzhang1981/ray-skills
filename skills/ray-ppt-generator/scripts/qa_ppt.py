@@ -13,6 +13,29 @@
 """
 import sys, math, unicodedata, argparse
 
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+
 EMU_IN = 914400.0
 TOL = 0.02                      # 越界容差（in）
 BODY_TOP, BODY_BOT = 1.55, 7.05  # 正文区（排除标题栏与页脚）
@@ -85,12 +108,12 @@ def check_pptx(path, min_overlap=0.06):
                 ox = max(0, min(a[0] + a[2], b[0] + b[2]) - max(a[0], b[0]))
                 oy = max(0, min(a[1] + a[3], b[1] + b[3]) - max(a[1], b[1]))
                 if ox * oy > min_overlap:
-                    issues.append(f"  [重叠] {ox*oy:.2f} in²  「{a[4]}」 ↔ 「{b[4]}」")
+                    issues.append(f"  [重叠] {ox*oy:.2f} in2  「{a[4]}」 <-> 「{b[4]}」")
         if issues:
             bad += 1
             print(f"\n--- P{si:02d} ---")
             print("\n".join(issues))
-    print(f"\n{'✅ 全部通过' if bad == 0 else f'❌ {bad} 页有问题'}")
+    print(f"\n{'[OK] 全部通过' if bad == 0 else f'[X] {bad} 页有问题'}")
     return 1 if bad else 0
 
 
@@ -122,9 +145,9 @@ def scan_dblpage(py_files, page_funcs=("chain_slide", "card_slide", "stat_slide"
             if builds and calls:
                 hits.append((f, name, sorted(set(calls))))
     if not hits:
-        print("✅ 双页隐患扫描：0 命中")
+        print("[OK] 双页隐患扫描：0 命中")
         return 0
-    print(f"❌ 双页隐患 {len(hits)} 处（该函数内既自建页、又调用自带建页的页面函数 → 会多出一页）：")
+    print(f"[X] 双页隐患 {len(hits)} 处（该函数内既自建页、又调用自带建页的页面函数 → 会多出一页）：")
     for f, name, calls in hits:
         print(f"  {f} :: def {name}()  同时出现 自建页 + {calls}")
     print("  处置：删掉该函数里的自建页行（add_slide / s = slide(prs)），改为 s = <页面函数>(...)。")
@@ -134,7 +157,7 @@ def scan_dblpage(py_files, page_funcs=("chain_slide", "card_slide", "stat_slide"
 def main():
     ap = argparse.ArgumentParser(description="PPT 生成后体检器")
     ap.add_argument("target", nargs="+", help=".pptx 文件；--dblpage 模式下为 gen_*.py")
-    ap.add_argument("--min-overlap", type=float, default=0.06, help="文本重叠面积阈值 in²（默认 0.06）")
+    ap.add_argument("--min-overlap", type=float, default=0.06, help="文本重叠面积阈值 in2（默认 0.06）")
     ap.add_argument("--dblpage", action="store_true", help="改做双页隐患静态扫描（不读 pptx）")
     a = ap.parse_args()
     if a.dblpage:

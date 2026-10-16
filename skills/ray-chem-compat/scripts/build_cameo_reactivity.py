@@ -11,8 +11,8 @@ import sys, io, os, re, json, glob, time
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 import fitz
 
-D = r"D:\Work\02-Tech Documents\Process Designing\Calculation Tools\Property Data\CAMEO"
-OUT = r"E:\LingXi-DSH\sessions\Chemical Compatible Matrix\_process\build\cameo_reactivity.json"
+D = r"<数据源PDF目录>/CAMEO"
+OUT = r"<输出目录>/cameo_reactivity.json"
 
 SECTIONS = [
     ("water", r"5\.1?\s*Reactivity with Water"),

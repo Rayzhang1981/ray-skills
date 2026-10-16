@@ -2,7 +2,7 @@
 name: ray-household-finance
 slug: ray-household-finance
 displayName: 家庭财务管理
-version: "2.9.2"
+version: "2.10.1"
 description: "家庭财务通用管理框架，数据源无关（Excel/截图OCR/手动录入/API）。双契约：持仓快照 JSON（现状）+ 交易流水 transactions（历史，append-only）→ 成本基准/真实收益率/XIRR（scripts/cost_basis.py）。核心分析：持仓解析（含天天基金 Sheet3 定投计划表）、持仓对比、货基轮动（判据已改为结构性理由：费率/规模稳定性/快赎额度；收益率排名经回测证伪不作判据）、债基加仓（有锁定期产品禁做高频定投）、比例控制模型（±5%漂移带）、3年预测、可视化仪表盘。任意输入经数据源适配器归一化为标准 JSON，下游分析只认 JSON。可扩展：收支记账、预算、保险、储蓄目标、资产负债全景。触发词：基金持仓、持仓分析、投资组合、交易流水、成本、收益率、IRR、XIRR、家庭财务、收支记账、记账、预算、花了多少、活期宝轮动、货基轮换、债基加仓、定投计划、比例控制、资产配置、3年预测、资产规模预测、投资仪表盘、加息影响、宏观传导、事件冲击、Financial。"
 agent_created: true
 ---
@@ -326,7 +326,12 @@ ray-household-finance/
     └── cost_basis.py             # 交易流水 → 成本基准 + 真实收益率 + XIRR + 红字分录（v2.9.0）
 ```
 
-## 实战经验
+## Gotchas
+
+> 经验回流口（合并原「环境怪癖」与「实战经验」两处落点）。构建与运行中踩的坑记这里，随运行累积。
+> ⚠️ `None known` 是合法值——禁止编造 gotcha 凑数，假怪癖会教模型错误约束。
+> 新回流条目带前缀：`- YYYY-MM-DD｜[LRN-YYYYMMDD-XXX]｜计数:N｜状态:…`（判重与归档用）；历史条目保持原样。
+> 归档阈值：本节 > 40 行 或 SKILL.md > 90 KB → 最旧批次移入 `references/experience-archive.md`，保留最近 3 轮。
 
 - 2026-09-21｜[LRN-20260921-001]｜场景：monitor + gate｜经验：**闸门与周检的流程缺口三件套回流**。① 09-20 周检漏做闸门检验，根因＝自动化提示词无该步骤（skill 文档里有但执行体看不到）→ 闸门步骤必须显式写入自动化提示词；② 东财国债接口 pageSize=60 会把近60日当全年（区间宽 6.69bp vs 真值 22.25bp）→ 年区间统计须 pageSize≥300 且双口径分列；③ 巡检提示词写死 ×1.261 乘数与 $4,400-4,500 区间（均已过期）→ 动态数值一律改读 JSON 派生字段。以上已固化为 v2.8「闸门数据源与自洽校验」+「monitor 场景」节｜死路：以为「skill 文档写了」自动化就会执行；用接口默认 pageSize 做年区间统计｜来源：09-21 self-neat（automation-1787489198215 重写）｜计数：1｜状态：resolved
 
@@ -378,3 +383,4 @@ ray-household-finance/
 - 2026-09-17｜[LRN-20260917-004]｜场景：cross（**「同桶 ≠ 同类」跨任务复发，计数 1→2**）｜经验：**分类桶相同 ≠ 风险同类——下单前看实际资产占比，不看分类标签**。首次（LRN-20260917-002）：QDII 桶内美股股票 vs 美元债，波动 **23.68% vs 3.35%**（差 7 倍）、相关性仅 +0.209、同向 51.0%。复发（本次）：`bond` 桶内纯债 vs 二级债基，波动 **0.61% vs 9.16%**（差 **15 倍**）。**两次都因"只看桶名"而险些误判** ⇒ 已具备升格条件（跨 2 任务复发），**待提纯升格进 SKILL.md 正文**（第 2 步"穿透校验"即为本次落地形态）｜死路：用桶名代表风险等级｜来源：美元货基遴选 + 加息对债基影响｜计数：2｜状态：monitoring（待第三次复现或用户确认后升格正文）
 
 - 2026-09-30｜场景：进化（RSI 批次 P2）｜**v2.9.0 → v2.9.1：补建 evals/prompts.md 触发用例套件**（3 正向：持仓分析/货基轮动/记账录入；3 near-miss：债基筛选→ray-fund-screener、目标倒推→ray-goal-planner、方向发现→ray-market-scan）。动机：RSI 四阶段 Evaluate 定量化——本 skill 此前无 evals，优化后回归只能靠"章节完整性对比"定性确认；套件与 fund-screener/market-scan/goal-planner 的路由边界对齐（near-miss 全部指向六层链路的相邻层）。基线建档，下次优化后按 ray-skill-evolve Step 5.6「evals 定量回归」重跑出 delta｜状态：resolved
+- 2026-10-09｜[LRN-20261009-001]｜计数:1｜状态:已修复｜**控制台编码护栏**：本 skill 的 2 个脚本注入 `_console_safe()` 并把显示面非 GBK 字形 ASCII 化（舰队级修复；缺陷＝输出被重定向/管道捕获时抛 UnicodeEncodeError 整段中断，交互式控制台看不出来）。回归门：`python ~/.workbuddy/scripts/gbk_console_check.py`（已挂 `evals_runner`）。

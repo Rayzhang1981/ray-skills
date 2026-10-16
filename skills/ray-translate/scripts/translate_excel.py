@@ -11,6 +11,29 @@ import openpyxl
 import sys
 import time
 
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+
 # ============================================================
 # 1. 术语字典 — 按需增删，保持"长串在前"排序规则
 #    每对 "English Phrase": "中文翻译"
@@ -139,11 +162,11 @@ RAW_TERMS = {
     "Actuator": "执行机构",
 
     # === 单位缩写（保留英文形式但保持显示一致性） ===
-    "kg/m3": "kg/m³",
-    "kg/m^3": "kg/m³",
-    "m3": "m³",
-    "m^3": "m³",
-    "g/cc": "g/cm³",
+    "kg/m3": "kg/m3",
+    "kg/m^3": "kg/m3",
+    "m3": "m3",
+    "m^3": "m3",
+    "g/cc": "g/cm3",
     "cal/g-C": "cal/(g·°C)",
     "cal/g": "cal/g",
     "g/mol": "g/mol",

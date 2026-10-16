@@ -13,6 +13,29 @@ import argparse
 import math
 import sys
 
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+
 # Ensure UTF-8 output on Windows consoles
 if sys.stdout.encoding != "utf-8":
     sys.stdout.reconfigure(encoding="utf-8")
@@ -89,7 +112,7 @@ def main() -> None:
         description="储罐呼吸量计算器 — API 2000 (7th Ed.) 常压储罐呼吸阀选型",
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
-    p.add_argument("--volume", "-V", type=float, required=True, help="储罐容积 (m³)")
+    p.add_argument("--volume", "-V", type=float, required=True, help="储罐容积 (m3)")
     p.add_argument(
         "--flashpoint",
         "-f",
@@ -97,8 +120,8 @@ def main() -> None:
         default="high",
         help="闪点等级: high (≥37.8°C) / low (<37.8°C)",
     )
-    p.add_argument("--pump_in", type=float, default=0.0, help="最大进料速率 (m³/h)")
-    p.add_argument("--pump_out", type=float, default=0.0, help="最大出料速率 (m³/h)")
+    p.add_argument("--pump_in", type=float, default=0.0, help="最大进料速率 (m3/h)")
+    p.add_argument("--pump_out", type=float, default=0.0, help="最大出料速率 (m3/h)")
     p.add_argument("--insulated", action="store_true", default=False, help="是否保温")
     p.add_argument(
         "--ifactor",
@@ -161,50 +184,50 @@ def main() -> None:
 
     # Inputs
     print("【输入参数】")
-    print(f"  储罐容积: {vol:.0f} m³")
+    print(f"  储罐容积: {vol:.0f} m3")
     print(f"  闪点等级: {coeff['desc']}")
     print(f"  保温: {'是' if insulated else '否'}{' (系数=' + str(ifactor) + ')' if insulated else ''}")
-    print(f"  最大进料: {args.pump_in:.1f} m³/h")
-    print(f"  最大出料: {args.pump_out:.1f} m³/h")
+    print(f"  最大进料: {args.pump_in:.1f} m3/h")
+    print(f"  最大出料: {args.pump_out:.1f} m3/h")
     if args.tank_diameter and args.tank_height:
         print(f"  储罐尺寸: D={args.tank_diameter:.1f}m, H={args.tank_height:.1f}m")
 
     print()
     print("【热呼吸量】")
-    print(f"  呼出: {fmt_flow(th_out)} Nm³/h")
-    print(f"  吸入: {fmt_flow(th_in)} Nm³/h")
+    print(f"  呼出: {fmt_flow(th_out)} Nm3/h")
+    print(f"  吸入: {fmt_flow(th_in)} Nm3/h")
 
     print()
     print("【工作呼吸量】")
-    print(f"  呼出 (泵入): {fmt_flow(work_out)} Nm³/h")
-    print(f"  吸入 (泵出): {fmt_flow(work_in)} Nm³/h")
+    print(f"  呼出 (泵入): {fmt_flow(work_out)} Nm3/h")
+    print(f"  吸入 (泵出): {fmt_flow(work_in)} Nm3/h")
 
     print()
     print("【总呼吸量】")
-    print(f"  总呼出: {fmt_flow(total_out)} Nm³/h")
-    print(f"  总吸入: {fmt_flow(total_in)} Nm³/h")
+    print(f"  总呼出: {fmt_flow(total_out)} Nm3/h")
+    print(f"  总吸入: {fmt_flow(total_in)} Nm3/h")
 
     print()
     print("【选型建议】")
     if n_out == 0:
         print("  呼出侧: 无需呼吸阀")
     else:
-        print(f"  呼出侧: {n_out} × {sz_out} 呼吸阀 (单阀容量 {fmt_flow(cap_out)} Nm³/h)")
+        print(f"  呼出侧: {n_out} × {sz_out} 呼吸阀 (单阀容量 {fmt_flow(cap_out)} Nm3/h)")
 
     if n_in == 0:
         print("  吸入侧: 无需呼吸阀")
     else:
-        print(f"  吸入侧: {n_in} × {sz_in} 呼吸阀 (单阀容量 {fmt_flow(cap_in)} Nm³/h)")
+        print(f"  吸入侧: {n_in} × {sz_in} 呼吸阀 (单阀容量 {fmt_flow(cap_in)} Nm3/h)")
 
     if q_fire is not None:
         print()
         print("【火灾工况参考】")
-        print(f"  紧急放空量: ~{fmt_flow(q_fire)} Nm³/h{fire_note}，需独立核算")
+        print(f"  紧急放空量: ~{fmt_flow(q_fire)} Nm3/h{fire_note}，需独立核算")
         print("  推荐: 独立紧急放空人孔或大尺寸呼吸阀")
 
     print()
     print(sep)
-    print("⚠️  注意事项:")
+    print("[!]  注意事项:")
     print("  1. 呼吸阀设定压力 ≤ 储罐设计压力")
     print("  2. 呼吸阀数量 ≥ 2 时需考虑冗余")
     print("  3. 最终选型需参照制造商实际性能曲线")

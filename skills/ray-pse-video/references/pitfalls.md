@@ -113,16 +113,16 @@ bash -c "python -c \"print('事故\\u201C9·16\\u201D')\""
 
 | 路径 | 做法 | 适用场景 |
 |------|------|----------|
-| **路径 1（首选）**：Write 工具写 `.py` 文件到系统 Temp 目录 | `Write("~/.workbuddy/AppData/Local/Temp/stage.py", code)` → `python -u temp/stage.py` | **任何含全角引号路径的项目** |
+| **路径 1（首选）**：Write 工具写 `.py` 文件到系统 Temp 目录 | `Write("C:/Users/rayzh/AppData/Local/Temp/stage.py", code)` → `python -u temp/stage.py` | **任何含全角引号路径的项目** |
 | **路径 2**：Python `subprocess.run()` 用 `cwd=` 参数 | Bash 只调 `python -u script.py`，脚本内部用 Python 拼路径 | TTS 生成、clip 编码 |
 | **路径 3**：Write 工具直接写 JS/Python 源文件到工作目录 | 但 Write 工具对全角引号路径也可能失败 → 降级为路径 1 | 能成功写入时可用 |
 
 ```python
 # ✅ 路径 1 — 写临时脚本 + 执行
 # 第一步：Write 工具写到临时目录（纯 ASCII 路径，零风险）
-Write("~/.workbuddy/AppData/Local/Temp/make_clips.py", code)
+Write("C:/Users/rayzh/AppData/Local/Temp/make_clips.py", code)
 # 第二步：shell 执行
-python -u "~/.workbuddy/AppData/Local/Temp/make_clips.py"
+python -u "C:/Users/rayzh/AppData/Local/Temp/make_clips.py"
 
 # ❌ 不要这样 — Bash 解析会破坏引号嵌套
 python -u -c "

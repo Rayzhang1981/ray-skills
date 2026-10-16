@@ -190,8 +190,8 @@ $pres.Slides.Item(35).Export("E:\...\_render\S35.png", "PNG", 1280, 720)
 ```bash
 # 视觉 QA：先 Read 试原生看图；读不了图（报 does not support reading images）才走 ray-ppt-ocr-eyes（VL 描述布局：溢出/重叠/风格）
 # ⚠️ 路径必须 Windows 格式，Git Bash 的 /e/... Python 不认
-PY="~/.workbuddy/.workbuddy/binaries/python/envs/default/Scripts/python.exe"
-"$PY" "~/.workbuddy/.workbuddy/skills/ray-ppt-ocr-eyes/scripts/ocr_eyes.py" \
+PY="C:/Users/rayzh/.workbuddy/binaries/python/envs/default/Scripts/python.exe"
+"$PY" "C:/Users/rayzh/.workbuddy/skills/ray-ppt-ocr-eyes/scripts/ocr_eyes.py" \
       "E:\\LingXi\\...\\_render\\S35.png" --provider opencode-go
 ```
 

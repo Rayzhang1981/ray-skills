@@ -14,7 +14,7 @@
 ## 方案三：科技绿松石（管道压力降计算推荐）
 
 **特点**：绿松石+琥珀配色，清新专业，适合化工管道计算场景
-**参考文件**：`D:\RayClaw\PE Calculation\01-Pipelines\不可压缩流体压力降计算-Pipe Pressure Drop-Incompressible.html`
+**参考文件**：`〔本机素材区〕PE Calculation\01-Pipelines\不可压缩流体压力降计算-Pipe Pressure Drop-Incompressible.html`
 
 ### CSS Variables
 

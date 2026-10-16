@@ -19,6 +19,29 @@ D = os.path.join(SK, "data")
 sys.path.insert(0, os.path.join(SK, "scripts"))
 import compat_engine as CE
 
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+
 
 def load(fp):
     return json.load(open(fp, encoding="utf-8"))
@@ -136,7 +159,7 @@ def main():
         "acceptance": {"score≥80 & ≥2 独立源+1 权威": "建议码 + * + 来源批注"
                         "（唯一可改）",
                        "60-79 / 单源": "?（只存档）",
-                       "20-39": "⚠ 冲突（两说并列 人工仲裁）",
+                       "20-39": "[!] 冲突（两说并列 人工仲裁）",
                        "低于 20 / 未覆盖": "?（严禁未证写 Y）"},
         "cache": "${OUT}/fallback_cache.jsonl",
     }

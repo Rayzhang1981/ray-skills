@@ -2,7 +2,7 @@
 name: ray-ppt-refine
 slug: ray-ppt-refine
 displayName: PPT排版美化器
-version: 2.5.1
+version: 2.6.0
 description: >-
   对已有 PPTX 做排版美化与合规验收（不生成内容、不改内容结构）。触发词：美化PPT、PPT排版优化、调整PPT版式、统一PPT风格、PPT换肤、修复PPT文字溢出、PPT字体统一、PPT配色调整、把这份PPT改好看、规范PPT格式、优化幻灯片排版、PPT太丑。输入任意 PPTX（含非本生态生成的），输出美化后的 PPTX。内置设计语言资产库（8类高手版设计语言），自动匹配推荐。自包含，不依赖 ray-ppt-generator；需要从零生成内容用 ray-ppt-generator。v2.1.0 机读化门禁（refine_gate_check.py）+ 可编辑性红线（铁律 4）。
 agent_created: true
@@ -226,7 +226,7 @@ python ~/.workbuddy/skills/ray-ppt-refine/scripts/refine_gate_check.py \
 | 编码 | 设计语言 | 一句话 | 档案路径 | 状态 |
 |------|---------|--------|---------|------|
 | **A** | 手绘线语言 | 用"线"建立视觉节奏（447 freeform）+ 暖纸色极简 + 固定位置灰度插图 | `design-languages/A-handdrawn-line/` | ✅ 已归档 |
-| **B** | 卡片+徽章 | 浅色卡片矩阵 + 1:1 方形徽章 + 功能色条 + 大数字 + 底部通栏提示 | `~/RayClaw/skill-archives/ray-ppt-refine-B-card-badge-20260828/`（62MB assets 外置归档，2026-08-28） | 📦 已外置 |
+| **B** | 卡片+徽章 | 浅色卡片矩阵 + 1:1 方形徽章 + 功能色条 + 大数字 + 底部通栏提示 | `D:/RayClaw/skill-archives/ray-ppt-refine-B-card-badge-20260828/`（62MB assets 外置归档，2026-08-28） | 📦 已外置 |
 | **C** | 大数字信息图 | 120pt 半透明数字背景 + 数据突出 + 章节编号 | `design-languages/C-big-number/` | ⬜ 空档案 |
 | **D** | 深色科技风 | 深空蓝/黑底 + 霓虹强调 + 科技感 | `design-languages/D-dark-tech/` | ⬜ 空档案 |
 | **E** | 政务公文风 | 红头文件 + 仿宋 + 严谨庄重 | `design-languages/E-gov-doc/` | ⬜ 空档案 |
@@ -254,7 +254,7 @@ python ~/.workbuddy/skills/ray-ppt-refine/scripts/refine_gate_check.py \
 | **底部通栏提示** | 关键页底部全宽提示条（白字加粗居中） | 关键警示页 | `banner()` 双位置（bottom y=6.45 / top y=1.18，内容满页用 top） |
 | **章节预告卡片** | 章节页底部居中 3 张深蓝卡片+功能色顶条 | 章节页 | `section()` previews 参数 |
 
-> 完整档案（改造路径/素材/经验引用）：已外置归档 `~/RayClaw/skill-archives/ray-ppt-refine-B-card-badge-20260828/`（含 profile.md），需要时按路径取用
+> 完整档案（改造路径/素材/经验引用）：已外置归档 `D:/RayClaw/skill-archives/ray-ppt-refine-B-card-badge-20260828/`（含 profile.md），需要时按路径取用
 
 ### 配图落地三坑（v1.3 新增，实战验证 2026-08-17）
 
@@ -310,9 +310,9 @@ python ~/.workbuddy/skills/ray-ppt-refine/scripts/refine_gate_check.py \
 | COM 索引报错 | COM 索引从 1 开始，非 0 | 遍历从 1 起；`True = -1` |
 | 文件被占用无法写 | 直接改被打开的文件 | 先关 PowerPoint；先写临时文件再替换 |
 | `'method' object is not iterable`（COM 遍历文本） | `TextRange.Paragraphs` / `Paragraphs(pi).Runs` 是方法不是属性 | 必须带括号调用：`tr.Paragraphs()`、`Paragraphs(pi).Runs(ri)`，索引从 1 开始（0 越界） |
-| bash 内联 Python 改 PPT 路径失效 | bash 吞掉反斜杠：`D:\Work` 变 `D:/Work` | COM 工作流一律用独立 `.py` 文件（Write 工具写盘再执行），不用 `python -c` 内联 |
+| bash 内联 Python 改 PPT 路径失效 | bash 吞掉反斜杠：`C:\dir` 变 `C:/dir` | COM 工作流一律用独立 `.py` 文件（Write 工具写盘再执行），不用 `python -c` 内联 |
 | `os.remove` 报 `SAFE_DELETE_FAIL_CLOSED` | 沙盒回收站不可用，删除 fail-closed 拒绝 | 不删旧文件，直接 `SaveAs` 覆盖目标路径 |
-| 批量改字号把页脚/页眉改坏 | 页脚页眉也是文本 shape，被统一缩放规则命中 | 先按文本内容（"Rianlon"/"Page"/页码）识别页脚页眉元素，白名单排除；页眉标签单独给较小增量 |
+| 批量改字号把页脚/页眉改坏 | 页脚页眉也是文本 shape，被统一缩放规则命中 | 先按文本内容（公司名/"Page"/页码）识别页脚页眉元素，白名单排除；页眉标签单独给较小增量 |
 | 表格字号缩放变形 | 表格单元格用 `tr.Paragraphs(pi).Runs(ri)` 遍历，直接改 `.Size` 会触发列宽重排 | 表格只换字体不换字号；字号缩放仅对普通文本框生效 |
 | 改完演讲稿对不上 | 动了页数/标题 | 违反铁律 2——应提前警告，已改则提示回 generator 重导 |
 | **横向图进竖框留白大** | contain 缩放（按比例）在竖框上下留白 | 装饰插图用 **cover**（居中裁切撑满框），见「配图落地三坑」 |
@@ -353,7 +353,12 @@ python ~/.workbuddy/skills/ray-ppt-refine/scripts/refine_gate_check.py \
 
 **独立演进**：本 skill 聚焦"最强版式美化器"（检测 / 换肤 / 修复）；generator 聚焦"最强内容生成器"。经验由 ray-self-reflection 回流，高手由 ray-skill-evolve 学习。
 
-## 实战经验
+## Gotchas
+
+> 经验回流口（合并原「环境怪癖」与「实战经验」两处落点）。构建与运行中踩的坑记这里，随运行累积。
+> ⚠️ `None known` 是合法值——禁止编造 gotcha 凑数，假怪癖会教模型错误约束。
+> 新回流条目带前缀：`- YYYY-MM-DD｜[LRN-YYYYMMDD-XXX]｜计数:N｜状态:…`（判重与归档用）；历史条目保持原样。
+> 归档阈值：本节 > 40 行 或 SKILL.md > 90 KB → 最旧批次移入 `references/experience-archive.md`，保留最近 3 轮。
 
 > 经验已按主题分类到 `references/experiences/`（overflow / layout-pitfalls / image-assets / template-skin），含 Problem/Root Cause/Fix/Rule 四字段结构化格式。
 > 本区只保留**最近 3 条**（滚动窗口）+ 待回流的 pending 条目索引。完整历史见 `references/experiences/README.md`。

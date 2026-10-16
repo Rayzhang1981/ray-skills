@@ -21,29 +21,29 @@
 
 | 技能 | 版本 | 一句话 | 源码 | SkillHub |
 |------|------|--------|:---:|----------|
-| ray-excel-html | 2.6.0 | Excel/工程计算表 → 单文件 HTML 计算工具（离线可用） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-excel-html) |
-| ray-pe-calc | 2.2.0 | 七大工艺计算模块工具箱 + 计算书输出 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-pe-calc) |
-| ray-html-miniprogram | 1.2.0 | 化工计算 HTML → 微信小程序模块 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-html-miniprogram) |
-| ray-ps-inforgraphic | 2.3.0 | 化工安全主题信息图生成器 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-ps-inforgraphic) |
-| ray-skill-generator | 1.12.0 | 从零创建 Skill 的元工具 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-skill-generator) |
+| ray-excel-html | 2.8.0 | Excel/工程计算表 → 单文件 HTML 计算工具（离线可用） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-excel-html) |
+| ray-pe-calc | 2.6.2 | 七大工艺计算模块工具箱 + 计算书输出 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-pe-calc) |
+| ray-html-miniprogram | 1.3.0 | 化工计算 HTML → 微信小程序模块 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-html-miniprogram) |
+| ray-ps-inforgraphic | 2.9.1 | 化工安全主题信息图生成器 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-ps-inforgraphic) |
+| ray-skill-generator | 1.15.1 | 从零创建 Skill 的元工具 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-skill-generator) |
 | ray-file-distil | 1.16.0 | 书籍/长文档蒸馏为 Skill 的元工具 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-file-distil) |
-| ray-data-analysis | 1.2.0 | 完整数据分析工作流 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-data-analysis) |
-| ray-ppt-generator | 3.20.0 | python-pptx 快速生成可编辑 PPTX | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-ppt-generator) |
-| ray-ppt-refine | 2.5.1 | 已有 PPTX 排版美化与合规验收 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-ppt-refine) |
-| ray-ppt-video | 2.7.1 | PPTX → 配音培训视频（FFmpeg） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-ppt-video) |
-| ray-deep-research | 1.4.1 | 溯源对比法深度研究对象 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-deep-research) |
-| ray-synth-search | 1.8.0 | 多源检索 + 交叉验证的日常搜索主力 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-synth-search) |
-| ray-standard-search | 3.0.2 | 化工标准与法规快查（IMA 为可选源） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-standard-search) |
-| ray-pse-sharing | 1.13.0 | 事故报告 → 一页 A4 分享卡 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-pse-sharing) |
-| ray-pse-video | 2.4.1 | 事故报告 → 安全培训视频 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-pse-video) |
-| ray-self-reflection | 3.18.0 | 自我反思 · 经验萃取 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-self-reflection) |
-| ray-translate | 4.1.0 | 化工安全文档中英双向翻译 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-translate) |
-| ray-hazop-lopa | 1.4.0 | HAZOP/LOPA 定量分析报告生成器 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-hazop-lopa) |
-| ray-chem-property | 3.6.0 | 化学品物性数据批量搜集（索引库随 SkillHub 版分发） | ✅* | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-chem-property) |
-| ray-household-finance | 2.9.2 | 家庭财务管理框架（示例为虚构数据） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-household-finance) |
-| ray-chem-compat | 1.4.1 | 化学品相容性矩阵（CRW/NOAA 规则对 + 三层知识库） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-chem-compat) |
-| ray-mm | 2.4.1 | 会议材料（音视频/PPT/PDF/文档）→ 格式化 Word 纪要 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-mm) |
-| ray-rca | 1.1.0 | 事故根本原因分析（RCA）端到端 | ⏳ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-rca) |
+| ray-data-analysis | 1.3.0 | 完整数据分析工作流 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-data-analysis) |
+| ray-ppt-generator | 3.21.1 | python-pptx 快速生成可编辑 PPTX | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-ppt-generator) |
+| ray-ppt-refine | 2.6.0 | 已有 PPTX 排版美化与合规验收 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-ppt-refine) |
+| ray-ppt-video | 2.9.0 | PPTX → 配音培训视频（FFmpeg） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-ppt-video) |
+| ray-deep-research | 1.5.0 | 溯源对比法深度研究对象 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-deep-research) |
+| ray-synth-search | 1.10.0 | 多源检索 + 交叉验证的日常搜索主力 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-synth-search) |
+| ray-standard-search | 3.4.2 | 化工标准与法规快查（IMA 为可选源） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-standard-search) |
+| ray-pse-sharing | 1.14.2 | 事故报告 → 一页 A4 分享卡 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-pse-sharing) |
+| ray-pse-video | 2.5.0 | 事故报告 → 安全培训视频 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-pse-video) |
+| ray-self-reflection | 3.21.0 | 自我反思 · 经验萃取 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-self-reflection) |
+| ray-translate | 4.5.2 | 化工安全文档中英双向翻译 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-translate) |
+| ray-hazop-lopa | 1.7.2 | HAZOP/LOPA 定量分析报告生成器 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-hazop-lopa) |
+| ray-chem-property | 3.9.3 | 化学品物性数据批量搜集（索引库随 SkillHub 版分发） | ✅* | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-chem-property) |
+| ray-household-finance | 2.10.1 | 家庭财务管理框架（示例为虚构数据） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-household-finance) |
+| ray-chem-compat | 1.7.1 | 化学品相容性矩阵（CRW/NOAA 规则对 + 三层知识库） | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-chem-compat) |
+| ray-mm | 2.6.1 | 会议材料（音视频/PPT/PDF/文档）→ 格式化 Word 纪要 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-mm) |
+| ray-rca | 1.5.3 | 事故根本原因分析（RCA）端到端 | ✅ | [安装](https://skillhub.cn/skills/user_fb8bdb79/ray-rca) |
 
 > \* ray-chem-property 开源版含脚本与流程，完整物性索引库（授权数据）仅随 SkillHub 版分发。
 > ⏳ ray-rca 融合第三方专有方法（ABS SOURCE™），源码不公开。

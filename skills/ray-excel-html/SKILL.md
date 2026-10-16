@@ -4,7 +4,7 @@ slug: ray-excel-html
 description: >-
   当用户需要将 Excel 或工程计算表转化为单文件 HTML 应用，或有化工/过程工程计算场景（储罐容积、管道压力降、安全阀计算等）需生成可离线使用的网页工具时使用此技能。交付物为**零外部资源的单文件 HTML**（禁 CDN／外链），须过**五道门**（A 数据保真／B 离线自包含／C 运行时行为／D 人工感知／E 视口机检）；无读图能力时 D 门走**机器代偿**（像素采样 + 落点守卫），不得直接跳过。
 agent_created: true
-version: "2.6.0"
+version: "2.8.0"
 displayName: Excel转单文件HTML计算工具
 ---
 
@@ -170,6 +170,12 @@ displayName: Excel转单文件HTML计算工具
 > 📌 **门字母以本节为唯一规范**（A 确定性／B 离线自包含／C 运行时行为／D 人工感知／E 视口机检）；`references/verification-toolkit.md` 按此对齐——v2.4.0 前其回执模板 B/C 错位、**漏整道 B 门**，其 D 节又用 D 指「COM 对拍台」= 同一字母两处三义（G1）。
 > ⚠️ **D 门截图必须配 DOM 探针**（G3）：headless 截图不捕获 JS 生成的面板——CHEF 实测 30 s 预算 + 3600 px 视口正文仍全空白，而 jsdom 探针显示默认 Tab 已渲染 223 行；**只看截图会把捕获 artifact 误判成白屏**。配方见 references D 节。
 
+**UI 质量硬判据 12 条（源自 hallmark，可机检）**：⚠️ **不新增第六道门**——按性质并入现有门，各门自报：
+- **D 门**收 #1 Token 纪律（颜色/字号全走 `var()`）· #2 对比度门（正文 4.5:1 / 大字图标 3:1；强调色承载文字用 `--color-accent-ink`；**表面翻转必须同步设 `color`**）· #3 触控 ≥44×44（`::before` 撑命中区）· #4 交互八态 · #8 数字列 `tabular-nums` · #10 表单几何统一（输入与按钮同高）· #12 字号 ≥16px / 行高 1.5–1.65 / 行宽 ≤65ch
+- **E 门**收 #6 `overflow-x: clip`（写 `hidden` 会**静默杀掉 sticky**）· #7 四档视口（320/375/414/768）横向溢出 0 · #9 二级 sticky 偏移
+- **C 门**收 #5 输入框零布局位移（聚焦前后矩形差 == 0）· #11 禁 `transition: all`
+判据表与机检写法 → `references/templates.md`「Excel 转 HTML 通用 UI 规范」节。**这 12 条只补「看着专不专业」，不替代任一门原判据。**
+
 **状态词**：`passed`（真实执行且通过）／`partial`（**仅 D 门机器代偿用**，见 references D0，不许在 A/B/C/E 门使用）／`failed`（真实执行且发现缺陷）／`skipped`（**仅当环境不具备**，须写明缺什么）。
 ⚠️ **禁止**把"运行失败／采集中断"归一化成 `skipped` —— 失败就是 `failed`。
 
@@ -268,7 +274,7 @@ print(f"F30 值: {ws_val['F30'].value}")
 
 - 计算公式与推导：`references/formulas.md`
 - 配色方案详细定义：`references/color-schemes.md`
-- **HTML/CSS/JS 模板库（按需加载）**：`references/templates.md`——UI 可视化设计规范（SVG 图标/Valve Grid 面板）、管道压力降设计规范（HG/T 20570.7-95）、实时计算模块、通用 UI 规范（字体/主题切换/标题/徽章）、导出功能（Excel/PDF + 中文乱码方案）
+- **HTML/CSS/JS 模板库（按需加载）**：`references/templates.md`——UI 可视化设计规范（SVG 图标/Valve Grid 面板）、管道压力降设计规范（HG/T 20570.7-95）、实时计算模块、通用 UI 规范（字体/主题切换/标题/徽章）、**UI 质量硬判据 12 条（源自 hallmark，可机检）**、导出功能（Excel/PDF + 中文乱码方案）
 - **验证工具箱（按需加载）**：`references/verification-toolkit.md`——交付回执模板与五态状态词（A）／离线自包含拒绝清单（B）／运行时冒烟骨架与断言纪律（C）／**人工感知评审配方与假信号（D）＋ 无读图能力的 D0 机器代偿路径**／视口机检判据（E：逐变体 E1 ＋ 纵向放行条件 E2）／COM 对拍台配方与坑表（无编号）
 - **变更记录（按需加载）**：`references/changelog.md`——v2.0.0 起逐版变更（含门字母统一 G1、哈希持久化 G2 等口径沿革）
 - **坑点与经验（按需加载）**：`references/pitfalls.md`——坑点 1-4（JS null／缺 try-catch／oninput 绑定／DOM ID 重复）、坑点 5（Edge tip 表格列丢失）、坑点 6（工程标准关系图处理）、坑点 7（**检查器自身的缺陷三类**）、坑点 8（**验证的三类假信号**）、**坑点 9（数据提取层的静默损坏——提取代码改坏数据）**、**坑点 10（扩充存量表——身份键去重 ＋ 拿存量惯例当合规尺）**；另有「泵系统公式对齐坑点」与「COM 对拍台」
@@ -300,6 +306,15 @@ print(f"F30 值: {ws_val['F30'].value}")
 # 查看 XLSM 内部结构
 python -c "import zipfile; z=zipfile.ZipFile('file.xlsm'); print(z.namelist())"
 ```
+
+## Gotchas
+
+> 经验回流口（合并原「环境怪癖」与「实战经验」两处落点）。构建与运行中踩的坑记这里，随运行累积。
+> ⚠️ `None known` 是合法值——禁止编造 gotcha 凑数，假怪癖会教模型错误约束。
+> 新回流条目带前缀：`- YYYY-MM-DD｜[LRN-YYYYMMDD-XXX]｜计数:N｜状态:…`（判重与归档用）；历史条目保持原样。
+> 归档阈值：本节 > 40 行 或 SKILL.md > 90 KB → 最旧批次移入 `references/experience-archive.md`，保留最近 3 轮。
+
+- None known
 
 ## 维护记录
 

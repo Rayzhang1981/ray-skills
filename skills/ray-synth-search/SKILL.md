@@ -2,7 +2,7 @@
 name: ray-synth-search
 slug: ray-synth-search
 displayName: 信息综合搜索
-version: 1.8.0
+version: 1.10.0
 description: >
   日常高质量信息搜索主力（搜索引擎 + 智能助手，短平快，分钟级出结果）。任何需要联网
   检索的问题都适用：查事实、查近况、对比、核实、查规定——统一执行「多源检索 +
@@ -225,8 +225,13 @@ agent_created: true
 
 ## Gotchas
 
+> 经验回流口（合并原「环境怪癖」与「实战经验」两处落点）。构建与运行中踩的坑记这里，随运行累积。
+> ⚠️ `None known` 是合法值——禁止编造 gotcha 凑数，假怪癖会教模型错误约束。
+
 > 环境专属怪癖。构建中踩的坑、验证时发现的行为记这里，随运行累积。
 > ⚠️ `None known` 是合法值——禁止编造 gotcha 凑数。
+> 新回流条目带前缀：`- YYYY-MM-DD｜[LRN-YYYYMMDD-XXX]｜计数:N｜状态:…`（判重与归档用）；历史条目保持原样。
+> 归档阈值：本节 > 40 行 或 SKILL.md > 90 KB → 最旧批次移入 `references/experience-archive.md`，保留最近 3 轮。
 
 - WebSearch 对中文长句查询效果差 → 拆成 2-3 个短关键词变体再查
 - ima-mcp 需已连接才可用；未连接时降级纯 WebSearch
@@ -239,4 +244,4 @@ agent_created: true
 
 ## 维护记录
 
-完整维护记录见 `references/changelog.md`（v1.7.0 卸载，按需加载）。最近变更：v1.8.0（补「核查纪律」与「反例黑名单」）。
+完整维护记录见 `references/changelog.md`（v1.7.0 卸载，按需加载）。最近变更：v1.10.0（渠道库补齐生命周期：入学→升级→毕业/休学）。

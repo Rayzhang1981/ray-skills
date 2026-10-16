@@ -2,6 +2,7 @@
 
 | 日期 | 变更 |
 |------|------|
+| 2026-10-09 | **控制台编码护栏（舰队级修复）**：本 skill 的 2 个脚本注入 `_console_safe()`、显示面非 GBK 字形 ASCII 化（缺陷＝输出被重定向/管道捕获时抛 UnicodeEncodeError 整段中断，交互式控制台看不出来）；回归门 `~/.workbuddy/scripts/gbk_console_check.py`（已挂 `evals_runner`）。 |
 | 2026-09-22 | v3.20.0：回流审计 G1–G5 全办结（701 反应热评估专报 PPT 实战）。①**G1 一致性**：核心原则 11 原列举的 7 个版式函数名（chain/card/stat/table/two_col/checklist/section_slide）**在 references 中从未定义**（全目录 grep `def` 零命中）→ 改为实际函数名 + 加「改名不改规则」说明；新增 `references/common-module.md` 补齐 2.16–2.21 依赖的 `add_shape()` 与缺失色常量（GOLD/AMBER/TEAL/DEEP/LIGHT_BG/PANEL_BLUE/TINT_*/RED_BG/GREEN_BG）＋ `slide()`/`notes()` 别名；②**G2 钩子不可执行**：原 grep 自查在 Windows/DSH 无 `grep`，且只覆盖一种双页写法 → 改脚本；③**G3 新增 `scripts/qa_ppt.py`**（越界 + 正文区重叠 + 文本溢出几何估算 + `--dblpage` 静态扫描；退出码 0/1）——原则 12 的"必跑"改为指向它；④**G4 演讲稿同源导出**：新增 `scripts/export_speech.py`（从 PPTX `notes_slide` 回读，单源抗漂移；`--titles` 传页标题，不猜），写入「演讲稿 MD 产出」节；⑤**G5 目检清单补 4 项**（交叉引用自洽 / widow 孤立标点 / 装饰件压正文 / 卡内装饰线）。 |
 
 | 2026-09-12 | v3.19.1：视觉 QA 前置检查（原生读图优先）。extend-deck.md 第五步与 QA 命令注释由「纯文本模型走 ray-ppt-ocr-eyes」改为「先 Read 试原生看图，读不了图才走 ocr-eyes」；experience-archive LRN-20260827-002 与本文件 LRN-20260902-003 各补记前提已变（2026-09 起主流模型普遍原生多模态）。 |
@@ -31,3 +32,5 @@
 | 2026-08-11 | v3.0：多数据源对比 PPT 领域 Top10 skill，补齐需求确认、内容补充、QA 流程、6 种页面类型、Win32COM 4 命令。保留原有工程级坑位处理/配色库/模板函数优势。 |
 | 2026-07-08 | v2.0：基于 PPT 生成器经验升级（页面类型函数 + 配色库 + Win32COM 后处理） |
 | 2026-07-08 | v1.0：基于检修作业安全培训 PPT 制作经验总结 |
+## v3.20.1（2026-09-28）
+- 实战经验 +1：LRN-20260928-002（--dblpage 扫描器对 def 名含 `_slide` 的自建页 helper 误报；自建页 helper 命名避开 _slide 后缀）；来源：企业主体责任规定培训 PPT 生成

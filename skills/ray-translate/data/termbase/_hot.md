@@ -21,7 +21,7 @@
 | rupture disc | 爆破片 | — | — | _hot v3.1.0 | 2026-09-06 |
 | pressure gauge | 压力表 | — | — | _hot v3.1.0 | 2026-09-06 |
 | flowmeter | 流量计 | — | — | _hot v3.1.0 | 2026-09-06 |
-| P&ID | 管道仪表流程图 | — | 俗称 PID 图 | _hot v3.1.0 | 2026-09-06 |
+| P&ID | 管道及仪表流程图 | ❌管道仪表流程图 | 俗称 PID 图；HG/T 20519 国标口径 | _hot v3.1.0 | 2026-10-08 |
 | PFD | 工艺流程图 | — | — | _hot v3.1.0 | 2026-09-06 |
 | residence time | 停留时间 | ❌居留时间 | 反应器设计 | _hot v3.1.0 | 2026-09-06 |
 | pressure drop | 压降 | — | — | _hot v3.1.0 | 2026-09-06 |
@@ -59,18 +59,18 @@
 | incompatible materials | 不相容物料 | ❌不兼容 | 混配禁忌 | _hot v3.1.0 | 2026-09-06 |
 | hydrogen gas | 氢气 | — | — | _hot v3.1.0 | 2026-09-06 |
 | PSM | 过程安全管理 | — | process safety management | _hot v3.1.0 | 2026-09-06 |
-| PHA | 工艺危害分析 | — | process hazard analysis | _hot v3.1.0 | 2026-09-06 |
+| PHA | 过程危害分析 | ❌工艺危害分析 | process hazard analysis；2026-09-26 已审定（推翻原推荐） | _hot v3.1.0 | 2026-10-08 |
 | HAZOP | 危险与可操作性分析 | — | hazard and operability study | _hot v3.1.0 | 2026-09-06 |
 | LOPA | 保护层分析 | — | layer of protection analysis | _hot v3.1.0 | 2026-09-06 |
 | SIL | 安全完整性等级 | — | safety integrity level | _hot v3.1.0 | 2026-09-06 |
 | SIS | 安全仪表系统 | — | safety instrumented system | _hot v3.1.0 | 2026-09-06 |
 | MOC | 变更管理 | — | management of change | _hot v3.1.0 | 2026-09-06 |
-| mechanical integrity | 机械完整性 | — | PSM 要素 | _hot v3.1.0 | 2026-09-06 |
+| mechanical integrity | 设备完好性 | ❌机械完整性 | PSM 要素；2026-09-26 已审定 | _hot v3.1.0 | 2026-10-08 |
 | SDS | 安全技术说明书 | — | safety data sheet；旧称 MSDS | _hot v3.1.0 | 2026-09-06 |
 | confined space | 受限空间 | ❌limited space | — | _hot v3.1.0 | 2026-09-06 |
 | hot work | 动火作业 | ❌fire work | — | _hot v3.1.0 | 2026-09-06 |
 | LOTO | 挂牌上锁 | ❌stop, tag, lock | lockout/tagout | _hot v3.1.0 | 2026-09-06 |
-| PPE | 劳动防护用品 | — | personal protective equipment | _hot v3.1.0 | 2026-09-06 |
+| PPE | 个体防护装备 | ❌劳动防护用品 | personal protective equipment；GB 39800 口径 | _hot v3.1.0 | 2026-10-08 |
 | flammable range | 爆炸极限 | ❌explosive range | LEL–UEL | _hot v3.1.0 | 2026-09-06 |
 | LEL | 爆炸下限 | — | lower explosive limit | _hot v3.1.0 | 2026-09-06 |
 | deflagration | 爆燃 | — | 与爆轰 detonation 区分 | _hot v3.1.0 | 2026-09-06 |

@@ -1,0 +1,2172 @@
+{
+ "_meta": {
+  "name": "ray-pse-sharing 历史事故锚点数据库",
+  "version": "2.0.0",
+  "updated": "2026-08-29",
+  "design_principles": [
+   "1. 首要任务是扩库：尽量涵盖各类事故类型（特别是工艺安全），量足够大才能『快速定位直接应用』",
+   "2. 典型性三条款：a.影响大较为知名 b.与事故类型适配 c.新事故优于旧事故（特别出名的经典除外）",
+   "3. 毕业机制=典型性复审而非使用次数上限：重要事故允许反复使用（事故分享就是反复揣摩学习，事故中成长）；不满足典型性的 → retired 淘汰"
+  ],
+  "tier_rules": {
+   "S": "经典知名事故（重大伤亡/社会影响/教科书案例），不限使用次数，跨类型优先",
+   "A": "典型行业事故（本类型首选池）",
+   "B": "补充案例（同类不足时选用；复审不达标淘汰）"
+  },
+  "lifecycle": "pending(未核实,不得入卡) -> active(可用) -> retired(典型性复审不通过)",
+  "usage": "python anchor_db.py pick <类型> --dir <卡目录> --from N --to M | scan-cards <卡目录> | review <id> --retire --reason | verify <id> | add --file x.json | search 关键词 | stats",
+  "known_gaps": [
+   "导热油炉/锅炉炉膛爆炸（锚点库TODO 2-3条）",
+   "受限空间动火残料更多经典",
+   "应急处置/盲目施救专题分组"
+  ]
+ },
+ "anchors": [
+  {
+   "id": "ANC-001",
+   "event": "Norco壳牌炼油厂",
+   "year": 1988,
+   "tier": "A",
+   "aliases": [
+    "1988年Norco壳牌",
+    "1988年5月美国Norco壳牌炼油厂",
+    "Norco"
+   ],
+   "type": "泄漏/法兰",
+   "label_30": "1988年Norco壳牌：管线腐蚀泄漏爆炸，7死48伤",
+   "cause": "脱丙烷塔管线腐蚀泄漏，可燃蒸气云遇点火源爆炸",
+   "casualty": "7死48伤",
+   "source": "CCPS案例/多源核实",
+   "verified": true,
+   "status": "active",
+   "used_count": 1,
+   "used_by": [
+    99
+   ]
+  },
+  {
+   "id": "ANC-002",
+   "event": "BP德州异构化装置",
+   "year": 2005,
+   "tier": "S",
+   "aliases": [
+    "2005年BP德州"
+   ],
+   "type": "泄漏/法兰",
+   "label_30": "2005年BP德州：无视液位报警冒顶爆炸，15死180伤",
+   "cause": "抽余液塔液位计失灵，报警被无视，开车时烃类大量排放形成蒸气云",
+   "casualty": "15死180伤",
+   "source": "CSB调查报告（教科书案例）",
+   "verified": true,
+   "status": "active",
+   "used_count": 1,
+   "used_by": [
+    100
+   ]
+  },
+  {
+   "id": "ANC-003",
+   "event": "Buncefield油库",
+   "year": 2005,
+   "tier": "S",
+   "aliases": [
+    "2005年Buncefield油库",
+    "2005年英国Buncefield油库"
+   ],
+   "type": "泄漏/法兰",
+   "label_30": "2005年Buncefield油库：超装蒸气云爆炸，43伤",
+   "cause": "汽油罐液位计失效充装过量，蒸气云扩散遇点火源",
+   "casualty": "43伤",
+   "source": "英国HSE/MIIB报告（教科书案例）",
+   "verified": true,
+   "status": "active",
+   "used_count": 1,
+   "used_by": [
+    100
+   ]
+  },
+  {
+   "id": "ANC-004",
+   "event": "印度斋普尔炼油厂",
+   "year": 2009,
+   "tier": "A",
+   "aliases": [
+    "2009年印度斋普尔",
+    "2005年印度斋普尔"
+   ],
+   "type": "泄漏/法兰",
+   "label_30": "2009年印度斋普尔：储罐冒顶蒸气云爆炸，12死",
+   "cause": "汽油罐液位计故障冒顶泄漏，蒸气云爆炸（2009年为准，2005年为误记）",
+   "casualty": "12死",
+   "source": "多源核实",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-005",
+   "event": "上海高桥石化切水",
+   "year": 1988,
+   "tier": "A",
+   "aliases": [
+    "1988年上海高桥"
+   ],
+   "type": "泄漏/法兰",
+   "label_30": "1988年上海高桥：切水作业冒顶闪爆，26死",
+   "cause": "切水作业无人监护冒顶，油气闪爆",
+   "casualty": "26死15伤",
+   "source": "行业案例核实",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-006",
+   "event": "兰州石化酸性水罐",
+   "year": 2006,
+   "tier": "A",
+   "aliases": [
+    "2006年兰州石化"
+   ],
+   "type": "泄漏/法兰",
+   "label_30": "2006年兰州石化：拆液位计含苯水遇焊渣爆燃，4死11伤",
+   "cause": "拆酸性水罐液位计含苯污水流出，遇动火焊渣爆燃",
+   "casualty": "4死11伤",
+   "source": "行业案例核实",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-007",
+   "event": "Flixborough",
+   "year": 1974,
+   "tier": "S",
+   "aliases": [
+    "1974年Flixborough"
+   ],
+   "type": "设备完整性/临时改造",
+   "label_30": "1974年Flixborough：临时旁通管拉脱爆炸，28死",
+   "cause": "20寸临时旁通管无设计计算，波纹管拉脱，环己烷蒸气云爆炸",
+   "casualty": "28死36伤",
+   "source": "英国HSE调查报告（教科书案例）",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-008",
+   "event": "Phillips Pasadena",
+   "year": 1989,
+   "tier": "S",
+   "aliases": [
+    "1989年Phillips"
+   ],
+   "type": "设备完整性/临时改造",
+   "label_30": "1989年Phillips：阀门软管反接泄漏爆炸，23死",
+   "cause": "球阀气动执行器软管反接，阀门误开泄漏，蒸气云爆炸",
+   "casualty": "23死314伤",
+   "source": "多源核实（2026-08-29）",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-009",
+   "event": "Longford炼油厂",
+   "year": 1998,
+   "tier": "S",
+   "aliases": [
+    "1998年Longford"
+   ],
+   "type": "设备完整性/临时改造",
+   "label_30": "1998年Longford：换热器冷脆破裂爆炸，2死",
+   "cause": "换热器-48℃冷脆后突进230℃热油脆裂，气云爆炸，维州断气19天",
+   "casualty": "2死8伤",
+   "source": "维州皇家委员会报告（教科书案例）",
+   "verified": true,
+   "status": "active",
+   "used_count": 1,
+   "used_by": [
+    101
+   ]
+  },
+  {
+   "id": "ANC-010",
+   "event": "上海赛科苯罐检修",
+   "year": 2018,
+   "tier": "S",
+   "aliases": [
+    "2018年上海赛科"
+   ],
+   "type": "受限空间/检修",
+   "label_30": "2018年上海赛科：苯罐浮箱残苯闪爆，6死",
+   "cause": "内浮顶罐浮箱内漏积苯外泄，非防爆工具点火，闪爆",
+   "casualty": "6死",
+   "source": "上海市政府批复调查报告+应急管理部通报（2026-08-29核实）",
+   "verified": true,
+   "status": "active",
+   "used_count": 1,
+   "used_by": [
+    117
+   ]
+  },
+  {
+   "id": "ANC-011",
+   "event": "青岛黄岛东黄输油管道",
+   "year": 2013,
+   "tier": "S",
+   "aliases": [
+    "2013年青岛黄岛",
+    "2013年青岛"
+   ],
+   "type": "泄漏/管道",
+   "label_30": "2013年青岛黄岛：管道腐蚀漏入暗渠爆炸，62死",
+   "cause": "管道腐蚀减薄破裂，原油漏入排水暗渠，液压破碎锤火花引爆",
+   "casualty": "62死136伤",
+   "source": "国务院调查报告（2026-08-29核实）",
+   "verified": true,
+   "status": "active",
+   "used_count": 1,
+   "used_by": [
+    123
+   ]
+  },
+  {
+   "id": "ANC-012",
+   "event": "台湾高雄丙烯管线",
+   "year": 2014,
+   "tier": "S",
+   "aliases": [
+    "2014年台湾高雄"
+   ],
+   "type": "泄漏/管道",
+   "label_30": "2014年台湾高雄：丙烯管线腐蚀泄漏连环爆，32死",
+   "cause": "4吋丙烯管在排水箱涵内悬空腐蚀破洞，泄漏后加压输送，连环气爆",
+   "casualty": "32死321伤",
+   "source": "高雄地方法院判决+监察院报告（2026-08-29核实）",
+   "verified": true,
+   "status": "active",
+   "used_count": 1,
+   "used_by": [
+    101
+   ]
+  },
+  {
+   "id": "ANC-013",
+   "event": "洛阳东都商厦",
+   "year": 2000,
+   "tier": "S",
+   "aliases": [
+    "2000年洛阳东都商厦"
+   ],
+   "type": "动火/热切割",
+   "label_30": "2000年洛阳东都商厦：无证电焊引燃，309死",
+   "cause": "地下一层无证电焊焊渣溅落地下二层可燃物，浓烟封死四楼歌舞厅逃生通道",
+   "casualty": "309死7伤",
+   "source": "国务院调查处理领导小组+公安部鉴定（2026-08-29核实）",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-014",
+   "event": "铁岭清河特殊钢",
+   "year": 2007,
+   "tier": "S",
+   "aliases": [
+    "2007年铁岭清河"
+   ],
+   "type": "灼烫/高温物料",
+   "label_30": "2007年铁岭清河：钢包失控倾覆，32死",
+   "cause": "起重机联锁触点锈蚀+制动器失效，钢包失控下坠倾覆，钢水冲入交接班室",
+   "casualty": "32死6重伤",
+   "source": "国务院调查报告（2026-08-29核实）",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-015",
+   "event": "青岛黄岛油库雷击",
+   "year": 1989,
+   "tier": "S",
+   "aliases": [
+    "1989年青岛黄岛油库"
+   ],
+   "type": "储罐/雷击",
+   "label_30": "1989年青岛黄岛油库：雷击引燃原油罐连爆，19死",
+   "cause": "非金属混凝土罐防雷缺陷感应放电引燃油气，沸溢波及邻罐，烧104小时",
+   "casualty": "19死100余伤",
+   "source": "应急管理部历史事故库（2026-08-29核实）",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-016",
+   "event": "靖江德桥仓储",
+   "year": 2016,
+   "tier": "A",
+   "aliases": [
+    "2016年靖江德桥"
+   ],
+   "type": "动火/热切割",
+   "label_30": "2016年靖江德桥：动火引燃油品，1死，损失2532万",
+   "cause": "动火作业引燃地沟残留油品",
+   "casualty": "1死，直接损失2532万",
+   "source": "政府批复报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-017",
+   "event": "安阳凯信达",
+   "year": 2022,
+   "tier": "S",
+   "aliases": [
+    "2022年安阳凯信达"
+   ],
+   "type": "动火/热切割",
+   "label_30": "2022年安阳凯信达：无证电焊引燃，38死",
+   "cause": "无证电焊焊渣引燃可燃物，43人遇难含38死亡",
+   "casualty": "38死",
+   "source": "国务院调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 3,
+   "used_by": [
+    112,
+    121,
+    128
+   ]
+  },
+  {
+   "id": "ANC-018",
+   "event": "杭州冰雪大世界",
+   "year": 2022,
+   "tier": "A",
+   "aliases": [
+    "2022年杭州冰雪大世界"
+   ],
+   "type": "动火/热切割",
+   "label_30": "2022年杭州冰雪大世界：焊渣引燃保温材料，6死19伤",
+   "cause": "焊割熔渣引燃保温材料，2消防员牺牲",
+   "casualty": "6死19伤",
+   "source": "政府调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 2,
+   "used_by": [
+    113,
+    125
+   ]
+  },
+  {
+   "id": "ANC-019",
+   "event": "自贡九鼎",
+   "year": 2024,
+   "tier": "A",
+   "aliases": [
+    "2024年自贡九鼎",
+    "2024年四川自贡"
+   ],
+   "type": "动火/热切割",
+   "label_30": "2024年自贡九鼎：切割熔渣引燃保温层，16死39伤",
+   "cause": "切割熔渣引燃彩钢夹芯保温层",
+   "casualty": "16死39伤",
+   "source": "政府调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 4,
+   "used_by": [
+    112,
+    113,
+    125,
+    128
+   ]
+  },
+  {
+   "id": "ANC-020",
+   "event": "浙江武义",
+   "year": 2023,
+   "tier": "A",
+   "aliases": [
+    "2023年浙江武义"
+   ],
+   "type": "动火/热切割",
+   "label_30": "2023年浙江武义：电焊引燃保温材料，11死",
+   "cause": "违章电焊引燃顶棚保温材料",
+   "casualty": "11死",
+   "source": "政府调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-021",
+   "event": "大连石化液位计",
+   "year": 1986,
+   "tier": "A",
+   "aliases": [
+    "1986年大连石化"
+   ],
+   "type": "动火/热切割",
+   "label_30": "1986年大连石化：误拆液位计阀残气遇焊火花爆炸，1死",
+   "cause": "误拆液位计高点阀残气遇焊火花爆炸",
+   "casualty": "1死1伤",
+   "source": "行业案例核实",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-022",
+   "event": "江苏联化",
+   "year": 2007,
+   "tier": "A",
+   "aliases": [
+    "2007年江苏联化"
+   ],
+   "type": "反应失控",
+   "label_30": "2007年江苏联化：重氮化釜超温爆炸，8死5伤",
+   "cause": "重氮化釜超温分解爆炸",
+   "casualty": "8死5伤",
+   "source": "政府调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-023",
+   "event": "绍兴林江",
+   "year": 2017,
+   "tier": "A",
+   "aliases": [
+    "2017年绍兴林江",
+    "2017年浙江绍兴"
+   ],
+   "type": "反应失控",
+   "label_30": "2017年绍兴林江：中试中间体分解爆燃，3死",
+   "cause": "中试中间体分解爆燃",
+   "casualty": "3死1伤",
+   "source": "政府调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-024",
+   "event": "兰州滨农",
+   "year": 2022,
+   "tier": "A",
+   "aliases": [
+    "2022年兰州滨农"
+   ],
+   "type": "反应失控",
+   "label_30": "2022年兰州滨农：污水车间爆炸，6死",
+   "cause": "污水处理车间爆炸",
+   "casualty": "6死",
+   "source": "政府调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-025",
+   "event": "浙江临海新华制药离心机",
+   "year": 2008,
+   "tier": "A",
+   "aliases": [
+    "2008年浙江临海"
+   ],
+   "type": "离心/干燥/粉体",
+   "label_30": "2008年浙江临海：离心机无氮保静电爆炸，1死",
+   "cause": "离心机无氮气保护静电引爆甲苯气，车间焚毁",
+   "casualty": "1死",
+   "source": "行业案例核实",
+   "verified": true,
+   "status": "active",
+   "used_count": 2,
+   "used_by": [
+    114,
+    143
+   ]
+  },
+  {
+   "id": "ANC-026",
+   "event": "中山奕安泰",
+   "year": 2025,
+   "tier": "A",
+   "aliases": [
+    "2025年中山奕安泰"
+   ],
+   "type": "离心/干燥/粉体",
+   "label_30": "2025年中山奕安泰：离心机未氮保爆燃，1死",
+   "cause": "离心机未氮保正庚烷爆燃",
+   "casualty": "1死",
+   "source": "政府调查报告（2026-08-29核实）",
+   "verified": true,
+   "status": "active",
+   "used_count": 5,
+   "used_by": [
+    115,
+    141,
+    143,
+    144,
+    147
+   ]
+  },
+  {
+   "id": "ANC-027",
+   "event": "邵武贝莱特",
+   "year": 2025,
+   "tier": "A",
+   "aliases": [
+    "2025年福建邵武"
+   ],
+   "type": "离心/干燥/粉体",
+   "label_30": "2025年福建邵武：离心机置换不足闪爆，1死",
+   "cause": "离心机氮气置换不足闪爆",
+   "casualty": "1死",
+   "source": "政府调查报告（2026-08-29核实）",
+   "verified": true,
+   "status": "active",
+   "used_count": 3,
+   "used_by": [
+    115,
+    144,
+    147
+   ]
+  },
+  {
+   "id": "ANC-028",
+   "event": "菏泽帝捷",
+   "year": 2025,
+   "tier": "A",
+   "aliases": [
+    "2025年菏泽帝捷"
+   ],
+   "type": "离心/干燥/粉体",
+   "label_30": "2025年菏泽帝捷：离心叠氮化钡爆炸，3死3伤",
+   "cause": "离心叠氮化钡刮铲爆炸（非法生产）",
+   "casualty": "3死3伤",
+   "source": "政府通报（2026-08-29核实）",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-029",
+   "event": "哈尔滨亚麻厂",
+   "year": 1987,
+   "tier": "S",
+   "aliases": [
+    "1987年哈尔滨亚麻厂"
+   ],
+   "type": "粉尘/料仓",
+   "label_30": "1987年哈尔滨亚麻厂：除尘器静电粉尘爆炸，58死",
+   "cause": "除尘器静电引爆亚麻粉尘",
+   "casualty": "58死177伤",
+   "source": "行业案例核实（中国粉尘爆炸标志性案例）",
+   "verified": true,
+   "status": "active",
+   "used_count": 7,
+   "used_by": [
+    102,
+    104,
+    105,
+    109,
+    110,
+    130,
+    137
+   ]
+  },
+  {
+   "id": "ANC-030",
+   "event": "昆山中荣",
+   "year": 2014,
+   "tier": "S",
+   "aliases": [
+    "2014年昆山中荣",
+    "2014年昆山中荣铝粉尘爆炸，146人遇难"
+   ],
+   "type": "粉尘/料仓",
+   "label_30": "2014年昆山中荣：铝粉尘爆炸，146死",
+   "cause": "铝粉尘爆炸",
+   "casualty": "146死114伤",
+   "source": "国务院调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 7,
+   "used_by": [
+    102,
+    104,
+    105,
+    109,
+    110,
+    130,
+    137
+   ]
+  },
+  {
+   "id": "ANC-031",
+   "event": "美国粮仓连爆",
+   "year": 1977,
+   "tier": "A",
+   "aliases": [
+    "1977年美国粮仓连爆，53死",
+    "1977年12月美国连发粮仓粉尘爆炸"
+   ],
+   "type": "粉尘/料仓",
+   "label_30": "1977年美国粮仓连爆，53死",
+   "cause": "Westwego 35死+Galveston 18死连环粉尘爆炸",
+   "casualty": "53死",
+   "source": "行业案例核实",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-032",
+   "event": "东阳合丰",
+   "year": 2022,
+   "tier": "B",
+   "aliases": [
+    "2022年东阳合丰",
+    "东阳合丰 2022-03-14",
+    "2022年浙江东阳"
+   ],
+   "type": "粉尘/料仓",
+   "label_30": "2022年东阳合丰：生物质料仓火灾，2死",
+   "cause": "生物质燃料料仓火灾，2人烧伤后死亡",
+   "casualty": "2死",
+   "source": "政府通报",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-033",
+   "event": "惠州丰林亚创",
+   "year": 2022,
+   "tier": "B",
+   "aliases": [
+    "2022年惠州丰林亚创",
+    "2022年广东惠州"
+   ],
+   "type": "粉尘/料仓",
+   "label_30": "2022年惠州丰林亚创：木质料仓闪燃，2死",
+   "cause": "木质燃料料仓甲醛积聚闪燃",
+   "casualty": "2死",
+   "source": "政府通报",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-034",
+   "event": "青岛仟佰味",
+   "year": 2025,
+   "tier": "A",
+   "aliases": [
+    "2025年青岛仟佰味"
+   ],
+   "type": "粉尘/料仓",
+   "label_30": "2025年青岛仟佰味：淀粉粉尘爆炸，5死",
+   "cause": "混合设备调试淀粉粉尘爆炸",
+   "casualty": "5死",
+   "source": "政府通报",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-035",
+   "event": "天津港瑞海",
+   "year": 2015,
+   "tier": "S",
+   "aliases": [
+    "2015年天津港"
+   ],
+   "type": "自燃/遇水反应",
+   "label_30": "2015年天津港：硝化棉自燃引爆800吨硝酸铵，165+8遇难",
+   "cause": "硝化棉湿润剂散失自燃，引爆硝酸铵",
+   "casualty": "165死8失踪798伤",
+   "source": "国务院调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 3,
+   "used_by": [
+    116,
+    121,
+    127
+   ]
+  },
+  {
+   "id": "ANC-036",
+   "event": "响水天嘉宜",
+   "year": 2019,
+   "tier": "S",
+   "aliases": [
+    "2019年响水天嘉宜"
+   ],
+   "type": "自燃/遇水反应",
+   "label_30": "2019年响水天嘉宜：硝化废料自燃爆炸，78死",
+   "cause": "硝化废料自燃爆炸",
+   "casualty": "78死",
+   "source": "国务院调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 2,
+   "used_by": [
+    116,
+    127
+   ]
+  },
+  {
+   "id": "ANC-037",
+   "event": "河南西峡旭日",
+   "year": 2023,
+   "tier": "A",
+   "aliases": [
+    "2023年河南西峡"
+   ],
+   "type": "自燃/遇水反应",
+   "label_30": "2023年河南西峡：电石灰镁铝粉遇水爆燃，4死",
+   "cause": "电石灰/镁铝粉遇水放氢爆燃",
+   "casualty": "4死",
+   "source": "政府通报",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-038",
+   "event": "镇平钙镁粉",
+   "year": 2022,
+   "tier": "B",
+   "aliases": [
+    "2022年镇平"
+   ],
+   "type": "自燃/遇水反应",
+   "label_30": "2022年镇平：钙镁粉雨水自燃",
+   "cause": "钙镁粉雨水自燃（黄岛2015同类备选）",
+   "casualty": "—",
+   "source": "政府通报",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-039",
+   "event": "河北新乐金万泰",
+   "year": 2018,
+   "tier": "A",
+   "aliases": [
+    "2018年河北新乐"
+   ],
+   "type": "环保设施/风道",
+   "label_30": "2018年河北新乐：阀门内漏煤气燃爆，6死7伤",
+   "cause": "尾气炉阀门内漏煤气窜入遇鼓风燃爆",
+   "casualty": "6死7伤",
+   "source": "政府调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 1,
+   "used_by": [
+    111
+   ]
+  },
+  {
+   "id": "ANC-040",
+   "event": "上海江桥除臭风机",
+   "year": 2013,
+   "tier": "A",
+   "aliases": [
+    "2013年上海江桥"
+   ],
+   "type": "环保设施/风道",
+   "label_30": "2013年上海江桥：沼气窜风管维修爆炸，3死7伤",
+   "cause": "除臭风机停运沼气窜风管维修爆炸",
+   "casualty": "3死7伤",
+   "source": "政府调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 1,
+   "used_by": [
+    111
+   ]
+  },
+  {
+   "id": "ANC-041",
+   "event": "安徽药企RTO",
+   "year": 2019,
+   "tier": "B",
+   "aliases": [
+    "2019年安徽药企"
+   ],
+   "type": "环保设施/风道",
+   "label_30": "2019年安徽药企：RTO风管甲醇蒸气爆炸",
+   "cause": "RTO风管积聚甲醇蒸气爆炸（无伤亡）",
+   "casualty": "无伤亡",
+   "source": "行业案例核实",
+   "verified": true,
+   "status": "active",
+   "used_count": 2,
+   "used_by": [
+    106,
+    139
+   ]
+  },
+  {
+   "id": "ANC-042",
+   "event": "山东东义锅炉风道",
+   "year": 2003,
+   "tier": "B",
+   "aliases": [
+    "2003年山东"
+   ],
+   "type": "环保设施/风道",
+   "label_30": "2003年山东：锅炉风道可燃气爆裂",
+   "cause": "锅炉送风道可燃气积聚爆裂（无伤亡）",
+   "casualty": "无伤亡",
+   "source": "行业案例核实",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-043",
+   "event": "华润锡林郭勒堵板",
+   "year": 2019,
+   "tier": "A",
+   "aliases": [
+    "2019年华润锡林郭勒"
+   ],
+   "type": "灼烫/蒸汽",
+   "label_30": "2019年华润锡林郭勒：堵板爆裂蒸汽喷出，1死2伤",
+   "cause": "临时堵板爆裂蒸汽喷出",
+   "casualty": "1死2伤",
+   "source": "政府调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 4,
+   "used_by": [
+    108,
+    118,
+    132,
+    148
+   ]
+  },
+  {
+   "id": "ANC-044",
+   "event": "云南氟磷检修残液",
+   "year": 2024,
+   "tier": "A",
+   "aliases": [
+    "2024年云南氟磷"
+   ],
+   "type": "灼烫/蒸汽",
+   "label_30": "2024年云南氟磷：检修残液高温喷溅，1死2伤",
+   "cause": "检修残液118℃喷溅",
+   "casualty": "1死2伤",
+   "source": "政府调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 7,
+   "used_by": [
+    108,
+    118,
+    119,
+    120,
+    132,
+    141,
+    145
+   ]
+  },
+  {
+   "id": "ANC-045",
+   "event": "UCLA叔丁基锂",
+   "year": 2008,
+   "tier": "A",
+   "aliases": [
+    "2008年UCLA"
+   ],
+   "type": "灼烫/实验室",
+   "label_30": "2008年UCLA：叔丁基锂自燃致死",
+   "cause": "叔丁基锂自燃，18天后死亡（实验安全CSB经典）",
+   "casualty": "1死",
+   "source": "CSB调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 4,
+   "used_by": [
+    107,
+    126,
+    131,
+    134
+   ]
+  },
+  {
+   "id": "ANC-046",
+   "event": "北京交通大学镁粉",
+   "year": 2018,
+   "tier": "A",
+   "aliases": [
+    "2018年北交大",
+    "2018年北京交大"
+   ],
+   "type": "灼烫/实验室",
+   "label_30": "2018年北交大：镁粉爆燃3学生遇难",
+   "cause": "镁粉磷酸氢气爆炸引发粉尘云",
+   "casualty": "3死",
+   "source": "政府调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 5,
+   "used_by": [
+    107,
+    122,
+    126,
+    131,
+    134
+   ]
+  },
+  {
+   "id": "ANC-047",
+   "event": "茂名海发装油",
+   "year": 2016,
+   "tier": "A",
+   "aliases": [
+    "2016年茂名"
+   ],
+   "type": "装卸车/静电",
+   "label_30": "2016年茂名：装油未接地静电引燃油气",
+   "cause": "油罐车装油未静电接地引燃罐内油气（火灾无死亡）",
+   "casualty": "无死亡",
+   "source": "政府批复报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 1,
+   "used_by": [
+    124
+   ]
+  },
+  {
+   "id": "ANC-048",
+   "event": "高州金墩勇昌",
+   "year": 2021,
+   "tier": "A",
+   "aliases": [
+    "2021年高州"
+   ],
+   "type": "装卸车/静电",
+   "label_30": "2021年高州：PVC管装油静电闪爆，1死",
+   "cause": "PVC管装油未接地静电闪爆",
+   "casualty": "1死",
+   "source": "政府调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-049",
+   "event": "乌鲁木齐艾美克",
+   "year": 2023,
+   "tier": "A",
+   "aliases": [
+    "2023年乌鲁木齐"
+   ],
+   "type": "装卸车/静电",
+   "label_30": "2023年乌鲁木齐：罐车充装闪爆，2死1伤",
+   "cause": "油罐车充装柴油闪爆",
+   "casualty": "2死1伤",
+   "source": "政府通报",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-050",
+   "event": "深圳一湾仓储",
+   "year": 2021,
+   "tier": "B",
+   "aliases": [
+    "2021年深圳"
+   ],
+   "type": "装卸车/静电",
+   "label_30": "2021年深圳：罐车静电线路驳接闪爆，1伤",
+   "cause": "罐车静电传感器线路驳接短路闪爆",
+   "casualty": "1轻伤",
+   "source": "政府通报",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-051",
+   "event": "葫芦岛世星药化",
+   "year": 2018,
+   "tier": "A",
+   "aliases": [
+    "2018年葫芦岛"
+   ],
+   "type": "受限空间/中毒窒息",
+   "label_30": "2018年葫芦岛：氮气窒息盲目施救，3死",
+   "cause": "氮保结晶釜未置换未测氧清理，3人窒息亡（含盲目施救）",
+   "casualty": "3死",
+   "source": "政府调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-052",
+   "event": "安徽金星钛白",
+   "year": 2023,
+   "tier": "A",
+   "aliases": [
+    "2023年安徽钛白"
+   ],
+   "type": "受限空间/中毒窒息",
+   "label_30": "2023年安徽钛白：泥浆桶硫化氢中毒，5死",
+   "cause": "泥浆桶内硫化氢中毒，盲目施救扩大",
+   "casualty": "5死",
+   "source": "政府调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 2,
+   "used_by": [
+    138,
+    146
+   ]
+  },
+  {
+   "id": "ANC-053",
+   "event": "潍坊华浩",
+   "year": 2016,
+   "tier": "B",
+   "aliases": [
+    "2016年潍坊"
+   ],
+   "type": "受限空间/中毒窒息",
+   "label_30": "2016年潍坊：未测氧进罐窒息，3死",
+   "cause": "未测氧未防护进罐查看缺氧窒息",
+   "casualty": "3死",
+   "source": "政府通报",
+   "verified": true,
+   "status": "active",
+   "used_count": 4,
+   "used_by": [
+    124,
+    140,
+    146,
+    148
+   ]
+  },
+  {
+   "id": "ANC-054",
+   "event": "四川金路树脂",
+   "year": 2016,
+   "tier": "A",
+   "aliases": [
+    "2016年四川金路"
+   ],
+   "type": "受限空间/中毒窒息",
+   "label_30": "2016年四川金路：清釜氯乙烯中毒，3死",
+   "cause": "清釜未隔离氯乙烯串入中毒",
+   "casualty": "3死",
+   "source": "政府通报",
+   "verified": true,
+   "status": "active",
+   "used_count": 3,
+   "used_by": [
+    99,
+    138,
+    140
+   ]
+  },
+  {
+   "id": "ANC-055",
+   "event": "云南安宁齐天",
+   "year": 2008,
+   "tier": "A",
+   "aliases": [
+    "2008年云南安宁"
+   ],
+   "type": "受限空间/中毒窒息",
+   "label_30": "2008年云南安宁：硫化氢逸出，6死29中毒",
+   "cause": "硫化钠过量硫化氢逸出",
+   "casualty": "6死29中毒",
+   "source": "政府通报",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-056",
+   "event": "河北宏顺（魏县）",
+   "year": 2013,
+   "tier": "A",
+   "aliases": [
+    "2013年河北魏县"
+   ],
+   "type": "受限空间/中毒窒息",
+   "label_30": "2013年河北魏县：疏通管道硫化氢中毒，3死",
+   "cause": "二硫化碳管道堵塞擅自疏通中毒",
+   "casualty": "3死",
+   "source": "政府通报",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-057",
+   "event": "安徽鑫泰新材料（池州）",
+   "year": 2025,
+   "tier": "A",
+   "aliases": [
+    "2025年安徽池州"
+   ],
+   "type": "受限空间/中毒窒息",
+   "label_30": "2025年安徽池州：盐水箱氮气窒息，4死",
+   "cause": "冷冻盐水箱未审批未测氮气窒息",
+   "casualty": "4死",
+   "source": "省调查报告2026-01公布（2026-08-29核实）",
+   "verified": true,
+   "status": "active",
+   "used_count": 1,
+   "used_by": [
+    122
+   ]
+  },
+  {
+   "id": "ANC-058",
+   "event": "浙江宁海塑料桶",
+   "year": 2019,
+   "tier": "A",
+   "aliases": [
+    "2019年浙江宁海"
+   ],
+   "type": "静电",
+   "label_30": "2019年浙江宁海：塑料桶静电起火，19死",
+   "cause": "热化学混合物倒入塑料桶静电起火",
+   "casualty": "19死3伤",
+   "source": "政府调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-059",
+   "event": "湖北天门压滤",
+   "year": 2020,
+   "tier": "A",
+   "aliases": [
+    "2020年湖北天门"
+   ],
+   "type": "静电",
+   "label_30": "2020年湖北天门：静电引燃分解爆炸，6死",
+   "cause": "压滤试验静电引燃物料分解爆炸",
+   "casualty": "6死1伤",
+   "source": "政府通报",
+   "verified": true,
+   "status": "active",
+   "used_count": 1,
+   "used_by": [
+    114
+   ]
+  },
+  {
+   "id": "ANC-060",
+   "event": "江西医药热釜转料",
+   "year": 2020,
+   "tier": "A",
+   "aliases": [
+    "2020年江西"
+   ],
+   "type": "静电",
+   "label_30": "2020年江西：热釜转料静电爆炸，2死",
+   "cause": "热釜转料静电引爆氯化苯气",
+   "casualty": "2死7伤",
+   "source": "政府通报",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-061",
+   "event": "天津菲达宝开",
+   "year": 2021,
+   "tier": "A",
+   "aliases": [
+    "2021年天津"
+   ],
+   "type": "静电",
+   "label_30": "2021年天津：喷粉静电爆燃，3伤",
+   "cause": "喷粉房未接地静电粉尘爆燃",
+   "casualty": "2重伤1轻伤",
+   "source": "政府通报",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-062",
+   "event": "山东胶料包装",
+   "year": 2023,
+   "tier": "B",
+   "aliases": [
+    "2023年山东"
+   ],
+   "type": "静电",
+   "label_30": "2023年山东：装桶静电引燃丁二烯",
+   "cause": "塑料桶装桶静电引燃丁二烯气（火灾）",
+   "casualty": "—",
+   "source": "政府通报",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-063",
+   "event": "安徽抽料吨桶",
+   "year": 2025,
+   "tier": "A",
+   "aliases": [
+    "2025年安徽"
+   ],
+   "type": "静电",
+   "label_30": "2025年安徽：抽料静电引燃吨桶，1死",
+   "cause": "抽料静电引燃吨桶物料",
+   "casualty": "1死",
+   "source": "政府通报",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-064",
+   "event": "瑞士山德士仓库",
+   "year": 1986,
+   "tier": "A",
+   "aliases": [
+    "1986年瑞士山德士仓库火灾"
+   ],
+   "type": "仓储/混存",
+   "label_30": "1986年瑞士山德士仓库火灾",
+   "cause": "农化品仓库火灾，莱茵河污染（环保史经典）",
+   "casualty": "—",
+   "source": "行业案例核实",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-065",
+   "event": "江苏RTO两次爆炸",
+   "year": 2015,
+   "tier": "B",
+   "aliases": [
+    "2015年3月江苏某企业RTO两次爆炸",
+    "2015年江苏"
+   ],
+   "type": "环保设施/风道",
+   "label_30": "2015年江苏：RTO两次爆炸",
+   "cause": "RTO蓄热超温两次爆炸",
+   "casualty": "—",
+   "source": "行业案例核实",
+   "verified": true,
+   "status": "active",
+   "used_count": 2,
+   "used_by": [
+    106,
+    139
+   ]
+  },
+  {
+   "id": "ANC-066",
+   "event": "墨西哥湾深水地平线",
+   "year": 2010,
+   "tier": "S",
+   "aliases": [
+    "2010年墨西哥湾钻井平台井喷失控，11人死亡"
+   ],
+   "type": "井喷/钻井",
+   "label_30": "2010年墨西哥湾：井喷失控平台爆炸，11死",
+   "cause": "Macondo井喷失控，深水地平线爆炸沉没（海洋钻井经典）",
+   "casualty": "11死",
+   "source": "多源核实",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-067",
+   "event": "美国West化肥硝酸铵",
+   "year": 2013,
+   "tier": "A",
+   "aliases": [
+    "2013年美国West化肥厂约240吨硝酸铵受热分解爆炸，1"
+   ],
+   "type": "自燃/遇水反应",
+   "label_30": "2013年美国West化肥：硝酸铵受热分解爆炸",
+   "cause": "约240吨硝酸铵受热分解爆炸",
+   "casualty": "15死",
+   "source": "多源核实",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-068",
+   "event": "DPC氯气软管",
+   "year": 2002,
+   "tier": "A",
+   "aliases": [
+    "2002年美国DPC企业氯气卸车软管破裂，48吨氯气泄漏（C",
+    "2002年DPC氯气软管",
+    "2002年DPC"
+   ],
+   "type": "装卸车/泄漏",
+   "label_30": "2002年美国DPC：氯气卸车软管破裂，48吨泄漏",
+   "cause": "氯气卸车软管破裂，48吨氯气泄漏",
+   "casualty": "—",
+   "source": "多源核实",
+   "verified": true,
+   "status": "active",
+   "used_count": 1,
+   "used_by": [
+    136
+   ]
+  },
+  {
+   "id": "ANC-069",
+   "event": "深圳清水河仓库",
+   "year": 1993,
+   "tier": "S",
+   "aliases": [
+    "1993年深圳清水河"
+   ],
+   "type": "仓储/混存",
+   "label_30": "1993年深圳清水河：氧化剂还原剂混存爆炸，15死",
+   "cause": "氧化剂与还原剂混存反应放热引燃硝酸铵爆炸",
+   "casualty": "15死200伤",
+   "source": "应急管理部历史事故库",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-070",
+   "event": "无锡焦化厂道生炉",
+   "year": 1982,
+   "tier": "A",
+   "aliases": [
+    "1982年无锡焦化厂"
+   ],
+   "type": "反应失控",
+   "label_30": "1982年无锡焦化：道生炉超温超压爆炸，5死",
+   "cause": "常压设备违规使用，无安全阀无超温报警，超温超压爆炸",
+   "casualty": "5死1重伤",
+   "source": "应急管理部历史事故库",
+   "verified": true,
+   "status": "active",
+   "used_count": 1,
+   "used_by": [
+    135
+   ]
+  },
+  {
+   "id": "ANC-071",
+   "event": "吐鲁番恒泽煤化",
+   "year": 2018,
+   "tier": "B",
+   "aliases": [
+    "2018年吐鲁番恒泽",
+    "2018年吐鲁番恒泽煤化"
+   ],
+   "type": "受限空间/检修",
+   "label_30": "2018年吐鲁番恒泽煤化：沥青高位槽检修闪爆，3死1伤",
+   "cause": "焦油深加工改质沥青高位槽检修违规操作闪爆",
+   "casualty": "3死1伤",
+   "source": "新疆应急管理厅通报(2026-09-05核实)",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-072",
+   "event": "临沂金山化工",
+   "year": 2018,
+   "tier": "A",
+   "aliases": [
+    "2018年临沂金山"
+   ],
+   "type": "反应失控",
+   "label_30": "2018年临沂金山：停产整顿非法生产爆燃，5死5伤",
+   "cause": "停产整顿期间非法违法组织生产，苯甲醛车间爆炸",
+   "casualty": "5死5伤",
+   "source": "国务院安委办通报2018-02-12(2026-09-05核实)",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-073",
+   "event": "唐山华熠",
+   "year": 2018,
+   "tier": "A",
+   "aliases": [
+    "2018年唐山华熠"
+   ],
+   "type": "反应失控",
+   "label_30": "2018年唐山华熠：污水罐检修燃爆且谎报，4死1伤",
+   "cause": "拆酸性污水罐盲板未封闭，工具碰撞火花引燃残气；企业谎报伤亡",
+   "casualty": "4死1伤",
+   "source": "调查报告/应急部通报(2026-09-05核实)",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-074",
+   "event": "天津渤化永利",
+   "year": 2018,
+   "tier": "A",
+   "aliases": [
+    "2018年天津渤化永利",
+    "2018年渤化永利"
+   ],
+   "type": "受限空间/中毒窒息",
+   "label_30": "2018年渤化永利：变换工段检修中毒窒息，3死2伤",
+   "cause": "合成氨3#变换炉检维修作业CO中毒窒息",
+   "casualty": "3死2伤",
+   "source": "调查报告(2026-09-05核实)",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-075",
+   "event": "长春李氏婚纱",
+   "year": 2021,
+   "tier": "A",
+   "aliases": [
+    "2021年长春李氏婚纱"
+   ],
+   "type": "电气火灾（非动火）",
+   "label_30": "2021年长春李氏婚纱：照明线路漏电引燃装饰，15死",
+   "cause": "照明线路漏电击穿金属管引燃仿真植物装饰",
+   "casualty": "15死25伤",
+   "source": "吉林省政府调查报告（2026-08-29核实；注意：非动火事故，不得用作动火锚点）",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-077",
+   "event": "印度博帕尔MIC泄漏",
+   "year": 1984,
+   "tier": "S",
+   "aliases": [
+    "1984年印度博帕尔"
+   ],
+   "type": "泄漏/毒气",
+   "label_30": "1984年印度博帕尔：MIC毒气泄漏，数千人死亡",
+   "cause": "MIC储罐进水放热，安全系统全部失效，毒气云笼罩城区（工业安全史上最惨重事故）",
+   "casualty": "官方统计3800+即时死亡，总数逾万人",
+   "source": "教科书级公开事实（世界工业安全标志性案例）",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-078",
+   "event": "Piper Alpha平台",
+   "year": 1988,
+   "tier": "S",
+   "aliases": [
+    "1988年Piper Alpha"
+   ],
+   "type": "泄漏/海上平台",
+   "label_30": "1988年Piper Alpha：海上平台凝析油泄漏爆炸，167死",
+   "cause": "凝析油泵安全阀复位不当，夜班许可交接断裂，烃泄漏连锁爆炸（海上油气经典）",
+   "casualty": "167死",
+   "source": "Cullen爵士公开调查报告（教科书案例）",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-079",
+   "event": "重庆开县井喷",
+   "year": 2003,
+   "tier": "S",
+   "aliases": [
+    "2003年重庆开县"
+   ],
+   "type": "井喷/硫化氢",
+   "label_30": "2003年重庆开县：井喷硫化氢扩散，243死",
+   "cause": "罗家16H井起钻时天然气井喷失控，硫化氢大范围扩散，未及时点火放喷",
+   "casualty": "243死",
+   "source": "国务院调查组（中国油气井喷标志性事故）",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-080",
+   "event": "吉林宝源丰液氨",
+   "year": 2013,
+   "tier": "S",
+   "aliases": [
+    "2013年吉林宝源丰"
+   ],
+   "type": "泄漏/毒气",
+   "label_30": "2013年吉林宝源丰：液氨泄漏爆炸火灾，121死",
+   "cause": "液氨管线泄漏爆炸，车间电气线路短路起火，安全出口锁闭致群死群伤",
+   "casualty": "121死",
+   "source": "国务院调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-081",
+   "event": "大连新港7·16",
+   "year": 2010,
+   "tier": "S",
+   "aliases": [
+    "2010年大连新港"
+   ],
+   "type": "装卸车/泄漏",
+   "label_30": "2010年大连新港：输油管道爆炸原油入海",
+   "cause": "原油储罐区输油管道爆炸起火，1500吨原油入海（海上溢油经典）",
+   "casualty": "无死亡，重大环境污染",
+   "source": "国务院批复调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 2,
+   "used_by": [
+    123,
+    136
+   ]
+  },
+  {
+   "id": "ANC-082",
+   "event": "墨西哥城Pemex LPG",
+   "year": 1984,
+   "tier": "S",
+   "aliases": [
+    "1984年墨西哥城Pemex"
+   ],
+   "type": "球罐/BLEVE",
+   "label_30": "1984年墨西哥Pemex：LPG罐区BLEVE，约500死",
+   "cause": "LPG管线破裂泄漏，蒸气云爆炸引发多球罐连锁BLEVE，居民区毗邻酿巨灾",
+   "casualty": "约500-600死",
+   "source": "教科书案例（世界BLEVE最惨重事故）",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-083",
+   "event": "法国Feyzin炼厂",
+   "year": 1966,
+   "tier": "S",
+   "aliases": [
+    "1966年法国Feyzin"
+   ],
+   "type": "球罐/BLEVE",
+   "label_30": "1966年法国Feyzin：LPG球罐BLEVE，18死",
+   "cause": "放水作业带出液化气，蒸气云被点燃，火焰烘烤致球罐连环BLEVE（BLEVE研究起点案例）",
+   "casualty": "18死81伤",
+   "source": "教科书案例",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-084",
+   "event": "盘锦浩业烷基化",
+   "year": 2023,
+   "tier": "S",
+   "aliases": [
+    "2023年盘锦浩业"
+   ],
+   "type": "泄漏/法兰",
+   "label_30": "2023年盘锦浩业：烷基化装置泄漏爆炸，13死",
+   "cause": "烷基化装置维修后法兰泄漏，处置中爆炸（近年重大化工事故）",
+   "casualty": "13死35伤",
+   "source": "国务院安委会挂牌督办/应急部通报（2026-08-29核实）",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-085",
+   "event": "聊城鲁西双氧水",
+   "year": 2023,
+   "tier": "A",
+   "aliases": [
+    "2023年聊城鲁西"
+   ],
+   "type": "反应失控",
+   "label_30": "2023年聊城鲁西：双氧水装置爆炸，10死",
+   "cause": "双氧水装置爆炸（过氧化工艺）",
+   "casualty": "10死",
+   "source": "应急部通报（2026-08-29核实）",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-086",
+   "event": "美国Texas City港硝酸铵",
+   "year": 1947,
+   "tier": "S",
+   "aliases": [
+    "1947年美国Texas City"
+   ],
+   "type": "自燃/遇水反应",
+   "label_30": "1947年美国Texas City：硝酸铵船爆，约580死",
+   "cause": "装船硝酸铵受热分解爆炸，港口连锁爆炸（美国工业史上最惨重爆炸）",
+   "casualty": "约580死",
+   "source": "教科书案例",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-087",
+   "event": "意大利Seveso二噁英",
+   "year": 1976,
+   "tier": "A",
+   "aliases": [
+    "1976年意大利Seveso"
+   ],
+   "type": "反应失控",
+   "label_30": "1976年意大利Seveso：反应失控二噁英泄漏",
+   "cause": "三氯苯酚反应釜失控，二噁英云扩散（催生欧盟Seveso指令）",
+   "casualty": "无即时死亡，数千人暴露",
+   "source": "教科书案例",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-088",
+   "event": "吉林石化双苯厂",
+   "year": 2005,
+   "tier": "A",
+   "aliases": [
+    "2005年吉林石化"
+   ],
+   "type": "反应失控",
+   "label_30": "2005年吉林石化：硝基苯装置爆炸，松花江污染",
+   "cause": "硝基苯精制单元爆炸，苯类污染物流入松花江（环境应急经典）",
+   "casualty": "8死（含失踪），重大跨江污染",
+   "source": "国务院调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-089",
+   "event": "湖北十堰燃气爆炸",
+   "year": 2021,
+   "tier": "A",
+   "aliases": [
+    "2021年湖北十堰"
+   ],
+   "type": "泄漏/燃气管道",
+   "label_30": "2021年湖北十堰：燃气泄漏集贸市场爆炸，26死",
+   "cause": "天然气中压钢管严重锈蚀破裂，泄漏气体进入集贸市场遇火源爆炸",
+   "casualty": "26死138伤",
+   "source": "国务院调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-090",
+   "event": "银川富洋烧烤店",
+   "year": 2023,
+   "tier": "A",
+   "aliases": [
+    "2023年银川富洋"
+   ],
+   "type": "泄漏/燃气",
+   "label_30": "2023年银川富洋：液化气罐泄漏爆炸，31死",
+   "cause": "液化气罐阀体泄漏引发爆炸（全国挂牌督办）",
+   "casualty": "31死7伤",
+   "source": "国务院调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-091",
+   "event": "日照石大科技液态烃",
+   "year": 2015,
+   "tier": "B",
+   "aliases": [
+    "2015年日照石大科技"
+   ],
+   "type": "球罐/BLEVE",
+   "label_30": "2015年日照石大科技：违规倒罐球罐爆炸，无伤亡",
+   "cause": "违规倒罐切水无监护，液态烃球罐泄漏连环爆炸",
+   "casualty": "无人员伤亡",
+   "source": "国务院安委办通报(2026-09-05核实)",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-092",
+   "event": "Piper之后海上平台补充：印度孟买高地",
+   "year": 2005,
+   "tier": "B",
+   "aliases": [
+    "2005年印度孟买高地平台",
+    "2005年印度孟买高地"
+   ],
+   "type": "泄漏/海上平台",
+   "label_30": "2005年印度孟买高地：平台起火沉没，22死",
+   "cause": "补给船碰撞立管喷射起火，2小时烧毁平台沉没",
+   "casualty": "22死362获救",
+   "source": "FABIG/Wikipedia(2026-09-05核实)",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-093",
+   "event": "美国Imperial糖厂",
+   "year": 2008,
+   "tier": "A",
+   "aliases": [
+    "2008年美国Imperial糖厂"
+   ],
+   "type": "粉尘/料仓",
+   "label_30": "2008年美国Imperial糖厂：糖粉尘爆炸，14死",
+   "cause": "糖粉尘云爆炸（CSB调查推动可燃粉尘标准，工业粉尘经典）",
+   "casualty": "14死36伤",
+   "source": "CSB调查报告",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "id": "ANC-094",
+   "event": "韩国丽水烯烃罐区",
+   "year": 2013,
+   "tier": "B",
+   "aliases": [
+    "2013年韩国丽水"
+   ],
+   "type": "泄漏/法兰",
+   "label_30": "2013年韩国丽水：HCFC装置爆炸，1死",
+   "cause": "韩华化学储罐区蒸气云爆炸（待核实伤亡）",
+   "casualty": "待核实",
+   "source": "线索（待核实）",
+   "verified": false,
+   "status": "retired",
+   "used_count": 0,
+   "used_by": [],
+   "retire_reason": "3次WebSearch超时无法核实三要素（2026-09-05）"
+  },
+  {
+   "id": "ANC-095",
+   "event": "山西交城炫釜导热油炉",
+   "year": 2022,
+   "tier": "A",
+   "aliases": [
+    "2022年山西交城炫釜肥业",
+    "2022年吕梁交城炫釜"
+   ],
+   "type": "锅炉/导热油",
+   "label_30": "2022年山西交城炫釜：导热油炉违规检修爆燃，3死2伤",
+   "cause": "违规修理导热油炉燃烧器，气动球阀选型错误无法关闭，吹扫阶段炉膛空气燃气混合达爆炸极限，点火时炉膛燃爆",
+   "casualty": "3死2伤",
+   "source": "应急管理部《历史上五月发生的危险化学品事故》",
+   "verified": true,
+   "status": "active",
+   "used_count": 7,
+   "used_by": [
+    103,
+    117,
+    119,
+    120,
+    129,
+    133,
+    142
+   ]
+  },
+  {
+   "id": "ANC-096",
+   "event": "七台河隆发导热油炉",
+   "year": 2021,
+   "tier": "A",
+   "aliases": [
+    "2021年七台河隆发导热油炉",
+    "七台河导热油炉爆炸",
+    "2021年黑龙江七台河",
+    "2021年七台河隆发"
+   ],
+   "type": "锅炉/导热油",
+   "label_30": "2021年黑龙江七台河：导热油炉长期失修爆炸，1死",
+   "cause": "导热油管长期未维护严重变形腐蚀渗漏，停炉2小时重新启炉时炉膛温度压力急剧升高，端盖脱落，导热油溢出燃烧",
+   "casualty": "1死",
+   "source": "七台河市隆发建筑安装工程公司\"10.23\"导热油炉爆炸事故调查报告（桃山区政府）",
+   "verified": true,
+   "status": "active",
+   "used_count": 6,
+   "used_by": [
+    103,
+    129,
+    133,
+    135,
+    142,
+    145
+   ]
+  },
+  {
+   "id": "ANC-097",
+   "event": "包头金福再生资源",
+   "tier": "B",
+   "type": "锅炉/导热油",
+   "year": 2025,
+   "label_30": "2025年内蒙古包头：导热油炉爆炸火灾，1死4伤",
+   "aliases": [
+    "2025年包头金福导热油炉",
+    "金福再生资源导热油炉"
+   ],
+   "casualty": "1死4伤",
+   "cause": "厂房内导热油炉爆炸引发火灾，导热油管及设备长期失修",
+   "source": "包头市昆都仑区政府调查报告",
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "event": "义马气化厂空分砂爆",
+   "year": 2019,
+   "tier": "S",
+   "type": "设备完整性/隐患失治",
+   "aliases": [
+    "2019年义马气化厂",
+    "2019年义马"
+   ],
+   "label_30": "2019年义马气化厂：空分冷箱砂爆液氧槽破裂，15死",
+   "cause": "空分冷箱漏液23天未处置发生砂爆，冷箱倒塌击破500m³液氧贮槽爆炸",
+   "casualty": "15死16重伤",
+   "source": "应急部办公厅通报/调查报告(2026-09-05核实)",
+   "id": "ANC-098",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "event": "连云港聚鑫保温釜",
+   "year": 2017,
+   "tier": "A",
+   "type": "反应失控",
+   "aliases": [
+    "2017年连云港聚鑫",
+    "2017年聚鑫"
+   ],
+   "label_30": "2017年连云港聚鑫：保温釜混酸反应失控爆炸，10死",
+   "cause": "尾气氮氧化物夹带硫酸串入保温釜，与回收残液成混酸绝热放热爆炸",
+   "casualty": "10死1轻伤",
+   "source": "本批调查报告正文(2026-09-05核实)",
+   "id": "ANC-099",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "event": "张家口盛华氯乙烯",
+   "year": 2018,
+   "tier": "S",
+   "type": "泄漏/气柜",
+   "aliases": [
+    "2018年张家口盛华",
+    "2018年盛华"
+   ],
+   "label_30": "2018年张家口盛华：氯乙烯泄漏爆燃，24死",
+   "cause": "氯乙烯泄漏遇点火源爆燃，涉事公司瞒报",
+   "casualty": "24死",
+   "source": "本批调查报告正文(2026-09-05核实)",
+   "id": "ANC-100",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "event": "宜宾恒达投料错误",
+   "year": 2019,
+   "tier": "A",
+   "type": "反应失控",
+   "aliases": [
+    "2019年宜宾恒达",
+    "2019年恒达"
+   ],
+   "label_30": "2019年宜宾恒达：氯酸钠误作丁酰胺投料爆炸，19死",
+   "cause": "无标识氯酸钠误当丁酰胺投入2R301釜脱水操作引发爆炸着火",
+   "casualty": "19死12伤",
+   "source": "本批调查报告正文(2026-09-05核实)",
+   "id": "ANC-101",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "event": "怀来长城生物清淤",
+   "year": 2019,
+   "tier": "A",
+   "type": "受限空间/中毒窒息",
+   "aliases": [
+    "2019年怀来长城生物",
+    "2019年怀来"
+   ],
+   "label_30": "2019年怀来长城生物：污水池清淤硫化氢中毒，5死4伤",
+   "cause": "违章清淤致淤泥硫化氢逸出积聚，未配应急装备盲目施救",
+   "casualty": "5死4伤",
+   "source": "本批调查报告正文(2026-09-05核实)",
+   "id": "ANC-102",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "event": "鑫广绿环危废处置",
+   "year": 2017,
+   "tier": "A",
+   "type": "受限空间/中毒窒息",
+   "aliases": [
+    "2017年鑫广绿环"
+   ],
+   "label_30": "2017年鑫广绿环：违规倾倒危废硫化氢中毒，5死12伤",
+   "cause": "违规向投料坑倾倒含硫化氢危废，有毒气体积聚中毒",
+   "casualty": "5死12伤",
+   "source": "本批调查报告正文(2026-09-05核实)",
+   "id": "ANC-103",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "event": "中卫新澧煤气炉",
+   "year": 2019,
+   "tier": "A",
+   "type": "锅炉/煤气炉",
+   "aliases": [
+    "2019年中卫新澧"
+   ],
+   "label_30": "2019年中卫新澧：煤气炉夹套缺水违规补水爆炸，4死",
+   "cause": "2#煤气发生炉夹套锅炉严重缺水违规补水剧烈气化爆炸",
+   "casualty": "4死3伤",
+   "source": "本批调查报告正文(2026-09-05核实)",
+   "id": "ANC-104",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "event": "建瓯金峰气柜动火",
+   "year": 2019,
+   "tier": "A",
+   "type": "动火/热切割",
+   "aliases": [
+    "2019年建瓯金峰"
+   ],
+   "label_30": "2019年建瓯金峰：乙炔气柜无置换动火闪爆，3死",
+   "cause": "无资质人员动火，未置换排气未测浓度，气柜残余乙炔闪爆",
+   "casualty": "3死",
+   "source": "本批调查报告正文(2026-09-05核实)",
+   "id": "ANC-105",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "event": "当阳蒸汽管道裂爆",
+   "year": 2016,
+   "tier": "A",
+   "type": "灼烫/蒸汽",
+   "aliases": [
+    "2016年湖北当阳",
+    "2016年当阳"
+   ],
+   "label_30": "2016年湖北当阳：高压蒸汽管道裂爆，22死",
+   "cause": "在建热电项目试生产调试中高压蒸汽管道裂爆蒸汽外泄",
+   "casualty": "22死4重伤",
+   "source": "安委督〔2016〕12号/调查报告(2026-09-05核实)",
+   "id": "ANC-106",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "event": "重庆天原氯气泄漏",
+   "year": 2004,
+   "tier": "A",
+   "type": "泄漏/毒气",
+   "aliases": [
+    "2004年重庆天原"
+   ],
+   "label_30": "2004年重庆天原：氯气泄漏储罐爆炸，9死15万疏散",
+   "cause": "氯气泄漏后储罐区连续爆炸，枪击引爆残罐排除险情",
+   "casualty": "9死，约15万人疏散",
+   "source": "China Daily/BBC等多源(2026-09-05核实)",
+   "id": "ANC-107",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "event": "燕山石化储罐高坠",
+   "year": 2019,
+   "tier": "A",
+   "type": "高坠/检修",
+   "aliases": [
+    "2019年燕山石化"
+   ],
+   "label_30": "2019年燕山石化：储罐检修高处坠落，1死",
+   "cause": "炼油四作业区801#储罐作业高处坠落",
+   "casualty": "1死",
+   "source": "燕山分公司调查报告(2026-09-05核实)",
+   "id": "ANC-108",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "event": "六国化工灰水槽闪爆",
+   "year": 2023,
+   "tier": "A",
+   "type": "高坠/检修",
+   "aliases": [
+    "2023年六国化工"
+   ],
+   "label_30": "2023年六国化工：灰水槽闪爆管廊坠落，2死",
+   "cause": "渣水处理灰水槽闪爆，管廊上维修作业人员坠落",
+   "casualty": "2死",
+   "source": "安徽省安委办通报(2026-09-05核实)",
+   "id": "ANC-109",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "event": "澧县红林触电",
+   "year": 2025,
+   "tier": "B",
+   "type": "触电",
+   "aliases": [
+    "2025年澧县红林"
+   ],
+   "label_30": "2025年澧县红林：屋顶换瓦检修触电，1死1伤",
+   "cause": "车间屋顶更换彩钢瓦检修作业触电",
+   "casualty": "1死1轻伤",
+   "source": "澧县政府调查报告(2026-09-05核实)",
+   "id": "ANC-110",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  },
+  {
+   "event": "泉州鲤城管道淹溺",
+   "year": 2023,
+   "tier": "B",
+   "type": "淹溺/污水设施",
+   "aliases": [
+    "2023年泉州鲤城"
+   ],
+   "label_30": "2023年泉州鲤城：污水管道气囊滑脱淹溺，3死",
+   "cause": "下游水位顶托致无防滑支撑的封堵气囊滑脱，污水灌入管道",
+   "casualty": "3死",
+   "source": "泉州市应急局调查报告(2026-09-05核实)",
+   "id": "ANC-111",
+   "verified": true,
+   "status": "active",
+   "used_count": 0,
+   "used_by": []
+  }
+ ]
+}

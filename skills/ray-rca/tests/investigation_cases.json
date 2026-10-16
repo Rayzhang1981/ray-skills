@@ -1,0 +1,476 @@
+{
+  "synthetic": true,
+  "coverage": "structured records, not LLM capability validation",
+  "cases": [
+    {
+      "id": "conditional-review",
+      "review": {
+        "records": [
+          {
+            "claim_id": "E1",
+            "claim": "operator reports an estimated solid fraction",
+            "source_type": "estimate",
+            "evidence_level": "Assumption",
+            "verified": false
+          },
+          {
+            "claim_id": "E2",
+            "claim": "two pressure indications are available",
+            "source_type": "record",
+            "evidence_level": "Fact",
+            "verified": true
+          }
+        ],
+        "hypotheses": [
+          "gas-generation",
+          "upstream-ingress"
+        ],
+        "conclusions": [
+          {
+            "claim_id": "C1",
+            "text": "candidate remains conditional",
+            "basis": [
+              "E1",
+              "E2"
+            ],
+            "status": "conditional",
+            "model_applicability": "constant-volume ideal-gas illustration only",
+            "input_basis": "solid fraction and density remain unresolved",
+            "scope": "hypothesis screening, not incident determination",
+            "model_verified": false,
+            "input_basis_verified": false,
+            "alternatives_reviewed": false,
+            "independent_evidence": false
+          }
+        ]
+      },
+      "expected_errors": []
+    },
+    {
+      "id": "missing-model-scope",
+      "review": {
+        "records": [
+          {
+            "claim_id": "E1",
+            "claim": "operator reports an estimated solid fraction",
+            "source_type": "estimate",
+            "evidence_level": "Assumption",
+            "verified": false
+          },
+          {
+            "claim_id": "E2",
+            "claim": "two pressure indications are available",
+            "source_type": "record",
+            "evidence_level": "Fact",
+            "verified": true
+          }
+        ],
+        "hypotheses": [
+          "gas-generation",
+          "upstream-ingress"
+        ],
+        "conclusions": [
+          {
+            "claim_id": "C1",
+            "text": "candidate remains conditional",
+            "basis": [
+              "E1",
+              "E2"
+            ],
+            "status": "conditional",
+            "model_applicability": "",
+            "input_basis": "solid fraction and density remain unresolved",
+            "scope": "hypothesis screening, not incident determination",
+            "model_verified": false,
+            "input_basis_verified": false,
+            "alternatives_reviewed": false,
+            "independent_evidence": false
+          }
+        ]
+      },
+      "expected_errors": [
+        "missing_model_applicability"
+      ]
+    },
+    {
+      "id": "missing-mass-basis",
+      "review": {
+        "records": [
+          {
+            "claim_id": "E1",
+            "claim": "operator reports an estimated solid fraction",
+            "source_type": "estimate",
+            "evidence_level": "Assumption",
+            "verified": false
+          },
+          {
+            "claim_id": "E2",
+            "claim": "two pressure indications are available",
+            "source_type": "record",
+            "evidence_level": "Fact",
+            "verified": true
+          }
+        ],
+        "hypotheses": [
+          "gas-generation",
+          "upstream-ingress"
+        ],
+        "conclusions": [
+          {
+            "claim_id": "C1",
+            "text": "candidate remains conditional",
+            "basis": [
+              "E1",
+              "E2"
+            ],
+            "status": "conditional",
+            "model_applicability": "constant-volume ideal-gas illustration only",
+            "input_basis": "",
+            "scope": "hypothesis screening, not incident determination",
+            "model_verified": false,
+            "input_basis_verified": false,
+            "alternatives_reviewed": false,
+            "independent_evidence": false
+          }
+        ]
+      },
+      "expected_errors": [
+        "missing_input_basis"
+      ]
+    },
+    {
+      "id": "two-points-not-unique",
+      "review": {
+        "records": [
+          {
+            "claim_id": "E1",
+            "claim": "operator reports an estimated solid fraction",
+            "source_type": "estimate",
+            "evidence_level": "Assumption",
+            "verified": false
+          },
+          {
+            "claim_id": "E2",
+            "claim": "two pressure indications are available",
+            "source_type": "record",
+            "evidence_level": "Fact",
+            "verified": true
+          }
+        ],
+        "hypotheses": [
+          "gas-generation"
+        ],
+        "conclusions": [
+          {
+            "claim_id": "C1",
+            "text": "candidate remains conditional",
+            "basis": [
+              "E1",
+              "E2"
+            ],
+            "status": "conditional",
+            "model_applicability": "constant-volume ideal-gas illustration only",
+            "input_basis": "solid fraction and density remain unresolved",
+            "scope": "hypothesis screening, not incident determination",
+            "model_verified": false,
+            "input_basis_verified": false,
+            "alternatives_reviewed": false,
+            "independent_evidence": false
+          }
+        ]
+      },
+      "expected_errors": [
+        "missing_competing_hypotheses"
+      ]
+    },
+    {
+      "id": "unknown-evidence",
+      "review": {
+        "records": [
+          {
+            "claim_id": "E1",
+            "claim": "operator reports an estimated solid fraction",
+            "source_type": "estimate",
+            "evidence_level": "Assumption",
+            "verified": false
+          },
+          {
+            "claim_id": "E2",
+            "claim": "two pressure indications are available",
+            "source_type": "record",
+            "evidence_level": "Fact",
+            "verified": true
+          }
+        ],
+        "hypotheses": [
+          "gas-generation",
+          "upstream-ingress"
+        ],
+        "conclusions": [
+          {
+            "claim_id": "C1",
+            "text": "candidate remains conditional",
+            "basis": [
+              "missing"
+            ],
+            "status": "conditional",
+            "model_applicability": "constant-volume ideal-gas illustration only",
+            "input_basis": "solid fraction and density remain unresolved",
+            "scope": "hypothesis screening, not incident determination",
+            "model_verified": false,
+            "input_basis_verified": false,
+            "alternatives_reviewed": false,
+            "independent_evidence": false
+          }
+        ]
+      },
+      "expected_errors": [
+        "unknown_evidence_reference"
+      ]
+    },
+    {
+      "id": "reject-assumption-promotion",
+      "review": {
+        "records": [
+          {
+            "claim_id": "E1",
+            "claim": "operator reports an estimated solid fraction",
+            "source_type": "estimate",
+            "evidence_level": "Assumption",
+            "verified": false
+          },
+          {
+            "claim_id": "E2",
+            "claim": "two pressure indications are available",
+            "source_type": "record",
+            "evidence_level": "Fact",
+            "verified": true
+          }
+        ],
+        "hypotheses": [
+          "gas-generation",
+          "upstream-ingress"
+        ],
+        "conclusions": [
+          {
+            "claim_id": "C1",
+            "text": "candidate remains conditional",
+            "basis": [
+              "E1",
+              "E2"
+            ],
+            "status": "confirmed",
+            "model_applicability": "constant-volume ideal-gas illustration only",
+            "input_basis": "solid fraction and density remain unresolved",
+            "scope": "hypothesis screening, not incident determination",
+            "model_verified": false,
+            "input_basis_verified": false,
+            "alternatives_reviewed": false,
+            "independent_evidence": false
+          }
+        ]
+      },
+      "expected_errors": [
+        "model_not_verified",
+        "input_basis_not_verified",
+        "alternatives_not_reviewed",
+        "no_independent_evidence",
+        "unsupported_promotion"
+      ]
+    },
+    {
+      "id": "reject-unsupported-exclusion",
+      "review": {
+        "records": [
+          {
+            "claim_id": "E1",
+            "claim": "operator reports an estimated solid fraction",
+            "source_type": "estimate",
+            "evidence_level": "Assumption",
+            "verified": false
+          },
+          {
+            "claim_id": "E2",
+            "claim": "two pressure indications are available",
+            "source_type": "record",
+            "evidence_level": "Fact",
+            "verified": true
+          }
+        ],
+        "hypotheses": [
+          "gas-generation",
+          "upstream-ingress"
+        ],
+        "conclusions": [
+          {
+            "claim_id": "C1",
+            "text": "candidate remains conditional",
+            "basis": [
+              "E1",
+              "E2"
+            ],
+            "status": "excluded",
+            "model_applicability": "constant-volume ideal-gas illustration only",
+            "input_basis": "solid fraction and density remain unresolved",
+            "scope": "hypothesis screening, not incident determination",
+            "model_verified": true,
+            "input_basis_verified": true,
+            "alternatives_reviewed": true,
+            "independent_evidence": false
+          }
+        ]
+      },
+      "expected_errors": [
+        "no_independent_evidence",
+        "unsupported_promotion"
+      ]
+    },
+    {
+      "id": "bounded-supported-conclusion",
+      "review": {
+        "records": [
+          {
+            "claim_id": "E1",
+            "claim": "operator reports an estimated solid fraction",
+            "source_type": "estimate",
+            "evidence_level": "Assumption",
+            "verified": false
+          },
+          {
+            "claim_id": "E2",
+            "claim": "two pressure indications are available",
+            "source_type": "record",
+            "evidence_level": "Fact",
+            "verified": true
+          }
+        ],
+        "hypotheses": [
+          "gas-generation",
+          "upstream-ingress"
+        ],
+        "conclusions": [
+          {
+            "claim_id": "C1",
+            "text": "candidate remains conditional",
+            "basis": [
+              "E2"
+            ],
+            "status": "confirmed",
+            "model_applicability": "constant-volume ideal-gas illustration only",
+            "input_basis": "solid fraction and density remain unresolved",
+            "scope": "hypothesis screening, not incident determination",
+            "model_verified": true,
+            "input_basis_verified": true,
+            "alternatives_reviewed": true,
+            "independent_evidence": true
+          }
+        ]
+      },
+      "expected_errors": []
+    },
+    {
+      "id": "input-correction-withdrawal",
+      "review": {
+        "records": [
+          {
+            "claim_id": "E1",
+            "claim": "operator reports an estimated solid fraction",
+            "source_type": "estimate",
+            "evidence_level": "Assumption",
+            "verified": false
+          },
+          {
+            "claim_id": "E2",
+            "claim": "two pressure indications are available",
+            "source_type": "record",
+            "evidence_level": "Fact",
+            "verified": true
+          }
+        ],
+        "hypotheses": [
+          "gas-generation",
+          "upstream-ingress"
+        ],
+        "conclusions": [
+          {
+            "claim_id": "C1",
+            "text": "candidate remains conditional",
+            "basis": [
+              "E1",
+              "E2"
+            ],
+            "status": "withdrawn",
+            "model_applicability": "constant-volume ideal-gas illustration only",
+            "input_basis": "solid fraction and density remain unresolved",
+            "scope": "hypothesis screening, not incident determination",
+            "model_verified": false,
+            "input_basis_verified": false,
+            "alternatives_reviewed": false,
+            "independent_evidence": false
+          }
+        ]
+      },
+      "expected_errors": []
+    },
+    {
+      "id": "duplicate-evidence",
+      "review": {
+        "records": [
+          {
+            "claim_id": "E1",
+            "claim": "operator reports an estimated solid fraction",
+            "source_type": "estimate",
+            "evidence_level": "Assumption",
+            "verified": false
+          },
+          {
+            "claim_id": "E2",
+            "claim": "two pressure indications are available",
+            "source_type": "record",
+            "evidence_level": "Fact",
+            "verified": true
+          },
+          {
+            "claim_id": "E1",
+            "claim": "operator reports an estimated solid fraction",
+            "source_type": "estimate",
+            "evidence_level": "Assumption",
+            "verified": false
+          }
+        ],
+        "hypotheses": [
+          "gas-generation",
+          "upstream-ingress"
+        ],
+        "conclusions": [
+          {
+            "claim_id": "C1",
+            "text": "candidate remains conditional",
+            "basis": [
+              "E1",
+              "E2"
+            ],
+            "status": "conditional",
+            "model_applicability": "constant-volume ideal-gas illustration only",
+            "input_basis": "solid fraction and density remain unresolved",
+            "scope": "hypothesis screening, not incident determination",
+            "model_verified": false,
+            "input_basis_verified": false,
+            "alternatives_reviewed": false,
+            "independent_evidence": false
+          }
+        ]
+      },
+      "expected_errors": [
+        "duplicate_evidence_id"
+      ]
+    },
+    {
+      "id": "reject-empty-review",
+      "review": {},
+      "expected_errors": [
+        "empty_or_invalid_review"
+      ]
+    }
+  ]
+}

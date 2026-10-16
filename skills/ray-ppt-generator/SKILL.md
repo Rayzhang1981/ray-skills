@@ -2,7 +2,7 @@
 name: ray-ppt-generator
 slug: ray-ppt-generator
 displayName: PPT内容生成器
-version: "3.20.0"
+version: "3.21.1"
 description: 基于 python-pptx 快速生成可编辑 PPTX 文件。触发词：生成PPT、制作课件、批量PPT、PPTX导出、汇报PPT、培训课件、幻灯片、资料转PPT、文档转PPT、把这份资料/报告/文档做成PPT、总结成PPT、视频转PPT。适用于培训课件、安全汇报、流程图解、技术文档/事故报告/视频稿转 PPT 等场景。不依赖 ppt-implement，无预览弹窗干扰，输出可编辑的 PowerPoint 文件。
 agent_created: true
 ---
@@ -266,7 +266,7 @@ PALETTES 字典代码（RGB 元组）见 `references/code-templates.md` 第 1 �
 | 需求 | 调用 | 说明 |
 |------|------|------|
 | 通用 AI 生图 | `ImageGen`（工具） | 文生图/图生图，默认选项 |
-| 独立计费生图 | `ray-wuyin-image` | 速创 API，ImageGen 不可用时的备选 |
+| 独立计费生图 | `ray-concept-image` | 速创 API（含 a6api 备用通道），ImageGen 不可用时的备选（原名 ray-wuyin-image） |
 | 手绘风示意图 | `sketch-illustration` | 流程图/功能说明/PPT 配图（Sketch 极简/水彩等 5 种风格） |
 
 **生图 prompt 规范**：风格词（如"商务简约、扁平插画"）+ 尺寸 16:9 + **无文字**（AI 生成文字必乱码，文字一律后期用 python-pptx 加）+ 配色与所选 PALETTE 协调。
@@ -432,7 +432,12 @@ python scripts/export_speech.py <生成的.pptx> <演讲稿.md> --titles "封面
 
 **演进方向**：本 skill 聚焦"最强内容生成器"（资料提炼 / 叙事弧 / 演讲稿）；refine 聚焦"最强版式美化器"（检测 / 换肤 / 修复）。经验由 ray-self-reflection 回流，高手由 ray-skill-evolve 学习。
 
-## 实战经验
+## Gotchas
+
+> 经验回流口（合并原「环境怪癖」与「实战经验」两处落点）。构建与运行中踩的坑记这里，随运行累积。
+> ⚠️ `None known` 是合法值——禁止编造 gotcha 凑数，假怪癖会教模型错误约束。
+> 新回流条目带前缀：`- YYYY-MM-DD｜[LRN-YYYYMMDD-XXX]｜计数:N｜状态:…`（判重与归档用）；历史条目保持原样。
+> 归档阈值：本节 > 40 行 或 SKILL.md > 90 KB → 最旧批次移入 `references/experience-archive.md`，保留最近 3 轮。
 
 > 任务复盘经验由 ray-self-reflection 回流到此（一行一条，带 ID）。格式：`- YYYY-MM-DD｜[LRN-...]｜场景：xxx｜经验/教训：xxx｜死路：xxx｜来源：任务名｜计数：N｜状态：pending`
 > ⚠️ resolved 条目已归档至 `references/experience-archive.md`（规则入主流程后毕业删除，此处只留活跃条目）。
@@ -455,12 +460,14 @@ python scripts/export_speech.py <生成的.pptx> <演讲稿.md> --titles "封面
 
 - 2026-09-04｜[LRN-20260904-003]｜场景：评估 iconfont 素材能否进 PPT 生成/美化链路｜经验：图标素材可行性 = **格式 × 库能力匹配**，不能凭"iconfont 很全"下结论。python-pptx 实测：PNG 可直接 `add_picture` ✅；**SVG 原生不支持**（add_picture 抛 UnidentifiedImageError）❌；venv 无 cairosvg/svglib（SVG→PNG 需新增依赖）；图标字体 python-pptx 无原生字形支持 ❌。可行路线：①单色简单语义图标（盾牌/警报）→ 下 PNG 做图标池 或 **拆 SVG path 用 FREEFORM 重绘**（保矢量可编辑）；②多色复杂插画 → 仍走 ImageGen/图库。能力边界已入 code-templates 2.25｜死路：默认"iconfont 资源能直接用"——SVG 是 iconfont 主力格式，python-pptx 插不进，直接套用会全线失败｜来源：iconfont 可用性评估｜计数：1｜状态：pending
 
-- 2026-09-04｜[LRN-20260904-004]｜场景：把"简单语义图标池"从想法做成资产（40 图标端到端）｜经验：**开源 Lucide + resvg 路线验证通过**，比 iconfont 更适合 python-pptx 链路——①源：lucide-static 走 jsdelivr CDN（免登录、ISC 可商用），**必须带 Mozilla UA**（urllib 裸 UA 会 404，curl 也要加）；②渲染：venv 装 `resvg-py`（纯 Rust abi3 wheel，秒装），API 是 **`svg_to_bytes(svg_string=, zoom=256/24)`**（不是 import resvg/调 render——模块只有 svg_to_bytes 一个导出）；③Lucide 是 outline 风格 `stroke=currentColor` 单 path → 重染只需把 `currentColor` 替换成目标 hex；④**图片资产一律外置** `~/RayClaw/skill-archives/`（SkillHub 发布拒收 .png——曾把 40 PNG 放 skill assets/ 内，发布必 400，已移出）；skill 内只留 build 脚本 + 路径指针，add_icon 双路径加载（外置池优先、缺失提示重建）｜死路：A. iconfont 自动化下载（需登录态/逆向接口，浏览器复用成本 >500MB 不值得）；B. `fetch(文件名带.svg)` 导致 CDN URL 变成 .svg.svg 404（fetch 应传纯图标名，模板内部补后缀）；C. PNG 内置进 skill 目录（阻塞发布）｜来源：iconfont 可用性评估的落地｜计数：1｜状态：pending｜深化：若未来要面性（filled）图标，Lucide 有 `lucide-static/filled/` 子目录同源可用；图标不够时改 ICONS dict 重跑 build 脚本即可
+- 2026-09-04｜[LRN-20260904-004]｜场景：把"简单语义图标池"从想法做成资产（40 图标端到端）｜经验：**开源 Lucide + resvg 路线验证通过**，比 iconfont 更适合 python-pptx 链路——①源：lucide-static 走 jsdelivr CDN（免登录、ISC 可商用），**必须带 Mozilla UA**（urllib 裸 UA 会 404，curl 也要加）；②渲染：venv 装 `resvg-py`（纯 Rust abi3 wheel，秒装），API 是 **`svg_to_bytes(svg_string=, zoom=256/24)`**（不是 import resvg/调 render——模块只有 svg_to_bytes 一个导出）；③Lucide 是 outline 风格 `stroke=currentColor` 单 path → 重染只需把 `currentColor` 替换成目标 hex；④**图片资产一律外置** `D:/RayClaw/skill-archives/`（SkillHub 发布拒收 .png——曾把 40 PNG 放 skill assets/ 内，发布必 400，已移出）；skill 内只留 build 脚本 + 路径指针，add_icon 双路径加载（外置池优先、缺失提示重建）｜死路：A. iconfont 自动化下载（需登录态/逆向接口，浏览器复用成本 >500MB 不值得）；B. `fetch(文件名带.svg)` 导致 CDN URL 变成 .svg.svg 404（fetch 应传纯图标名，模板内部补后缀）；C. PNG 内置进 skill 目录（阻塞发布）｜来源：iconfont 可用性评估的落地｜计数：1｜状态：pending｜深化：若未来要面性（filled）图标，Lucide 有 `lucide-static/filled/` 子目录同源可用；图标不够时改 ICONS dict 重跑 build 脚本即可
 
 - 2026-09-22｜[LRN-20260922-001]｜场景：新增 `scripts/qa_ppt.py --dblpage`（双页隐患静态扫描）后做负控——故意植入一个"自建页 + 调用自带建页的页面函数"的脚本，验证扫描器是否真能抓到｜经验：**扫描源码的脚本读文件必须用 `encoding="utf-8-sig"`**——PowerShell 的 `Set-Content -Encoding UTF8` 会写 BOM，而 BOM 会让 `re.match(r"def\s+")` 在行首失配 ⇒ **整个文件被静默跳过、报"0 命中"**（假阴性，退出码 0，无任何告警）。首轮负控正是这么漏掉的；改 `utf-8-sig` 后 BOM / 无 BOM 两种编码均能抓到（各 1 命中，exit=1）。**判据：「扫描器说没问题」必须先由一次"成功捕获"的负控背书**——"没有命中"在做负控之前不能当通过证据｜死路：只跑正控（对真实脚本报 0 命中）就认为扫描器可用——正控对假阴性零分辨力｜来源：701 反应热评估专报 PPT 回流审计 G3｜计数：1｜状态：pending
 
-> ✅ 已毕业（2026-08-16 用户确认）：LRN-001（版式函数调用契约）→ 核心原则 11；LRN-003（布局自适应+越界检测）→ 核心原则 12；LRN-004（装饰不越页）→ 核心原则 12；LRN-005（页码贴右下角）→ 常见坑表。毕业条目从缓冲区删除，规则已入主流程。
+- 2026-09-28｜[LRN-20260928-002]｜场景：`qa_ppt.py --dblpage` 对正常生成脚本误报"双页隐患"（def section_slide 自建页 + 名字含 _slide）｜经验：扫描器默认 page_funcs 含 `section_slide`，且泛化规则把 def 块内任何 `x_slide(` 计为"调用页面函数"——**def 函数名以 `_slide` 结尾且自身 `add_slide` 的 helper 会被自我命中误报**。判据：自建页的版式助手命名避开 `_slide` 后缀（用 `make_section` / `card3` / `chip` 等），`add_*_slide` 命名留给"调用即建页"的页面函数｜死路：反复排查脚本找"真双页"——误报不是真双页，改生成脚本无效｜来源：企业主体责任规定培训 PPT（40页）生成｜计数：1｜状态：pending
 
+> ✅ 已毕业（2026-08-16 用户确认）：> ✅ 已毕业（2026-08-16 用户确认）：LRN-001（版式函数调用契约）→ 核心原则 11；LRN-003（布局自适应+越界检测）→ 核心原则 12；LRN-004（装饰不越页）→ 核心原则 12；LRN-005（页码贴右下角）→ 常见坑表。毕业条目从缓冲区删除，规则已入主流程。
+- 2026-10-09｜[LRN-20261009-001]｜计数:1｜状态:已修复｜**控制台编码护栏**：本 skill 的 2 个脚本注入 `_console_safe()` 并把显示面非 GBK 字形 ASCII 化（舰队级修复；缺陷＝输出被重定向/管道捕获时抛 UnicodeEncodeError 整段中断，交互式控制台看不出来）。回归门：`python ~/.workbuddy/scripts/gbk_console_check.py`（已挂 `evals_runner`）。
 ## 维护记录
 
 完整维护记录见 `references/changelog.md`（最新版本见 frontmatter version）。

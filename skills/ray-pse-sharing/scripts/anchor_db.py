@@ -40,6 +40,29 @@ import re
 import sys
 from collections import defaultdict
 
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace", line_buffering=True)
 
 SKILL_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -140,7 +163,7 @@ def cmd_scan_cards(args):
         for a, why in violations:
             print(f"  [{a['id']}] {a['event']}: {why}  cards={a['used_by']}")
         sys.exit(1)
-    print("\n✅ 对账通过：全部 history 引用合规（active）")
+    print("\n[OK] 对账通过：全部 history 引用合规（active）")
 
 
 def cmd_pick(args):
@@ -160,10 +183,10 @@ def cmd_pick(args):
                              a["used_count"]))
     print(f"=== 类型「{args.type}」推荐锚点（共 {len(pool)} 条可用；S级优先→年份新→批内少用）===")
     for a in pool[: args.top]:
-        flag = f" ⚠️本批已用{batch_used[a['id']]}次" if batch_used.get(a["id"]) else ""
+        flag = f" [!]本批已用{batch_used[a['id']]}次" if batch_used.get(a["id"]) else ""
         print(f"  [{a['tier']}] {a.get('year','?')}年 余量记录{a['used_count']} | {a['label_30']}{flag}")
     if not pool:
-        print("  ⚠️ 该类型无 active 锚点——WebSearch 核实新事故后 add + verify 入库")
+        print("  [!] 该类型无 active 锚点——WebSearch 核实新事故后 add + verify 入库")
 
 
 def cmd_verify(args):

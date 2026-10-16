@@ -5,7 +5,7 @@ displayName: 事故报告转安全培训视频
 description: >-
   Use when converting a process safety incident report (PDF/Word/image) into a narrated safety training video with PPT, TTS, hard subtitles, and FFmpeg MP4 assembly. Triggers: "事故报告转视频", "安全培训视频", "incident report to training video", or converting any structure document into a slide-video workflow.
 agent_created: true
-version: 2.4.1
+version: 2.5.0
 ---
 
 # ray-PSE-Video — 事故报告转安全培训视频
@@ -182,7 +182,7 @@ color: "868E96"
 # 避免 Git Bash/PowerShell 对中文路径的展开问题
 import subprocess, os
 env = os.environ.copy()
-env['NODE_PATH'] = '~/.workbuddy/.workbuddy/binaries/node/workspace/node_modules'
+env['NODE_PATH'] = 'C:/Users/rayzh/.workbuddy/binaries/node/workspace/node_modules'
 subprocess.run([node_exe, js_path, pptx_path], cwd=work_dir, env=env)
 ```
 
@@ -463,6 +463,15 @@ for item in os.listdir(work_dir):
 > 代码片段见 `references/code-snippets.md`（幽灵目录清理脚本）。
 
 > **教训**：隆莱项目的报告路径含 `"12·31"`（全角引号），Write 工具写入 `create_ppt.js` 时在上级目录创建了幽灵目录，内部分裂为 `u201c12·31/u201d较大窒息事故调查报告/video_work/`。此目录空无一物，但容易被误认为有效工作目录。
+
+## Gotchas
+
+> 经验回流口（合并原「环境怪癖」与「实战经验」两处落点）。构建与运行中踩的坑记这里，随运行累积。
+> ⚠️ `None known` 是合法值——禁止编造 gotcha 凑数，假怪癖会教模型错误约束。
+> 新回流条目带前缀：`- YYYY-MM-DD｜[LRN-YYYYMMDD-XXX]｜计数:N｜状态:…`（判重与归档用）；历史条目保持原样。
+> 归档阈值：本节 > 40 行 或 SKILL.md > 90 KB → 最旧批次移入 `references/experience-archive.md`，保留最近 3 轮。
+
+- None known
 
 ## 维护记录
 

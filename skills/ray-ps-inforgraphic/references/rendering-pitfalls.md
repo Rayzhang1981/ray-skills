@@ -9,15 +9,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 ```
 
-**2. 下载按钮（body 区域，固定定位）：**
+**2. 下载按钮（⚠️ 放画布外顶部工具栏，文档流——勿用 position:fixed 悬浮在画布上：窄视口缩放后按钮会压住画布内容，2026-09-29 追责红线信息图实证；html2canvas 只截画布元素，按钮放画布外既不遮挡显示也不进导出）：**
 ```html
-<button id="downloadBtn" style="position:fixed;top:20px;right:20px;z-index:9999;
-  background:linear-gradient(135deg,#C84B4B,#E8913A);
-  color:#fff;border:none;padding:14px 28px;
-  font:700 18px/1 var(--sans);border-radius:8px;cursor:pointer;
-  box-shadow:0 4px 12px rgba(200,75,75,0.4);transition:all 0.3s;">
-  下载 PNG 图片
-</button>
+<div style="text-align:right;padding:10px 16px;background:#E8ECF1;">
+  <button id="downloadBtn" style="background:#E67E22;color:#FFFFFF;border:none;
+    padding:11px 24px;font:700 17px/1 'Microsoft YaHei',sans-serif;border-radius:8px;cursor:pointer;
+    box-shadow:0 3px 10px rgba(0,0,0,0.25);">
+    下载 PNG 图片（3x 高清）
+  </button>
+</div>
 ```
 
 **3. 截图脚本（script 标签）——关键参数：`scale:3`（高DPI手机必须≥3x）、`toBlob()`（优于 toDataURL，内存友好）、`useCORS:true`、`backgroundColor:'#FFFFFF'`：**
@@ -66,6 +66,55 @@ document.getElementById('downloadBtn').onclick = function() {
 ```html
 <meta name="viewport" content="width=1080, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 ```
+
+**5. 固定宽度画布窄视口适配 + onclone 导出解耦（v2.5.0 固化，横版 1920 必配）：**
+
+> 桌面浏览器忽略 viewport meta 的 `width=1080`——用户用 1080px 宽窗口打开 1920px 横版画布时，
+> 右侧撞壁裁切、底部重叠。**固定宽度画布必须配 fit 自适应缩放，导出必须用 onclone 解耦。**
+
+**① fit 自适应缩放（wrapper 包裹画布 + 整体 scale + resize 监听）：**
+
+```html
+<div id="wrapper" style="overflow:hidden;">
+  <div class="canvas" style="width:1920px; transform-origin:top left;">
+    <!-- 原画布内容 -->
+  </div>
+</div>
+<script>
+function fitCanvas() {
+  var c = document.querySelector('.canvas');
+  var w = document.getElementById('wrapper');
+  var s = Math.min(1, window.innerWidth / c.offsetWidth);
+  c.style.transform = 'scale(' + s + ')';
+  w.style.width  = (c.offsetWidth  * s) + 'px';
+  w.style.height = (c.offsetHeight * s) + 'px';
+}
+window.addEventListener('resize', fitCanvas);
+fitCanvas();
+</script>
+```
+
+**② onclone 导出解耦（html2canvas options 内新增）：**
+
+> 坑：窄视口下 scale<1 时直接导出，html2canvas 按缩放后的 DOM 渲染 → 导出 PNG 分辨率缩水
+> （实测 1920×1200 画布导出从 2.18MB 掉到 1.10MB）。「导出前复位缩放、导出后恢复」方案会挂起
+> （等待事件超时）。**正解＝onclone：仅在克隆文档解除缩放，页面显示不动、导出恒 1:1，显示与导出彻底解耦。**
+
+```javascript
+onclone: function (doc) {
+  var c = doc.querySelector('.canvas');
+  if (c) { c.style.transform = 'none'; c.style.transformOrigin = 'top left'; }
+  var w = doc.getElementById('wrapper');
+  if (w) { w.style.overflow = 'visible'; w.style.width = '1920px'; w.style.height = '1200px'; }
+}
+```
+
+**③ 交付前双视口负控实测（Playwright 无头）：**
+
+- 宽视口（如 1980px）+ **窄视口（1080px）** 各跑一遍：量测 `wrapper 右缘 ≤ 视口宽`（NO-CLIP）+ 点击下载按钮拿导出实物
+- **判据（同一次运行内对比）：窄/宽两视口导出 PNG 字节数一致 = onclone 生效（显示与导出已解耦）；窄视口导出明显更小 = 缩放污染未解除**
+- ⚠️ **html2canvas 输出有非确定性**：同一页面跨轮次导出字节数可有 ±0.5% 浮动（2026-09-29 实测三轮 2207192 / 2224283 / 2228702）——判据只在同一轮的窄/宽之间比，MD5 不跨轮比
+- ⚠️ **只测宽视口 = 自欺**：宽视口 scale=1 天然无缩放，测不出 onclone 缺失（2026-09-29 带病交付被用户截图打回的教训）
 
 ---
 
@@ -250,3 +299,43 @@ function pickScale() {
 > **"浏览器能看 ≠ html2canvas 能导"**
 > 生成 HTML 后，务必点"下载 PNG 图片"按钮实测导出效果。
 > 以上三条高危写法在浏览器中 100% 正常，但在 html2canvas 中 90% 丢失。
+
+
+## 内联 SVG 导出缺陷：绝对定位 + 仅 CSS 尺寸 = 缩角/消失（v2.6.0 · 2026-09-29 实测）
+
+**现象**：`position:absolute` 且无 `width/height` 属性的内联 `<svg>`（如卡片头图标），在 html2canvas 导出中被缩成元素框角落的碎片甚至整体消失；**静态块级 SVG（CSS width:100% 之类）不受影响**。浏览器 DOM 渲染 100% 正常——「浏览器能看 ≠ html2canvas 能导」的又一实例，且既有门检（溢出/字号/高危写法）根本不查 SVG 导出忠实度。
+
+**修法（已实证 9/9 图形导出忠实度 ratio≈1.0）**：页面加载时把问题 SVG 原位栅格化为等尺寸 `<img>`（class 保留、CSS 照常定位），导出走 img 成熟通路：
+
+```js
+(function rasterizeIcons() {
+  var UP = 4;  // 4x 采样，2x 导出仍超采样
+  document.querySelectorAll('svg.ic, svg.wi').forEach(function (sv) {
+    var ser = new XMLSerializer().serializeToString(sv);   // 依赖 svg 带 width/height 属性
+    var tmp = new Image();
+    tmp.onload = function () {
+      var w = tmp.naturalWidth * UP, h = tmp.naturalHeight * UP;  // ⚠️ 只准 naturalWidth，见坑 2
+      var c = document.createElement('canvas');
+      c.width = w; c.height = h;
+      c.getContext('2d').drawImage(tmp, 0, 0, w, h);
+      var im = document.createElement('img');
+      im.setAttribute('class', sv.getAttribute('class'));
+      im.src = c.toDataURL('image/png');
+      sv.parentNode.replaceChild(im, sv);
+    };
+    tmp.src = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(ser);
+  });
+})();
+```
+
+**三个连环坑（本轮全踩过）**：
+
+1. **`drawImage` 不接受内联 `<svg>` 元素**——CanvasImageSource 白名单只有 SVGImageElement，直接传 svg 抛 TypeError。必须 serializeToString → data URL → `new Image()` 异步加载后再画。
+2. **`offsetWidth` 在 SVG 元素上是 `undefined`**（HTMLElement 专属）→ `Math.round(undefined*4)=NaN` → `canvas.width=NaN` 按 0 处理 → 0×0 空画布 → `toDataURL()` 返回 6 字符「data:,」→ img 全空 → **图标整体消失且无任何报错**。尺寸一律取 `tmp.naturalWidth/naturalHeight`（= svg 的 width/height 属性，transform 无关）。
+3. **`getBoundingClientRect` 是变换后视觉尺寸**——窄视口 fitCanvas 缩放后调用，栅格化分辨率随视口变化（宽/窄视口导出字节数漂移的根源）。
+
+**验证纪律（本轮教训）**：
+
+- **「双视口导出字节数相等」只是负控，相等 ≠ 正确**——两个视口渲染同一种空 img 时照样逐字节全等。必须加**正控**：对交付 PNG 实物按 DOM 坐标裁剪图标区做墨迹/目视核对（图标缺失 = 纯色块，一眼即穿）。
+- **图形色不得与所在底色同值**——图形 `#2E7BB8` 放 `#2E7BB8` 表头 = 隐形（改前 4 图标 3 个同色自伤，像素分类 third-color 计数≈0 实锤）。配色检查器的扫描范围必须限定在图标块内。
+- 门 1 建议增补：**SVG 导出忠实度墨迹审计**（DOM 截图墨迹 vs html2canvas 导出墨迹，ratio ∈ [0.70, 1.45] 为 PASS）。

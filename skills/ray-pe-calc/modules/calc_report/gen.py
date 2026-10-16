@@ -13,6 +13,29 @@ import os
 import io
 from datetime import datetime
 
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+
 # Handle Windows console encoding for CJK characters
 if sys.platform == "win32":
     sys.stdout = io.TextIOWrapper(
@@ -34,11 +57,11 @@ TEMPLATES = {
         "doc_no": "CAL-P-NPSH-001",
         "standard": "API 610 / GB/T 5656 / ANSI/HI 9.6.1",
         "inputs": [
-            {"name": "流量 Q", "value": "", "unit": "m³/h", "note": "额定工况"},
+            {"name": "流量 Q", "value": "", "unit": "m3/h", "note": "额定工况"},
             {"name": "介质", "value": "", "unit": "—", "note": ""},
-            {"name": "密度 ρ", "value": "", "unit": "kg/m³", "note": "操作温度"},
+            {"name": "密度 ρ", "value": "", "unit": "kg/m3", "note": "操作温度"},
             {"name": "饱和蒸气压 Pv", "value": "", "unit": "kPa(a)", "note": "操作温度"},
-            {"name": "吸入压力 P₁", "value": "", "unit": "kPa(a)", "note": "吸入侧"},
+            {"name": "吸入压力 P1", "value": "", "unit": "kPa(a)", "note": "吸入侧"},
             {"name": "吸入管径", "value": "", "unit": "mm", "note": "内径"},
             {"name": "安装高度 z", "value": "", "unit": "m", "note": "+液面在泵上，-液面在泵下"},
             {"name": "NPSHr", "value": "", "unit": "m", "note": "泵样本数据"},
@@ -47,21 +70,21 @@ TEMPLATES = {
         "steps": [
             {
                 "title": "吸入管流速",
-                "formula": "v = Q / A = 4Q / (3600 × π × d²)",
+                "formula": "v = Q / A = 4Q / (3600 × π × d2)",
                 "calc": "",
                 "result": "",
                 "check": "v 应在经济流速范围内（液体吸入管 0.5~2.0 m/s）",
             },
             {
                 "title": "吸入管路沿程摩阻 hf",
-                "formula": "hf = f × (L/d) × v²/(2g)",
+                "formula": "hf = f × (L/d) × v2/(2g)",
                 "calc": "",
                 "result": "",
                 "check": "",
             },
             {
                 "title": "NPSHa 计算",
-                "formula": "NPSHa = (P₁ - Pv) / (ρ × g) + v²/(2g) - hf + z",
+                "formula": "NPSHa = (P1 - Pv) / (ρ × g) + v2/(2g) - hf + z",
                 "calc": "",
                 "result": "",
                 "check": "NPSHa ≥ NPSHr + 裕量 (≥0.5m)",
@@ -131,20 +154,20 @@ TEMPLATES = {
         "standard": "GB/T 151 / TEMA",
         "inputs": [
             {"name": "热负荷 Q", "value": "", "unit": "kW", "note": "工艺侧"},
-            {"name": "热流进口温度 T₁,in", "value": "", "unit": "°C", "note": ""},
-            {"name": "热流出口温度 T₁,out", "value": "", "unit": "°C", "note": ""},
-            {"name": "冷流进口温度 T₂,in", "value": "", "unit": "°C", "note": ""},
-            {"name": "冷流出口温度 T₂,out", "value": "", "unit": "°C", "note": ""},
-            {"name": "总传热系数 U", "value": "", "unit": "W/(m²·K)", "note": "经验值或校核值"},
-            {"name": "污垢热阻 Rf", "value": "", "unit": "m²·K/W", "note": "按 TEMA 推荐"},
+            {"name": "热流进口温度 T1,in", "value": "", "unit": "°C", "note": ""},
+            {"name": "热流出口温度 T1,out", "value": "", "unit": "°C", "note": ""},
+            {"name": "冷流进口温度 T2,in", "value": "", "unit": "°C", "note": ""},
+            {"name": "冷流出口温度 T2,out", "value": "", "unit": "°C", "note": ""},
+            {"name": "总传热系数 U", "value": "", "unit": "W/(m2·K)", "note": "经验值或校核值"},
+            {"name": "污垢热阻 Rf", "value": "", "unit": "m2·K/W", "note": "按 TEMA 推荐"},
         ],
         "steps": [
             {
                 "title": "对数平均温差 LMTD",
-                "formula": "LMTD = (ΔT₁ - ΔT₂) / ln(ΔT₁/ΔT₂)\nΔT₁ = T₁,in - T₂,out\nΔT₂ = T₁,out - T₂,in",
+                "formula": "LMTD = (ΔT1 - ΔT2) / ln(ΔT1/ΔT2)\nΔT1 = T1,in - T2,out\nΔT2 = T1,out - T2,in",
                 "calc": "",
                 "result": "",
-                "check": "若 ΔT₁/ΔT₂ < 2，可取算术平均温差",
+                "check": "若 ΔT1/ΔT2 < 2，可取算术平均温差",
             },
             {
                 "title": "温差校正系数 Ft",
@@ -178,8 +201,8 @@ TEMPLATES = {
         "standard": "GB 50316 / ASME B31.3",
         "inputs": [
             {"name": "介质", "value": "", "unit": "—", "note": ""},
-            {"name": "流量 Q", "value": "", "unit": "m³/h", "note": "操作工况"},
-            {"name": "密度 ρ", "value": "", "unit": "kg/m³", "note": "操作温度"},
+            {"name": "流量 Q", "value": "", "unit": "m3/h", "note": "操作工况"},
+            {"name": "密度 ρ", "value": "", "unit": "kg/m3", "note": "操作温度"},
             {"name": "黏度 μ", "value": "", "unit": "mPa·s", "note": "操作温度"},
             {"name": "管径 D", "value": "", "unit": "mm", "note": "内径"},
             {"name": "管长 L", "value": "", "unit": "m", "note": "含当量长度"},
@@ -188,7 +211,7 @@ TEMPLATES = {
         "steps": [
             {
                 "title": "流速计算",
-                "formula": "v = 4Q / (3600 × π × D²)",
+                "formula": "v = 4Q / (3600 × π × D2)",
                 "calc": "",
                 "result": "",
                 "check": "液体推荐 1~3 m/s，气体推荐 5~30 m/s",
@@ -202,14 +225,14 @@ TEMPLATES = {
             },
             {
                 "title": "摩擦系数 f（Colebrook-White）",
-                "formula": "1/√f = -2 log₁₀[ ε/(3.7D) + 2.51/(Re×√f) ]",
+                "formula": "1/√f = -2 log10[ ε/(3.7D) + 2.51/(Re×√f) ]",
                 "calc": "",
                 "result": "",
                 "check": "",
             },
             {
                 "title": "沿程压降 ΔP",
-                "formula": "ΔP = f × (L/D) × (ρ × v² / 2)",
+                "formula": "ΔP = f × (L/D) × (ρ × v2 / 2)",
                 "calc": "",
                 "result": "",
                 "check": "ΔP 应在工艺允许范围内",
@@ -224,12 +247,12 @@ TEMPLATES = {
         "doc_no": "CAL-TANK-001",
         "standard": "API 2000 / GB/T 50761",
         "inputs": [
-            {"name": "储罐容积", "value": "", "unit": "m³", "note": ""},
+            {"name": "储罐容积", "value": "", "unit": "m3", "note": ""},
             {"name": "储罐内径", "value": "", "unit": "m", "note": ""},
             {"name": "储罐高度", "value": "", "unit": "m", "note": ""},
             {"name": "介质闪点", "value": "", "unit": "°C", "note": "影响呼出量系数"},
-            {"name": "泵入流量", "value": "", "unit": "m³/h", "note": ""},
-            {"name": "泵出流量", "value": "", "unit": "m³/h", "note": ""},
+            {"name": "泵入流量", "value": "", "unit": "m3/h", "note": ""},
+            {"name": "泵出流量", "value": "", "unit": "m3/h", "note": ""},
             {"name": "设计温度范围", "value": "", "unit": "°C", "note": "最低~最高"},
             {"name": "保温状况", "value": "", "unit": "—", "note": "有保温/无保温"},
         ],
@@ -250,14 +273,14 @@ TEMPLATES = {
             },
             {
                 "title": "工作呼吸吸入量",
-                "formula": "Vi_working = 0.94 × Qpump_out （m³/h → Nm³/h 空气）",
+                "formula": "Vi_working = 0.94 × Qpump_out （m3/h → Nm3/h 空气）",
                 "calc": "",
                 "result": "",
                 "check": "",
             },
             {
                 "title": "工作呼吸呼出量",
-                "formula": "Vo_working = 2.02 × Qpump_in （m³/h → Nm³/h 空气）",
+                "formula": "Vo_working = 2.02 × Qpump_in （m3/h → Nm3/h 空气）",
                 "calc": "",
                 "result": "",
                 "check": "挥发性液体取大值",

@@ -11,6 +11,29 @@ import math
 import sys
 import io
 
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+
 # 确保 stdout/stderr 使用 UTF-8，避免 Windows GBK 终端编码问题
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
@@ -122,7 +145,7 @@ def compute_pressure_drop(args):
             density = args.density
         elif args.mw is not None and args.T is not None and args.P is not None:
             density = compute_gas_density(args.mw, args.T, args.P)
-            print(f"由理想气体方程计算密度: {density:.2f} kg/m³")
+            print(f"由理想气体方程计算密度: {density:.2f} kg/m3")
         else:
             print("错误: 气体计算需提供 --density 或 (--mw + --T + --P)", file=sys.stderr)
             sys.exit(1)
@@ -278,13 +301,13 @@ def main():
 
     # ---- 基本参数 ----
     parser.add_argument("--flow", type=float, required=True,
-                        help="流量 (体积 m³/h 或质量 kg/h，取决于 --unit)")
+                        help="流量 (体积 m3/h 或质量 kg/h，取决于 --unit)")
     parser.add_argument("--unit", type=str, default="m3/h",
                         help="流量单位: m3/h (体积) 或 kg/h (质量, 需配合 --density)")
     parser.add_argument("--id", type=float, required=True,
                         help="管道内径 (mm)")
     parser.add_argument("--density", type=float, default=None,
-                        help="介质密度 (kg/m³)。液体必须提供；气体可选（若无则从理想气体方程计算）")
+                        help="介质密度 (kg/m3)。液体必须提供；气体可选（若无则从理想气体方程计算）")
     parser.add_argument("--viscosity", type=float, required=True,
                         help="动力粘度 (cP)")
     parser.add_argument("--length", type=float, required=True,

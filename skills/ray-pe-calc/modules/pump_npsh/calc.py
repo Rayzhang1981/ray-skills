@@ -13,6 +13,29 @@ import math
 import sys
 import io
 
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+
 # 确保 Windows GBK 终端下正确输出中文
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
 sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
@@ -200,7 +223,7 @@ def format_results(r, args):
     print("【吸入侧】")
     print(f"  吸入管流速:           {r['v_suction']:.2f} m/s")
     print(f"  吸入管压降 (hf):      {r['hf_suction']:.2f} m")
-    print(f"  速度头 (v²/2g):       {r['vel_head_suction']:.2f} m")
+    print(f"  速度头 (v2/2g):       {r['vel_head_suction']:.2f} m")
     print(f"  液面绝对压力:         {args.suction_pres:.2f} kPa(a)")
     print(f"  饱和蒸气压:           {args.vapor_pres:.2f} kPa(a)")
 
@@ -214,11 +237,11 @@ def format_results(r, args):
     print(f"  NPSHa:                {r['npsha']:.2f} m")
     print(f"  NPSHr:                {r['npshr']:.2f} m")
     if r["margin"] >= 1.0:
-        status = f"✅ 裕量充足"
+        status = f"[OK] 裕量充足"
     elif r["margin"] >= 0.5:
-        status = f"⚠️ 裕量偏小，建议进一步核实"
+        status = f"[!] 裕量偏小，建议进一步核实"
     else:
-        status = f"❌ 严重！裕量不足，有汽蚀风险！"
+        status = f"[X] 严重！裕量不足，有汽蚀风险！"
     print(f"  安全裕量 (NPSHa-NPSHr): {r['margin']:.2f} m  {status}")
     print()
 
@@ -238,9 +261,9 @@ def format_results(r, args):
 
     # ---- 结论 ----
     if r["margin_ok"]:
-        print(f"✅ 结论: NPSH 校核通过，裕量充足。泵选型扬程需 ≥ {r['total_head']:.1f} m")
+        print(f"[OK] 结论: NPSH 校核通过，裕量充足。泵选型扬程需 ≥ {r['total_head']:.1f} m")
     else:
-        print(f"❌ 结论: NPSH 校核失败！裕量 {r['margin']:.2f} m < 0.5 m 最低要求。请重新评估安装高度或管道配置。")
+        print(f"[X] 结论: NPSH 校核失败！裕量 {r['margin']:.2f} m < 0.5 m 最低要求。请重新评估安装高度或管道配置。")
     print("=" * 70)
 
 
@@ -261,13 +284,13 @@ def main():
     )
 
     parser.add_argument("--flow", type=float, required=True,
-                        help="流量 (m³/h)")
+                        help="流量 (m3/h)")
     parser.add_argument("--suction_pres", type=float, default=101.325,
                         help="吸入液面压力 kPa(绝压)，默认 101.325")
     parser.add_argument("--vapor_pres", type=float, required=True,
                         help="操作温度下饱和蒸气压 kPa(绝压)")
     parser.add_argument("--density", type=float, default=1000.0,
-                        help="介质密度 (kg/m³)，默认 1000")
+                        help="介质密度 (kg/m3)，默认 1000")
     parser.add_argument("--viscosity", type=float, default=1.0,
                         help="动力粘度 (cP)，默认 1.0")
     parser.add_argument("--suction_id", type=float, required=True,

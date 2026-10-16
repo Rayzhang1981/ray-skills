@@ -9,10 +9,10 @@ import sys, io, os, re, json, collections
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
 import fitz
 
-BOOK = (r"D:\Work\02-Tech Documents\Process Designing\Calculation Tools\Property Data"
-        r"\Property Reference Books\危险化学品安全技术全书-通用卷-3rd Ed.pdf")
-OUT = r"E:\LingXi-DSH\sessions\Chemical Compatible Matrix\_process\build\whpdj_incompat.json"
-IDX = r"C:\Users\rayzh\.workbuddy\skills\ray-chem-property\data\危险品全书-通用卷索引.json"
+BOOK = (r"<数据源PDF目录>"
+        r"/危险化学品安全技术全书-通用卷-3rd Ed.pdf")
+OUT = r"<输出目录>/whpdj_incompat.json"
+IDX = r"<skill数据目录>/危险品全书-通用卷索引.json"
 FIELDS = ["稳定性", "危险反应", "避免接触的条件", "禁配物", "危险的分解产物"]
 
 # ---------- ① 读全书，页级清洗 ----------

@@ -9,16 +9,41 @@ ray-hazop-lopa · 计算模块④：物料平衡 / 富氧 / 异常加料温升�
 """
 import argparse, math
 
+import sys
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+import sys
+
 def main():
     ap = argparse.ArgumentParser(description="物料平衡与温升压升")
     ap.add_argument('--mode', default='o2', choices=['o2','dT'], help='o2=尾气富氧 dT=温升压升')
     # 富氧模式
     ap.add_argument('--decomp', type=float, default=32.7, help='分解率 wt%（H2O2 计）')
     ap.add_argument('--h2o2_use', type=float, default=51.4, help='每小时分解 H2O2 kg/h')
-    ap.add_argument('--o2_dens', type=float, default=1.429, help='O2 密度 kg/Nm³')
+    ap.add_argument('--o2_dens', type=float, default=1.429, help='O2 密度 kg/Nm3')
     ap.add_argument('--o2_air', type=float, default=21.0, help='空气氧含量 %')
     ap.add_argument('--target_o2', type=float, default=17.0, help='氮气稀释目标 %')
-    ap.add_argument('--n2_plan', type=float, default=100.0, help='计划氮气量 m³/h')
+    ap.add_argument('--n2_plan', type=float, default=100.0, help='计划氮气量 m3/h')
     # 温升模式
     ap.add_argument('--vol', type=float, default=500.0, help='H2O2 体积 L')
     ap.add_argument('--rho', type=float, default=1.196, help='50% H2O2 密度 kg/L')
@@ -28,7 +53,7 @@ def main():
     ap.add_argument('--cp', type=float, default=3.43, help='体系比热 kJ/(kg·K)')
     ap.add_argument('--m_sys', type=float, default=1600.0, help='体系总质量 kg')
     ap.add_argument('--T0', type=float, default=65.0, help='起始温度 ℃')
-    ap.add_argument('--V_gas', type=float, default=5.5, help='釜气相空间 m³（ΔP 用，按釜实际，勿用计量罐容积）')
+    ap.add_argument('--V_gas', type=float, default=5.5, help='釜气相空间 m3（ΔP 用，按釜实际，勿用计量罐容积）')
     a = ap.parse_args()
 
     if a.mode == 'o2':
@@ -39,14 +64,14 @@ def main():
         Q = o2_vol*(1.0-x_target)/(x_target-a.o2_air/100.0)
         o2_total = a.o2_air/100.0*Q + o2_vol
         print("== 尾气富氧 ==")
-        print(f"  每小时分解 H2O2 {a.h2o2_use} kg → 产氧 {o2_mass:.1f} kg/h = {o2_vol:.1f} Nm³/h")
-        print(f"  尾气基础流量 Q = {Q:.0f} m³/h（使混合后 O2 = 27%）")
-        print(f"  混合后 O2 总量 {o2_total:.1f} m³/h")
+        print(f"  每小时分解 H2O2 {a.h2o2_use} kg → 产氧 {o2_mass:.1f} kg/h = {o2_vol:.1f} Nm3/h")
+        print(f"  尾气基础流量 Q = {Q:.0f} m3/h（使混合后 O2 = 27%）")
+        print(f"  混合后 O2 总量 {o2_total:.1f} m3/h")
         # 氮气稀释
         V_n2 = o2_total/(a.target_o2/100.0) - (Q+o2_vol)
         o2_after = o2_total/(Q+o2_vol+a.n2_plan)*100.0
-        print(f"  目标 {a.target_o2:.0f}%: 需氮气 {V_n2:.0f} m³/h")
-        print(f"  工程方案（{a.n2_plan:.0f} m³/h）: 实际 O2 ≈ {o2_after:.1f}%")
+        print(f"  目标 {a.target_o2:.0f}%: 需氮气 {V_n2:.0f} m3/h")
+        print(f"  工程方案（{a.n2_plan:.0f} m3/h）: 实际 O2 ≈ {o2_after:.1f}%")
     else:
         m_sol = a.vol*a.rho                                # kg 溶液
         m_pure = m_sol*a.frac                               # kg 纯 H2O2
@@ -60,8 +85,8 @@ def main():
         print("== 异常加料温升/压升 ==")
         print(f"  H2O2 溶液 {a.vol:.0f} L = {m_sol:.0f} kg | 纯 H2O2 {m_pure:.0f} kg | 分解 {m_dec:.0f} kg")
         print(f"  放热 {Q_heat/1000:.0f} MJ | 绝热温升 ΔT = {dT:.1f} K → {a.T0}℃ → {a.T0+dT:.1f}℃")
-        print(f"  产氧 {o2_kg:.1f} kg = {o2_nm3:.1f} Nm³ = {o2_mol:.0f} mol")
-        print(f"  O2 分压（V_gas={a.V_gas} m³, T={a.T0+dT:.1f}℃）≈ {P_abs-1:.1f} bar 表压")
+        print(f"  产氧 {o2_kg:.1f} kg = {o2_nm3:.1f} Nm3 = {o2_mol:.0f} mol")
+        print(f"  O2 分压（V_gas={a.V_gas} m3, T={a.T0+dT:.1f}℃）≈ {P_abs-1:.1f} bar 表压")
 
 if __name__ == '__main__':
     main()

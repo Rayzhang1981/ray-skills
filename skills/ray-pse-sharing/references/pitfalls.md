@@ -32,7 +32,7 @@
 ### 11. Edge headless PDF — Windows 路径三大坑
 
 - **坑 1 — CJK 路径静默失败**：Edge `--print-to-pdf` 参数含中文路径会静默退出（exit 0），不报错但不生成文件。**解决**：先输出到不含中文的临时路径，再 `shutil.copy` 到目标。
-- **坑 2 — 正斜杠路径不生成文件**：bash 风格正斜杠（`E:/<工作区>/out.pdf`）同样静默失败。**必须用反斜杠**（`E:\<工作区>\out.pdf`），Python `subprocess.run` 中传 `os.path.join` 默认反斜杠正确。
+- **坑 2 — 正斜杠路径不生成文件**：bash 风格正斜杠（`E:/LingXi/out.pdf`）同样静默失败。**必须用反斜杠**（`E:\LingXi\out.pdf`），Python `subprocess.run` 中传 `os.path.join` 默认反斜杠正确。
 - **坑 3 — `file:///` URL 正常**：HTML 输入 URL 用正斜杠（`file:///E:/path/to/card.html`）不受限制。
 
 ### 12. 大 PDF 文件读取 — markitdown 桥接
@@ -154,9 +154,9 @@
 **问题**：本机 Edge headless `--print-to-pdf` 完全静默失败——`--dump-dom` 无输出、exit 0、stderr 空。尝试 `--headless=new`、`--no-sandbox`、独立 `--user-data-dir`、`--virtual-time-budget` 均无效。疑似 Edge 被策略锁定（非 CJK 路径问题，纯 ASCII 路径也失败）。
 
 **回退方案（已验证可靠）**：Playwright + Chromium headless-shell：
-- venv：`~/.workbuddy/binaries/python/envs/default/Scripts/python.exe`
+- venv：`C:/Users/rayzh/.workbuddy/binaries/python/envs/default/Scripts/python.exe`
 - 浏览器：`chromium-headless-shell`/`chromium-1223`（ms-playwright 已有）
-- playwright 报 `__dirlock` 错误时删 `$LOCALAPPDATA/ms-playwright/__dirlock` 重试
+- playwright 报 `__dirlock` 错误时删 `C:/Users/rayzh/AppData/Local/ms-playwright/__dirlock` 重试
 
 **渲染要点**（模板见 assets/playwright_pdf.py）：
 1. **必须用同步 API**（`playwright.sync_api`），async 在本机 exit 1 无输出

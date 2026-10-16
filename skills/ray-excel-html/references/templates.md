@@ -8,7 +8,7 @@
 
 将**工程示意图（SVG矢量图标）**与**数据输入框**合并为统一面板，让用户一眼看到设备类型、输入数量、当量参数，无需在两处来回跳转。
 
-**已验证参考**：`D:\RayClaw\PE Calculation\01-Pipelines\不可压缩流体压力降计算-Pipe Pressure Drop-V2.Visual.html`
+**已验证参考**：`〔本机素材区〕PE Calculation\01-Pipelines\不可压缩流体压力降计算-Pipe Pressure Drop-V2.Visual.html`
 
 ### SVG 工业图标设计规范
 
@@ -235,9 +235,9 @@ function highlightFit(el, valveType) {
 ## 管道压力降计算 HTML 设计规范（HG/T 20570.7-95）
 
 ### 设计参考文件
-- 用户认可的设计：`D:\RayClaw\PE Calculation\01-Pipelines\不可压缩流体压力降计算-Pipe Pressure Drop-Incompressible-Ver2.1.html`
-- 生成文件示例：`D:\RayClaw\PE Calculation\01-Pipelines\不可压缩流体压力降计算-Pipe Pressure Drop-Incompressible.html`
-- Visual 版本：`D:\RayClaw\PE Calculation\01-Pipelines\不可压缩流体压力降计算-Pipe Pressure Drop-V2.Visual.html`
+- 用户认可的设计：`〔本机素材区〕PE Calculation\01-Pipelines\不可压缩流体压力降计算-Pipe Pressure Drop-Incompressible-Ver2.1.html`
+- 生成文件示例：`〔本机素材区〕PE Calculation\01-Pipelines\不可压缩流体压力降计算-Pipe Pressure Drop-Incompressible.html`
+- Visual 版本：`〔本机素材区〕PE Calculation\01-Pipelines\不可压缩流体压力降计算-Pipe Pressure Drop-V2.Visual.html`
 
 ### INPUT PARAMETERS 必须包含的 5 个子项
 
@@ -430,6 +430,31 @@ function calc(manual = false){
 
 > 适用场景：所有 Excel → 单文件 HTML 的转换任务。
 > 目的：保持系列工具视觉风格统一，减少反复调整。
+
+### UI 质量硬判据 12 条（源自 hallmark，可机检）
+
+> **来源与许可**：`Nutlope/hallmark` v1.1.0（**MIT · Copyright (c) 2026 Hallmark contributors**）——从其余 58 道 slop-test 门中筛出 12 条「**不依赖外链资源 ＋ 可用 grep / DOM 探针直接判**」的，并按本 skill 的**零外部资源**硬约束改写。
+> **取舍（为什么不收全）**：hallmark 原目录里的 Google Fonts / 图标库 CDN / 图库素材类条目**故意不收**——它们全都要外链，直接违反 Step 6；其「营销落地页结构」类条目与本 skill 场景无关。
+> **用法**：这是**判据**不是建议——逐条都能判真假，**不许"看着像"就打勾**。与五道门的挂接见 `SKILL.md` Step 5.5。
+
+| # | 判据 | 机检写法 | 违反后果（本生态实证） |
+|---|------|---------|---------------------|
+| 1 | **Token 纪律** — 颜色/字号/间距一律走 `var(--…)`，禁散落行内魔法值 | `grep -nE '(color\|background\|font-size)\s*:\s*#'` 只应命中 `:root` 定义处 | 双主题切换时局部不跟随 ⇒ 暗色下浅底浅字 |
+| 2 | **对比度门** — 正文 ≥ 4.5:1，大字/图标 ≥ 3:1；强调色**承载文字**须用 `--color-accent-ink`（不是 accent 本身）；**表面翻转（深浅底互换）必须同步设 `color`** | 逐对像素采样 `ΔL` / `rel`（D 门 D0 配方） | 暗色霓虹青主题最易出「深底深字」 |
+| 3 | **触控目标 ≥ 44×44** — 小图标按钮不得靠字形尺寸达标，用 `::before` 撑命中区 | 遍历可见控件量 `getBoundingClientRect()` | 移动端点不中 |
+| 4 | **交互八态齐备** — 默认 / 悬停 / 聚焦 / 按下 / 禁用 / 加载 / 错误 / 成功 | 逐态注入 class 或 `:hover`，断言计算样式确有变化 | 「看着像按钮，点了没反应」 |
+| 5 | **输入框零布局位移** — 边框恒 1px，焦点用**透明 outline 预留槽**，禁 `border` 增减 | 聚焦前后量矩形宽高差 == 0 | 一聚焦整行输入框抖动 |
+| 6 | **`overflow-x: clip`** — 容器裁切用 `clip` 不用 `hidden`：`hidden` 会创建滚动容器、**静默杀掉内部 `position: sticky`** | `grep -n 'overflow-x'` 不得出现 `hidden` | 表头「不吸顶」（sticky 静默失效） |
+| 7 | **四档视口底线** — 320 / 375 / 414 / 768 逐档量，**横向溢出必须为 0** | `probe_template.js` 多视口模式（E 门） | 窄屏出横向滚动条（横向永不许可） |
+| 8 | **数字列 `tabular-nums`** — 数值列加 `font-variant-numeric: tabular-nums` | `grep -n tabular-nums` 须覆盖**全部**数值列 | 等宽不对齐、无法竖读（结果表尤甚） |
+| 9 | **二级 sticky 偏移** — sticky 表头须让位固定导航（`top` = 导航高度） | DOM 探针断言两者矩形**不相交** | 表头被导航压盖不可见 |
+| 10 | **表单几何统一** — 同组输入框与按钮**同高**（建议 44px 基高），右留 24px 图标槽 | 量同组控件高度集合，`size == 1` | 一行内高矮不齐 = 最典型的「AI 味」 |
+| 11 | **禁 `transition: all`** — 只写要过渡的具体属性，禁过渡布局属性（`width`/`height`/`top`） | `grep -nE 'transition:\s*all'` 应 0 命中 | 意料外的属性一起动，观感发糊 |
+| 12 | **正文字号 / 行高 / 行宽** — 正文 ≥ 16px、行高 1.5–1.65、单行 ≤ 65ch | 量计算样式与 `max-width` | 小字挤、长行难读 |
+
+**按门归属（⚠️ 不新增第六道门）**：D 门 = #1 #2 #3 #4 #8 #10 #12 · E 门 = #6 #7 #9 · C 门 = #5 #11（7 + 3 + 2 = 12）。
+
+---
 
 ### 规范 1：字体统一用微软雅黑
 

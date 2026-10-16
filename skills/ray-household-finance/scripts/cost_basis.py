@@ -23,6 +23,29 @@ import re
 import sys
 from datetime import date, datetime
 
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+
 CODE_RE = re.compile(r'[（(](\d{6})[)）]')
 
 
@@ -66,7 +89,7 @@ def compute_positions(txns):
             else:
                 # 无法定位冲销对象：按 nav 存在与否默认冲买入（最常见错误），并显式提示
                 p['invested'] -= amt
-                print(f'⚠️ {code} reversal 无 ref 指向，默认按冲销买入处理（若错请补 ref）')
+                print(f'[!] {code} reversal 无 ref 指向，默认按冲销买入处理（若错请补 ref）')
             p['reversed'] += amt
             continue
         if typ == 'buy':
@@ -91,7 +114,7 @@ def compute_positions(txns):
             p['recovered'] += amt
             p['realized'] += amt
         else:
-            print(f'⚠️ 未知交易类型 {typ!r}（fund {code}），已跳过')
+            print(f'[!] 未知交易类型 {typ!r}（fund {code}），已跳过')
     return pos
 
 
@@ -139,7 +162,7 @@ def main():
         sys.exit(1)
     txns = load_json(sys.argv[1]).get('transactions', [])
     if not txns:
-        print('⚠️ transactions 为空')
+        print('[!] transactions 为空')
         sys.exit(1)
     snapshot = load_json(sys.argv[2]) if len(sys.argv) > 2 else None
     values = snapshot_values(snapshot) if snapshot else {}
@@ -153,12 +176,12 @@ def main():
     for code, p in sorted(pos.items()):
         cur = values.get(code, 0.0)
         if code not in values and p['invested']:
-            print(f'⚠️ {code} {p["name"]}: 快照中无现值，损益未计入该基金现值')
+            print(f'[!] {code} {p["name"]}: 快照中无现值，损益未计入该基金现值')
         gain = cur + p['recovered'] - p['invested']
         ret = gain / p['invested'] * 100 if p['invested'] else 0.0
         cost_s = f'{p["cost"]:.4f}' if p['cost'] else '--'
         miss = f'（nav缺失{p["nav_missing"]}笔）' if p['nav_missing'] else ''
-        rev = f'（含红字冲销 ¥{p["reversed"]:,.0f}）' if p['reversed'] else ''
+        rev = f'（含红字冲销 CNY {p["reversed"]:,.0f}）' if p['reversed'] else ''
         print(f'{code} | {p["name"]} | {p["invested"]:,.0f} | {p["recovered"]:,.0f} | '
               f'{cur:,.0f} | {gain:+,.0f} | {ret:+.2f}% | {cost_s} | {p["shares"]:,.0f}{miss}{rev}')
         tot_i += p['invested']

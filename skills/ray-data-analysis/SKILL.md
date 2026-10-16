@@ -2,7 +2,7 @@
 name: ray-data-analysis
 slug: ray-data-analysis
 displayName: 数据分析工作流
-version: 1.2.0
+version: 1.3.0
 description: >
   完整数据分析工作流：回答数据问题、探查数据集、写优化 SQL、创建可视化、构建交互式仪表板、
   分享前验证。覆盖从快速查询到正式报告的全流程，含 ASCII 快速图表、报告模板、统计检验速查。
@@ -308,6 +308,16 @@ Mar: ████████████████████████ 24
 - `references/data-cleaning.md` — 数据清洗清单 + 清洗 SQL 模式（数据脏时读）
 - `references/visualization-code.md` — Python 可视化代码模板（画图时读）
 - `references/dashboard-template.md` — 交互式仪表板 HTML 模板（做仪表板时读）
+
+
+## Gotchas
+
+> 经验回流口（合并原「环境怪癖」与「实战经验」两处落点）。构建与运行中踩的坑记这里，随运行累积。
+> ⚠️ `None known` 是合法值——禁止编造 gotcha 凑数，假怪癖会教模型错误约束。
+> 新回流条目带前缀：`- YYYY-MM-DD｜[LRN-YYYYMMDD-XXX]｜计数:N｜状态:…`（判重与归档用）；历史条目保持原样。
+> 归档阈值：本节 > 40 行 或 SKILL.md > 90 KB → 最旧批次移入 `references/experience-archive.md`，保留最近 3 轮。
+
+- None known
 
 ## 维护记录
 

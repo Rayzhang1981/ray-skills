@@ -10,10 +10,34 @@ Lucide 安全语义图标池 下载+渲染+验证 流水线
 import os, sys, io, time, urllib.request, re
 from PIL import Image
 
+import sys
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+
 CDN = "https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/{}.svg"
 UA = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
 HERE = os.path.dirname(os.path.abspath(__file__))
-# 图标池外置（SkillHub 发布拒收 .png，图片资产一律放 ~/RayClaw/skill-archives/）
+# 图标池外置（SkillHub 发布拒收 .png，图片资产一律放 D:/RayClaw/skill-archives/）
 POOL = r"D:\RayClaw\skill-archives\ray-ppt-generator-icon-pool-20260904"
 SVG_TMP = os.path.join(HERE, "_svg_tmp")
 
@@ -138,9 +162,9 @@ def build_color(color_name: str | None):
                 fail.append((key, "render empty/尺寸错"))
         except Exception as e:
             fail.append((key, f"render: {type(e).__name__} {str(e)[:100]}"))
-    print(f"✅ 成功 {len(ok)}: {ok}")
+    print(f"[OK] 成功 {len(ok)}: {ok}")
     if fail:
-        print(f"❌ 失败 {len(fail)}:")
+        print(f"[X] 失败 {len(fail)}:")
         for k, e in fail:
             print(f"   - {k}: {e}")
     return ok, fail

@@ -12,10 +12,22 @@ def strip_tags(s):
     return s.replace('&nbsp;', ' ').replace('&gt;', '>').replace('&lt;', '<').replace('&amp;', '&').strip()
 
 def parse(html):
-    """解析行动项闭环表：找含 A\\d+ 编号的 <tr>，按 <td> 切列"""
-    rows = []
-    for m in re.finditer(r'<tr>\s*<td[^>]*class="num">(A\d+)</td>(.*?)</tr>', html, re.S):
+    r"""解析行动项闭环表：首列为 A\d+ 的行按 <td> 切列。
+
+    两个防坑点（2026-09-30 修）：
+      ① 行匹配放宽为 <tr[^>]*> —— 报告若给行动行加 class（按优先级着色），
+         只认裸 <tr> 会**静默漏掉整张表**，导出 0 条却毫无提示。
+      ② 按编号去重 —— 同一张表若被渲染两遍（如主报告与独立 Tab 各一份），
+         旧版会把 67 条**默默导成 134 条**；去重并把重复编号回报给调用方告警。
+    返回 (rows, dup)：dup 为 {编号: 出现次数} 中出现 >1 次者。
+    """
+    rows, seen = [], {}
+    for m in re.finditer(r'<tr[^>]*>\s*<td[^>]*class="num">(A\d+)</td>(.*?)</tr>', html, re.S):
         rid = m.group(1)
+        if rid in seen:
+            seen[rid] += 1
+            continue                      # 同编号只取首次，防翻倍
+        seen[rid] = 1
         tds = re.findall(r'<td[^>]*>(.*?)</td>', m.group(2), re.S)
         cells = [strip_tags(t) for t in tds]
         # 列序：# | 场景 | 行动建议 | 优先级 | Rf | 责任人 | 截止 | 状态
@@ -24,8 +36,8 @@ def parse(html):
         for i, k in enumerate(keys):
             row[k] = cells[i] if i < len(cells) else ''
         rows.append(row)
-    return rows
-
+    dup = {k: v for k, v in seen.items() if v > 1}
+    return rows, dup
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('html')
@@ -36,7 +48,11 @@ def main():
     except ImportError:
         print("[ERROR] 需要 openpyxl，请用 venv python 运行")
         sys.exit(1)
-    rows = parse(open(a.html, encoding='utf-8').read())
+    rows, dup = parse(open(a.html, encoding='utf-8').read())
+    if dup:
+        print(f"[WARN] 检出重复的行动项编号 {len(dup)} 个（例：{sorted(dup)[:8]}）")
+        print("       同一编号在多处出现 → 已按编号去重，每个只导出一次。")
+        print("       若源报告确实把行动项表渲染了两遍，建议修正报告，以免读者误读。")
     if not rows:
         print("[WARN] 未解析到行动项（检查表头格式：首列为 <td class=\"num\">A1</td>）")
         sys.exit(1)

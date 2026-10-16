@@ -33,7 +33,7 @@
 ## 四、与三级存储的衔接
 
 ```
-HOT（常驻）：MEMORY.md（Claude Code ≤200 行 / ≤25,000 B；WorkBuddy 用户级 ≤4,000 字符、项目级 ≤8,000 字符）
+HOT（常驻）：MEMORY.md（Claude Code ≤200 行 / ≤25,000 B；WorkBuddy 用户级 ≤4,000 字符、项目级 ≤10,000 字符；本生态自定工作线 8,000）
 WARM（按需）：项目 skill 实战经验区 / 当日日志
 COLD（归档）：references/experience-archive.md / changelog.md
 ```

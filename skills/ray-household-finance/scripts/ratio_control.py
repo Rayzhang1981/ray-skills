@@ -19,6 +19,29 @@
 """
 import sys
 
+def _console_safe():
+    """控制台编码护栏（2026-10-09 舰队级修复）。
+
+    中文 Windows 下 stdout/stderr 走 cp936(GBK)。**输出被重定向或经管道捕获时**
+    （自动验证 / 日志 / CI / subprocess PIPE），Python 按 locale 编码写流，
+    遇到 GBK 无法表示的字符即抛 UnicodeEncodeError，**整段输出中断**；
+    而交互式控制台走 WriteConsoleW(UTF-16)，同一字符却无碍
+    => 该缺陷只在「捕获输出」时显形，最易漏测。
+
+    处理：**保持流原编码不变**（中文在 GBK 控制台仍正常），
+    仅把不可表示的字符降级为 '?'，从而永不中断。
+    注意：不要改成 encoding="utf-8" —— 那会让 GBK 控制台下的中文变乱码。
+    """
+    for _s in (sys.stdout, sys.stderr):
+        try:
+            _s.reconfigure(errors="replace")
+        except Exception:
+            pass
+
+
+_console_safe()
+
+
 # ===== 默认参数 =====
 # 初始状态（四类：活期宝/国内债基/美债QDII/ETF权益）
 INIT = [1132171.0, 430270.0, 23195.0, 39062.0]
@@ -118,13 +141,13 @@ def main():
     rows, meta = simulate(TARGET, CAP, MONTHS, band=BAND)
     final = rows[-1]
 
-    print(f'=== 比例控制模型 [{"/".join(map(str, TARGET))}] 月转出上限 ¥{CAP:,.0f} '
+    print(f'=== 比例控制模型 [{"/".join(map(str, TARGET))}] 月转出上限 CNY {CAP:,.0f} '
           f'漂移带 ±{BAND:.0f}% ===')
     print(f'目标比例: {"/".join(f"{p:.0f}%" for p in meta["target_pct"])}')
     print(f'加权年化: {meta["weighted_annual"]:.2f}%')
-    print(f'{MONTHS}月后总资产: ¥{final["total"]:,.0f}')
+    print(f'{MONTHS}月后总资产: CNY {final["total"]:,.0f}')
     for i, n in enumerate(NAMES):
-        print(f'  {n}: ¥{final["bal"][i]:,.0f} ({final["pct"][i]:.1f}%)')
+        print(f'  {n}: CNY {final["bal"][i]:,.0f} ({final["pct"][i]:.1f}%)')
     if meta['conv_month']:
         print(f'活期宝收敛到目标: 第 {meta["conv_month"]} 个月')
     print()
